@@ -4,7 +4,6 @@ class MobileagentModule extends CWebModule {
 
     public function init() {
         parent::init();
-        //   $this->register_baidu_script = false;
         Yii::setPathOfAlias('mobileagent', dirname(__FILE__));
 
         // this method is called when the module is being created
@@ -29,7 +28,7 @@ class MobileagentModule extends CWebModule {
             ),
                 ), true);
 
-        //$this->setTheme('ma');
+        $this->setTheme('mobile');
         $this->defaultController = 'agent';
     }
 
