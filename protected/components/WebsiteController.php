@@ -17,9 +17,9 @@ abstract class WebsiteController extends Controller {
      * @var array context menu items. This property will be assigned to {@link CMenu::items}.
      */
     public $menu = array();
-    public $pageTitle = '名医主刀_三甲医院名医,专家,主任医生手术,床位预约,网上挂号,手机APP';
-    public $htmlMetaKeywords = '名医主刀,三甲医院,名医,专家,主任医生,手术预约,网上挂号,手机APP';
-    public $htmlMetaDescription = '名医随时有,手术不再难！【名医主刀】汇聚国内外顶级名医资源和床位资源，利用互联网技术实现医患精准匹配，帮助广大患者得以在第一时间预约到名医专家进行主刀治疗。www.mingyizhudao.com';
+    public $pageTitle = '新楼花';
+    public $htmlMetaKeywords = '新楼花';
+    public $htmlMetaDescription = "新楼花";
 
     /**
      * @var array the breadcrumbs of the current page. The value of this property will
@@ -38,10 +38,6 @@ abstract class WebsiteController extends Controller {
     public function init() {
         if (isset(Yii::app()->theme)) {
             Yii::app()->clientScript->scriptMap = array(
-                //'jquery.js' => Yii::app()->theme->baseUrl . '/js/jquery-1.8.3.min.js',            
-                'jquery.js' => 'http://myzd.oss-cn-hangzhou.aliyuncs.com/static/web/js/jquery-1.9.1.min.js',
-                'jquery.min.js' => 'http://myzd.oss-cn-hangzhou.aliyuncs.com/static/web/js/jquery-1.9.1.min.js',
-                'jquery.yiiactiveform.js' => 'http://myzd.oss-cn-hangzhou.aliyuncs.com/static/web/js/jquery.yiiactiveform.js',
             );
         }
 
@@ -200,109 +196,14 @@ abstract class WebsiteController extends Controller {
     /**
      * Stores user's access info for every request.
      */
-    public function storeUserAccessInfo() 
-    {
-        $time = time();
-        if (get_extension_funcs("mongodb") !== false) {
-            $mongodb = new MongoDbManager();
-            $mongodb->insert([
-                'source' => 'doctor',
-                'user_host_ip' => Yii::app()->request->getUserHostAddress(),
-                'url' => Yii::app()->request->getUrl(),
-                'url_referrer' => Yii::app()->request->getUrlReferrer(),
-                'user_agent' => Yii::app()->request->getUserAgent(),
-                'user_host' => Yii::app()->request->getUserHost(),
-                'timestamp' => $time,
-                'date_time' => date('Y-m-d H:i:s', $time)
-            ]);
-        }
-        elseif (get_extension_funcs("mongo") !== false) {
-            $mongo = new MongoManager();
-            $mongo->source = 'doctor';
-            $mongo->user_host_ip = Yii::app()->request->getUserHostAddress();
-            $mongo->url = Yii::app()->request->getUrl();
-            $mongo->url_referrer = Yii::app()->request->getUrlReferrer();
-            $mongo->user_agent = Yii::app()->request->getUserAgent();
-            $mongo->user_host = Yii::app()->request->getUserHost();
-            $mongo->timestamp = $time;
-            $mongo->date_time = date('Y-m-d H:i:s', $time);
-            $mongo->addInfo();
-        }
-        else {
-            $coreAccess = new CoreAccess();
-            $coreAccess->user_host_ip = Yii::app()->request->getUserHostAddress();
-            $coreAccess->url = Yii::app()->request->getUrl();
-            $coreAccess->url_referrer = Yii::app()->request->getUrlReferrer();
-            $coreAccess->user_agent = Yii::app()->request->getUserAgent();
-            $coreAccess->user_host = Yii::app()->request->getUserHost();
-            $coreAccess->save();
-        }
-    }
-
-    /*
-      public function isUserAgentWeixin() {
-      $userAgent = Yii::app()->request->getUserAgent();
-      return (strContains($userAgent, 'MicroMessenger'));
-      }
-
-      public function isUserAgentIOS() {
-      $userAgent = strtolower(Yii::app()->request->getUserAgent());
-      return strContains($userAgent, 'iphone') || strContains($userAgent, 'ipad');
-      }
-
-      public function isUserAgentAndroid() {
-      $userAgent = strtolower(Yii::app()->request->getUserAgent());
-      return strContains($userAgent, 'android');
-      }
-     * 
-     */
-
-    public function loadSiteMenu() {
-        if (is_null($this->site_menu)) {
-            $urlFacultyView = $this->createUrl("faculty/view", array("name" => ""));
-            $this->site_menu = array(
-                'site' => array(
-                    "aboutus" => array("label" => "简介", "url" => $this->createUrl('site/page', array('view' => 'aboutus'))),
-                    "terms" => array("label" => "免责声明", "url" => $this->createUrl('site/page', array('view' => 'terms'))),
-                    "contactus" => array("label" => "联系我们", "url" => $this->createUrl('site/contactus')),
-                    "quickbook" => array("label" => "快速预约", "url" => $this->createUrl('site/enquiry')),
-                ),
-                'auth' => array(
-                    "userRegister" => array("label" => "用户注册", "url" => $this->createUrl("user/register")),
-                    "userLogin" => array("label" => "用户登录", "url" => $this->createUrl("user/login")),
-                    "doctorRegister" => array("label" => "医生注册", "url" => $this->createUrl("doctor/register"))
-                ),
-                'serviceflow' => array(
-                    '国内服务流程' => $this->createUrl('service/domestic'),
-                    '海外服务流程' => $this->createUrl('service/overseas')
-                ),
-                'overseas' => array(
-                    '新加坡' => $this->createUrl('overseas/view', array('page' => 'sg')),
-                    '美国' => $this->createUrl('overseas/view', array('page' => 'usa')),
-                    '韩国' => $this->createUrl('overseas/view', array('page' => 'korea')),
-                    '日本' => $this->createUrl('overseas/view', array('page' => 'japan')),
-                    'divider' => '',
-                    '特色手术' => $this->createUrl('overseas/surgery'),
-                ),
-                'event' => array(
-                    '上海胆道疾病会诊中心' => $this->createUrl('event/view', array('page' => 'dandao')),
-                    '肝病新疗法' => $this->createUrl('event/view', array('page' => 'liubaochi'))
-                ),
-                'faculty' => array(
-                    "xinxueguan" => array("label" => "心血管科", "url" => $urlFacultyView . "心血管科"),
-                    "jiazhuangxianke" => array("label" => "甲状腺科", "url" => $urlFacultyView . "甲状腺科"),
-                    "yanke" => array("label" => "眼科", "url" => $urlFacultyView . "眼科"),
-                    "baineizhangke" => array("label" => "白内障科", "url" => $urlFacultyView . "白内障科"),
-                    "shenjingke" => array("label" => "神经外科", "url" => $urlFacultyView . "神经外科"),
-                    "jiezhichangaike" => array("label" => "结直肠癌科", "url" => $urlFacultyView . "结直肠癌科"),
-                    "gandan" => array("label" => "肝胆外科", "url" => $urlFacultyView . "肝胆外科"),
-                    "yixianwaike" => array("label" => "胰腺外科", "url" => $urlFacultyView . "胰腺外科"),
-                    "shengzhiyixueke" => array("label" => "生殖医学科", "url" => $urlFacultyView . "生殖医学科"),
-                    "zhongliu" => array("label" => "肿瘤外科", "url" => $urlFacultyView . "肿瘤外科"),
-                )
-            );
-        }
-        return $this->site_menu;
+    public function storeUserAccessInfo() {
+        $coreAccess = new CoreAccess();
+        $coreAccess->user_host_ip = Yii::app()->request->getUserHostAddress();
+        $coreAccess->url = Yii::app()->request->getUrl();
+        $coreAccess->url_referrer = Yii::app()->request->getUrlReferrer();
+        $coreAccess->user_agent = Yii::app()->request->getUserAgent();
+        $coreAccess->user_host = Yii::app()->request->getUserHost();
+        $coreAccess->save();
     }
 
 }

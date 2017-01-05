@@ -7,7 +7,7 @@ class MobileagentController extends WebsiteController {
     public $pageTitle = '新楼花用户端';
 
     public function init() {
-        
+        parent::init();
     }
 
     public function getHomeUrl() {

@@ -28,7 +28,7 @@ class AgentController extends MobileagentController {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('regist', 'ajaxRegist', 'login', 'ajaxLogin', 'ajaxFiletoken'),
+                'actions' => array('register', 'ajaxRegister', 'login', 'ajaxLogin', 'ajaxFiletoken'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -48,15 +48,15 @@ class AgentController extends MobileagentController {
     }
 
     //进入注册页面
-    public function actionRegist() {
-        $form = new AgentUserFrom();
+    public function actionRegister() {
+        $form = new AgentUserForm();
         $form->user_role = StatCode::ROLE_USER;
         $this->render('register', array(
             'model' => $form,
         ));
     }
 
-    public function actionAjaxRegist() {
+    public function actionAjaxRegister() {
         $output = array('status' => 'no');
         if (isset($_POST['RegisterForm'])) {
             $form = new AgentUserForm();
