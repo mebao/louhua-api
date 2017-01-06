@@ -40,9 +40,10 @@ class UserWant extends EActiveRecord {
         return array(
             array('date_created', 'required'),
             array('project_id, expect_floor_low, expect_floor_high', 'numerical', 'integerOnly' => true),
-            array('project_name, expossure', 'length', 'max' => 50),
+            array('project_name, exposure', 'length', 'max' => 50),
             array('unit_type', 'length', 'max' => 200),
             array('price, coop', 'length', 'max' => 10),
+            array('user_id', 'length', 'max' => 20),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -113,7 +114,7 @@ class UserWant extends EActiveRecord {
         $criteria->compare('expect_floor_low', $this->expect_floor_low);
         $criteria->compare('expect_floor_high', $this->expect_floor_high);
         $criteria->compare('price', $this->price, true);
-        $criteria->compare('expossure', $this->expossure, true);
+        $criteria->compare('exposure', $this->expossure, true);
         $criteria->compare('date_created', $this->date_created, true);
         $criteria->compare('date_updated', $this->date_updated, true);
         $criteria->compare('date_deleted', $this->date_deleted, true);
@@ -135,7 +136,13 @@ class UserWant extends EActiveRecord {
 
     private function createId() {
         if ($this->isNewRecord) {
-            $num = $this->count() + 1;
+            $num = 1;
+            $criteria = new CDbCriteria;
+            $criteria->select = 'max(id) as id';
+            $model = $this->find($criteria);
+            if (isset($model)) {
+                $num = substr($model->id, 1) + 1;
+            }
             $this->id = "W" . str_pad($num, 5, "0", STR_PAD_LEFT);
         }
     }

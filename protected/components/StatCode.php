@@ -35,14 +35,14 @@ class StatCode {
 
     public static function loadOptionsExposure() {
         return array(
-            self::EXPOSURE_EAST => self::EXPOSURE_EAST,
-            self::EXPOSURE_SOUTH => self::EXPOSURE_SOUTH,
-            self::EXPOSURE_WEST => self::EXPOSURE_WEST,
-            self::EXPOSURE_NORTH => self::EXPOSURE_NORTH,
-            self::EXPOSURE_SE => self::EXPOSURE_SE,
-            self::EXPOSURE_NE => self::EXPOSURE_NE,
-            self::EXPOSURE_SW => self::EXPOSURE_SW,
-            self::EXPOSURE_NW => self::EXPOSURE_NW
+            "E" => self::EXPOSURE_EAST,
+            "S" => self::EXPOSURE_SOUTH,
+            "W" => self::EXPOSURE_WEST,
+            "N" => self::EXPOSURE_NORTH,
+            "SE" => self::EXPOSURE_SE,
+            "NE" => self::EXPOSURE_NE,
+            "SW" => self::EXPOSURE_SW,
+            "NW" => self::EXPOSURE_NW
         );
     }
 

@@ -5,9 +5,11 @@
  *
  * The followings are the available columns in table 'housing_resources':
  * @property integer $id
- * @property integer $user_have_id
+ * @property string $have_id
+ * @property string $user_have_id
  * @property string $user_have_name
- * @property integer $user_want_id
+ * @property string $want_id
+ * @property string $user_want_id
  * @property integer $floor_level
  * @property integer $expect_floor_low
  * @property string $user_want_name
@@ -49,7 +51,7 @@ class HousingResources extends EActiveRecord {
             array('floor_level, expect_floor_low, project_id, expect_floor_high', 'numerical', 'integerOnly' => true),
             array('user_have_name, user_want_name, project_name, price, exposure, action, unit_status', 'length', 'max' => 50),
             array('coop', 'length', 'max' => 10),
-            array('user_have_id, user_want_id, unit_type', 'length', 'max' => 20),
+            array('user_have_id, user_want_id, unit_type, want_id, have_id', 'length', 'max' => 20),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -67,6 +69,8 @@ class HousingResources extends EActiveRecord {
             'userHave' => array(self::BELONGS_TO, 'AgentUser', 'user_have_id'),
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
             'userWant' => array(self::BELONGS_TO, 'AgentUser', 'user_want_id'),
+            'postHave' => array(self::BELONGS_TO, 'UserHave', 'have_id'),
+            'postWant' => array(self::BELONGS_TO, 'UserWant', 'want_id'),
         );
     }
 
@@ -76,8 +80,10 @@ class HousingResources extends EActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
+            'have_id' => 'user_have.id',
             'user_have_id' => 'user.id',
             'user_have_name' => '拥有的',
+            'want_id' => 'user_want.id',
             'user_want_id' => 'user.id',
             'floor_level' => '楼层',
             'expect_floor_low' => '最高期望楼层',

@@ -133,9 +133,19 @@ class UserHave extends EActiveRecord {
 
     private function createId() {
         if ($this->isNewRecord) {
-            $num = $this->count() + 1;
+            $num = 1;
+            $criteria = new CDbCriteria;
+            $criteria->select = 'max(id) as id';
+            $model = $this->find($criteria);
+            if (isset($model)) {
+                $num = substr($model->id, 1) + 1;
+            }
             $this->id = "H" . str_pad($num, 5, "0", STR_PAD_LEFT);
         }
+    }
+
+    public function loadAllByUserId($userId) {
+        return $this->getAllByAttributes(array("user_id" => $userId));
     }
 
 }

@@ -12,6 +12,7 @@ class MobileagentModule extends CWebModule {
 
         $this->setImport(array(
             'mobileagent.components.*',
+            'mobileagent.apiviewservices.*',
             'mobileagent.models.*',
             'mobileagent.models.user.*',
             'mobileagent.models.post.*',

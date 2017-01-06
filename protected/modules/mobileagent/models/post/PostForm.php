@@ -23,9 +23,9 @@ class PostForm extends EFormModel {
         return array(
             array('user_id, project_name, unit_type, exposure, price, coop', 'required', 'message' => 'must be input {attribute}'),
             array('project_id, floor_level, expect_floor_low, expect_floor_high', 'numerical', 'integerOnly' => true),
-            array('project_name', 'length', 'max' => 20),
+            array('project_name, user_id', 'length', 'max' => 20),
             array('unit_type, exposure', 'length', 'max' => 50),
-            array('price, coop', 'length', 'max' => 10),
+            array('price, coop, post_type', 'length', 'max' => 10),
         );
     }
 

@@ -28,11 +28,11 @@ class AgentController extends MobileagentController {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('register', 'ajaxRegister', 'login', 'ajaxLogin', 'ajaxFiletoken', 'ajaxUserPost'),
+                'actions' => array('register', 'ajaxRegister', 'login', 'ajaxLogin', 'ajaxFiletoken'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('userPost'),
+                'actions' => array('userPost', 'ajaxPostList', 'ajaxUserPost'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -119,6 +119,13 @@ class AgentController extends MobileagentController {
                 $output['errors'] = $form->getErrors();
             }
         }
+        $this->renderJsonOutput($output);
+    }
+
+    public function actionAjaxPostList() {
+        $userId = $this->getCurrentUserId();
+        $apiview = new ApiViewUserPostList($userId);
+        $output = $apiview->loadApiViewData();
         $this->renderJsonOutput($output);
     }
 
