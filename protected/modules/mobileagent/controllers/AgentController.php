@@ -28,11 +28,11 @@ class AgentController extends MobileagentController {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('register', 'ajaxRegister', 'login', 'ajaxLogin', 'ajaxFiletoken'),
+                'actions' => array('register', 'ajaxRegister', 'login', 'ajaxLogin', 'ajaxFiletoken', 'ajaxUserPost'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array(),
+                'actions' => array('userPost'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -65,7 +65,7 @@ class AgentController extends MobileagentController {
             $userMgr->registerNewUser($form);
             if ($form->hasErrors() === false) {
                 //自动登录
-                $userMgr->autoLoginUser($form->email, $form->password, $form->user_role, 1);
+                $userMgr->autoLoginUser($form->email, $form->password, $form->user_role);
                 $output['status'] = 'ok';
             } else {
                 $output['errors'] = $form->getErrors();
@@ -90,6 +90,30 @@ class AgentController extends MobileagentController {
             $userMgr = new UserManager();
             if ($userMgr->doLogin($form)) {
                 //自动登录
+                $output['status'] = 'ok';
+            } else {
+                $output['errors'] = $form->getErrors();
+            }
+        }
+        $this->renderJsonOutput($output);
+    }
+
+    public function actionUserPost() {
+        $form = new PostForm();
+        $form->initModel();
+        $this->render('userPost', array(
+            'model' => $form,
+        ));
+    }
+
+    public function actionAjaxUserPost() {
+        $output = array('status' => 'no');
+        if (isset($_POST['PostForm'])) {
+            $form = new PostForm();
+            $form->attributes = $_POST['PostForm'];
+            $form->user_id = $this->getCurrentUserId();
+            $postMgr = new PostManager();
+            if ($postMgr->createPost($form)) {
                 $output['status'] = 'ok';
             } else {
                 $output['errors'] = $form->getErrors();

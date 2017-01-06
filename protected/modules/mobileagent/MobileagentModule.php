@@ -14,6 +14,8 @@ class MobileagentModule extends CWebModule {
             'mobileagent.components.*',
             'mobileagent.models.*',
             'mobileagent.models.user.*',
+            'mobileagent.models.post.*',
+            'mobileagent.models.house.*',
         ));
 
         Yii::app()->setComponents(array(
