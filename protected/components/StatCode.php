@@ -18,9 +18,9 @@ class StatCode {
             self::UNIT_TYPE_STUDIO => "studio",
             self::UNIT_TYPE_ONE => "1 Bed",
             self::UNIT_TYPE_ONEANDONE => "1+1 Bed",
-            self::UNIT_TYPE_TWO => "2 Bed",
-            self::UNIT_TYPE_TWOANDONE => "2+1 Bed",
-            self::UNIT_TYPE_THREE => "3 Bed"
+            self::UNIT_TYPE_TWO => "2 Beds",
+            self::UNIT_TYPE_TWOANDONE => "2+1 Beds",
+            self::UNIT_TYPE_THREE => "3 Beds"
         );
     }
 

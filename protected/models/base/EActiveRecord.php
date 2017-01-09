@@ -4,6 +4,8 @@ abstract class EActiveRecord extends CActiveRecord {
 
     const DB_FORMAT_DATETIME = 'Y-m-d H:i:s';
     const DB_FORMAT_DATE = 'Y-m-d';
+    const DB_IS_DELETED = 1;
+    const DB_ISNOT_DELETED = 0;
 
     /**
      * Prepares date_created, date_updated.
@@ -163,7 +165,7 @@ abstract class EActiveRecord extends CActiveRecord {
             $ids = array($ids);
         }
         $criteria = new CDbCriteria;
-        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
         $criteria->addInCondition('t.id', $ids);
         $criteria->order = "FIELD(t.id," . arrayToCsv($ids) . ")";
         if (is_array($with)) {
@@ -185,7 +187,7 @@ abstract class EActiveRecord extends CActiveRecord {
         }
 
         $criteria = new CDbCriteria();
-        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
         $criteria->addInCondition($field, $values);
         if (is_array($with)) {
             $criteria->with = $with;
@@ -196,7 +198,7 @@ abstract class EActiveRecord extends CActiveRecord {
 
     public function getAll($with = null, $options = null) {
         $criteria = new CDbCriteria();
-        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
 
         if (is_array($with)) {
             $criteria->with = $with;
@@ -215,38 +217,13 @@ abstract class EActiveRecord extends CActiveRecord {
         return ($this->findAll($criteria));
     }
 
-    /*
-      public function getAll($with = null, $sorts = array(), $limit = 0, $offset = 0) {
-      $criteria = new CDbCriteria();
-      $criteria->addCondition('t.date_deleted is NULL');
-
-      if (is_array($with)) {
-      $criteria->with = $with;
-      }
-
-      if (empty($sorts) === false) {
-      $order = implode($sorts);
-      $criteria->order = $order;
-      }
-      if ($limit > 0) {
-      $criteria->limit = $limit;
-      }
-      if ($offset > 0) {
-      $criteria->offset = $offset;
-      }
-
-      return ($this->findAll($criteria));
-      }
-     * 
-     */
-
     public function getById($id, $with = null) {
         if (is_null($id))
             return null;
         else if (is_array($with)) {
-            return $this->with($with)->findByAttributes(array('id' => $id, 'date_deleted' => null));
+            return $this->with($with)->findByAttributes(array('id' => $id, 'is_deleted' => self::DB_ISNOT_DELETED));
         } else {
-            return $this->findByAttributes(array('id' => $id, 'date_deleted' => null));
+            return $this->findByAttributes(array('id' => $id, 'is_deleted' => self::DB_ISNOT_DELETED));
         }
     }
 
@@ -257,8 +234,8 @@ abstract class EActiveRecord extends CActiveRecord {
      * @return type 
      */
     public function getByAttributes(array $attrs, $with = null) {
-        if (isset($attrs['date_deleted']) === false)
-            $attrs['date_deleted'] = null;
+        if (isset($attrs['is_deleted']) === false)
+            $attrs['is_deleted'] = self::DB_ISNOT_DELETED;
         if (is_array($with))
             return $this->with($with)->findByAttributes($attrs);
         else
@@ -273,7 +250,7 @@ abstract class EActiveRecord extends CActiveRecord {
      */
     public function getAllByAttributes(array $attrs, $with = null, $options = null) {
         $criteria = new CDbCriteria();
-        $criteria->addCondition('t.date_deleted is NULL');
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
         foreach ($attrs as $attr => $value) {
             $criteria->compare($attr, $value);
         }
@@ -305,7 +282,7 @@ abstract class EActiveRecord extends CActiveRecord {
             if (!$this->getIsNewRecord()) {
                 Yii::trace(get_class($this) . '.delete()', 'system.db.ar.CActiveRecord');
                 $now = new CDbExpression('NOW()');
-                return $this->updateByPk($this->id, array('date_deleted' => $now));
+                return $this->updateByPk($this->id, array('date_deleted' => $now, 'is_deleted' => self::DB_IS_DELETED));
             } else
                 throw new CDbException(Yii::t('yii', 'The active record cannot be deleted because it is new.'));
         }

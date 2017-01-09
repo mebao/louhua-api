@@ -8,7 +8,7 @@
  * @property string $token
  * @property string $username
  * @property integer $role
- * @property integer $user_id
+ * @property string $user_id
  * @property integer $is_active
  * @property integer $time_expiry
  * @property string $user_host_ip
@@ -43,8 +43,9 @@ class AuthTokenUser extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('date_created', 'required'),
-            array('role, user_id, is_active, time_expiry', 'numerical', 'integerOnly' => true),
+            array('role, is_active, time_expiry', 'numerical', 'integerOnly' => true),
             array('token', 'length', 'max' => 64),
+            array('user_id', 'length', 'max' => 20),
             array('username, user_host_ip', 'length', 'max' => 50),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
@@ -60,7 +61,7 @@ class AuthTokenUser extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+            'user' => array(self::BELONGS_TO, 'AgentUser', 'user_id'),
         );
     }
 
@@ -192,7 +193,6 @@ class AuthTokenUser extends EActiveRecord {
         return $this->verifyByTokenAndUsernameAndRole($token, $username, StatCode::ROLE_USER);
     }
 
-
     public function verifyByTokenAndUsernameAndRole($token, $username, $userRole) {
         $model = $this->getByTokenAndUsernameAndRole($token, $username, $userRole, true);
         if (isset($model)) {
@@ -232,6 +232,5 @@ class AuthTokenUser extends EActiveRecord {
     public function getUser() {
         return $this->user;
     }
-
 
 }

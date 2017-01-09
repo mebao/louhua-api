@@ -14,9 +14,9 @@
 class AuthManager {
 
     //验证登录权限
-    public function doTokenUserAutoLogin(User $user) {
-        $userId = $user->getId();
-        $username = $user->mobile;
+    public function doTokenUserAutoLogin(AgentUser $user) {
+        $userId = $user->id;
+        $username = $user->username;
         $authTokenUser = AuthTokenUser::model()->getFirstActiveByUserId($userId);
         if (isset($authTokenUser) && $authTokenUser->checkExpiry() === false) {
             // token is active but expired, so update it as 'inactive' (is_active=0). 
