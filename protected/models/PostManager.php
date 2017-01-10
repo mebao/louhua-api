@@ -55,4 +55,34 @@ class PostManager {
         }
     }
 
+    public function deleteMyPost($id, $userId) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'deleted faild!';
+        $with = array('resoures');
+        if (stripos($id, 'H') !== false) {
+            $model = UserHave::model()->loadByIdAndUserId($id, $userId, $with);
+        }
+        if (stripos($id, 'W') !== false) {
+            $model = UserWant::model()->loadByIdAndUserId($id, $userId, $with);
+        }
+        if (isset($model)) {
+            $resoures = $model->resoures;
+            $trans = Yii::app()->db->beginTransaction();
+            try {
+                if (isset($resoures) && $resoures->delete(false)) {
+                    $model->delete(false);
+                    $trans->commit();
+                    $std->status = 'ok';
+                    $std->errorCode = 200;
+                    $std->errorMsg = 'success';
+                }
+            } catch (CDbException $cdb) {
+                $trans->rollback();
+            }
+        }
+        return $std;
+    }
+
 }

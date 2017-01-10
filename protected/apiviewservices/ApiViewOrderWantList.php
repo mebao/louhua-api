@@ -18,7 +18,7 @@ class ApiViewOrderWantList extends EApiViewService {
     private $order;
     private $type;
 
-    public function __construct($values, $userId) {
+    public function __construct($values) {
         parent::__construct();
         $this->userId = $userId;
         if (isset($values['order']) === false) {
@@ -53,14 +53,14 @@ class ApiViewOrderWantList extends EApiViewService {
     private function loadUserhave() {
         $options = array("order" => "t." . $this->order . " " . $this->type);
         $with = array("user");
-        $models = UserWant::model()->getAllByAttributes(array("user_id" => $this->userId), $with, $options);
+        $models = UserWant::model()->getAll($with, $options);
         if (arrayNotEmpty($models)) {
-            $this->setUserhave($models);
+            $this->setUserWant($models);
         }
         $this->results->postList = $this->postList;
     }
 
-    private function setUserhave($models) {
+    private function setUserWant($models) {
         foreach ($models as $v) {
             $std = new stdClass();
             $std->id = $v->id;
@@ -73,19 +73,6 @@ class ApiViewOrderWantList extends EApiViewService {
             $std->avatarUrl = $user->avatar_url;
             $this->postList[] = $std;
         }
-    }
-
-    private function listorder() {
-        $processing = array();
-        foreach ($this->processingList as $v) {
-            $processing[] = $v->dateUpdated;
-        }
-        $done = array();
-        foreach ($this->doneList as $v) {
-            $done[] = $v->dateUpdated;
-        }
-        array_multisort($processing, SORT_DESC, $this->processingList);
-        array_multisort($done, SORT_DESC, $this->doneList);
     }
 
 }

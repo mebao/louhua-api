@@ -56,12 +56,13 @@ class XlhapiController extends Controller {
                     $output = $apiview->loadApiViewData();
                     break;
                 case 'orderhavelist':
+                    $this->userLoginRequired($values);
                     $apiview = new ApiViewOrderHaveList($values);
                     $output = $apiview->loadApiViewData();
                     break;
                 case 'orderwantlist':
-                    $user = $this->userLoginRequired($values);
-                    $apiview = new ApiViewOrderWantList($values, $user->id);
+                    $this->userLoginRequired($values);
+                    $apiview = new ApiViewOrderWantList($values);
                     $output = $apiview->loadApiViewData();
                     break;
                 default:
@@ -84,12 +85,16 @@ class XlhapiController extends Controller {
     }
 
     //具体信息展示页面
-    public function actionView($model, $id) {
+    public function actionDelete($model, $id) {
         $values = $_GET;
         $statusCode = 200;
         try {
             switch ($model) {
-
+                case 'mypost':
+                    $user = $this->userLoginRequired($values);
+                    $mgr = new PostManager();
+                    $output = $mgr->deleteMyPost($id, $user->id);
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
@@ -126,10 +131,10 @@ class XlhapiController extends Controller {
                     $apipost = new ApiPostPwdLogin($post);
                     $output = $apipost->run();
                     break;
-                case 'forgetpwd'://忘记密码
-                    $apipost = new ApiPostForgetPwd($post);
-                    $output = $apipost->run();
-                    break;
+//                case 'forgetpwd'://忘记密码
+//                    $apipost = new ApiPostForgetPwd($post);
+//                    $output = $apipost->run();
+//                    break;
                 case 'userpost':
                     $user = $this->userLoginRequired($post);
                     $post['user_id'] = $user->id;

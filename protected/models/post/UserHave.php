@@ -159,4 +159,8 @@ class UserHave extends EActiveRecord {
         return $this->findAll($criteria);
     }
 
+    public function loadByIdAndUserId($id, $userId, $with = null) {
+        return $this->getByAttributes(array("id" => $id, "user_id" => $userId), $with);
+    }
+
 }
