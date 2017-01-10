@@ -65,6 +65,10 @@ class XlhapiController extends Controller {
                     $apiview = new ApiViewOrderWantList($values);
                     $output = $apiview->loadApiViewData();
                     break;
+                case 'selectoptions':
+                    $apiview = new ApiViewOptions();
+                    $output = $apiview->loadApiViewData();
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
