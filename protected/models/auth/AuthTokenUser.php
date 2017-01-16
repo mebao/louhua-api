@@ -8,7 +8,7 @@
  * @property string $token
  * @property string $username
  * @property integer $role
- * @property string $user_id
+ * @property integer $user_id
  * @property integer $is_active
  * @property integer $time_expiry
  * @property string $user_host_ip
@@ -43,9 +43,8 @@ class AuthTokenUser extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('date_created', 'required'),
-            array('role, is_active, time_expiry', 'numerical', 'integerOnly' => true),
+            array('user_id, role, is_active, time_expiry', 'numerical', 'integerOnly' => true),
             array('token', 'length', 'max' => 64),
-            array('user_id', 'length', 'max' => 20),
             array('username, user_host_ip', 'length', 'max' => 50),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().

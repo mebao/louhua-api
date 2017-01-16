@@ -39,7 +39,9 @@ class ApiViewUserPostList extends EApiViewService {
     }
 
     private function loadHaveList() {
-        $models = UserHave::model()->loadAllByUserId($this->userId);
+        $with = array('resoures');
+        $options = array("order" => "t.date_created desc");
+        $models = UserHave::model()->loadAllByUserId($this->userId, $with, $options);
         if (arrayNotEmpty($models)) {
             $this->setHave($models);
         }
@@ -55,17 +57,20 @@ class ApiViewUserPostList extends EApiViewService {
             $std->floor = $v->floor_level;
             $std->price = $v->price;
             $std->time = $v->getDateCreated('Y/m/d H:i a');
+            $std->postType = 'have';
+            $std->isDelete = 0;
             $house = $v->resoures;
-            $std->isDelete = 1;
-            if (isset($house) && strIsEmpty($house->user_want_id) === false) {
-                $std->isDelete = 0;
+            if (count($house) == 1 && strIsEmpty($house[0]->user_want_id)) {
+                $std->isDelete = 1;
             }
             $this->postList[] = $std;
         }
     }
 
     public function loadWantList() {
-        $models = UserWant::model()->loadAllByUserId($this->userId);
+        $with = array('resoures');
+        $options = array("order" => "t.date_created desc");
+        $models = UserWant::model()->loadAllByUserId($this->userId, $with, $options);
         if (arrayNotEmpty($models)) {
             $this->setWant($models);
         }
@@ -81,10 +86,11 @@ class ApiViewUserPostList extends EApiViewService {
             $std->floor = $v->expect_floor_low . "-" . $v->expect_floor_high;
             $std->price = $v->price;
             $std->time = $v->getDateCreated('Y/m/d H:i a');
+            $std->postType = 'want';
+            $std->isDelete = 0;
             $house = $v->resoures;
-            $std->isDelete = 1;
-            if (isset($house) && strIsEmpty($house->user_have_id) === false) {
-                $std->isDelete = 0;
+            if (count($house) == 1 && strIsEmpty($house[0]->user_have_id)) {
+                $std->isDelete = 1;
             }
             $this->postList[] = $std;
         }

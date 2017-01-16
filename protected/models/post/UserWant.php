@@ -4,8 +4,8 @@
  * This is the model class for table "user_want".
  *
  * The followings are the available columns in table 'user_want':
- * @property string $id
- * @property string $user_id
+ * @property integer $id
+ * @property integer $user_id
  * @property integer $project_id
  * @property string $project_name
  * @property string $unit_type
@@ -39,21 +39,15 @@ class UserWant extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('date_created', 'required'),
-            array('project_id, expect_floor_low, expect_floor_high', 'numerical', 'integerOnly' => true),
+            array('project_id, expect_floor_low, expect_floor_high, user_id', 'numerical', 'integerOnly' => true),
             array('project_name, exposure', 'length', 'max' => 50),
             array('unit_type', 'length', 'max' => 200),
             array('price, coop', 'length', 'max' => 10),
-            array('user_id', 'length', 'max' => 20),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, user_id, project_id, project_name, unit_type, expect_floor_low, expect_floor_high, price, exposure, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
-    }
-
-    public function beforeValidate() {
-        $this->createId();
-        return parent::beforeValidate();
     }
 
     /**
@@ -65,7 +59,7 @@ class UserWant extends EActiveRecord {
         return array(
             'user' => array(self::BELONGS_TO, 'AgentUser', 'user_id'),
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
-            'resoures' => array(self::HAS_ONE, 'HousingResources', 'want_id'),
+            'resoures' => array(self::HAS_MANY, 'HousingResources', 'want_id'),
         );
     }
 
@@ -135,27 +129,22 @@ class UserWant extends EActiveRecord {
         return parent::model($className);
     }
 
-    private function createId() {
-        if ($this->isNewRecord) {
-            $num = 1;
-            $criteria = new CDbCriteria;
-            $criteria->select = 'max(id) as id';
-            $model = $this->find($criteria);
-            if (isset($model)) {
-                $num = substr($model->id, 1) + 1;
-            }
-            $this->id = "W" . str_pad($num, 5, "0", STR_PAD_LEFT);
-        }
-    }
-
-    public function loadAllByUserId($userId) {
-        $with = array("resoures");
-        $order = array("order" => "t.date_created desc");
-        return $this->getAllByAttributes(array("t.user_id" => $userId), $with, $order);
+    public function loadAllByUserId($userId, $with = null, $options = null) {
+        return $this->getAllByAttributes(array("t.user_id" => $userId), $with, $options);
     }
 
     public function loadByIdAndUserId($id, $userId, $with = null) {
         return $this->getByAttributes(array("id" => $id, "user_id" => $userId), $with);
+    }
+
+    public function loadAllNotMe($userId, $with, $order) {
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("t.user_id!={$userId}");
+        $criteria->addCondition("t.is_show = 1");
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
+        $criteria->with = $with;
+        $criteria->order = $order;
+        return $this->findAll($criteria);
     }
 
 }

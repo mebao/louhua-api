@@ -14,6 +14,7 @@
 class ApiViewOrderHaveList extends EApiViewService {
 
     private $postList;
+    private $userId;
     private $order;
     private $type;
 
@@ -31,6 +32,7 @@ class ApiViewOrderHaveList extends EApiViewService {
         }
         $this->order = $order;
         $this->type = $type;
+        $this->userId = $values['user_id'];
         $this->postList = array();
     }
 
@@ -50,8 +52,8 @@ class ApiViewOrderHaveList extends EApiViewService {
 
     private function loadUserhave() {
         $order = "t." . $this->order . " " . $this->type;
-        $with = array("userHave");
-        $models = HousingResources::model()->loadAllHaveNotWant($with, $order);
+        $with = array("user");
+        $models = UserHave::model()->loadAllNotMe($this->userId, $with, $order);
         if (arrayNotEmpty($models)) {
             $this->setUserhave($models);
         }
@@ -62,14 +64,14 @@ class ApiViewOrderHaveList extends EApiViewService {
         foreach ($models as $v) {
             $std = new stdClass();
             $std->id = $v->id;
-            $std->haveId = $v->have_id;
             $std->type = $v->unit_type;
             $std->exposure = $v->exposure;
             $std->coop = $v->coop;
             $std->floor = $v->floor_level;
             $std->price = $v->price;
-            $user = $v->userHave;
+            $user = $v->user;
             $std->avatarUrl = $user->avatar_url;
+            $std->postType = 'have';
             $this->postList[] = $std;
         }
     }

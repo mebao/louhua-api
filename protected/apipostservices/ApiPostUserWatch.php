@@ -32,30 +32,24 @@ class ApiPostUserWatch extends EApiPostService {
     }
 
     protected function validateRequestData() {
-        if (isset($this->requestData['user_id']) === false || strIsEmpty($this->requestData['user_id'])) {
-            $this->errors[] = 'this user_id must input!';
-        }
         if (isset($this->requestData['id']) === false || strIsEmpty($this->requestData['id'])) {
             $this->errors[] = 'this id must input!';
         }
-        if (isset($this->requestData['have_id']) === false || strIsEmpty($this->requestData['have_id'])) {
-            $this->errors[] = 'this id must input!';
+        if (isset($this->requestData['post_type']) === false || strIsEmpty($this->requestData['post_type'])) {
+            $this->errors[] = 'this type must input!';
         }
     }
 
     protected function doPostAction() {
-        $model = HousingResources::model()->loadByIdAndHaveId($this->requestData['id'], $this->requestData['have_id']);
-        if (isset($model) && strIsEmpty($model->user_want_id)) {
-            $model->user_want_id = $this->requestData['user_id'];
-            $model->user_want_name = $this->requestData['real_name'];
-            if ($model->update(array("user_want_id", "user_want_name")) === false) {
-                $this->errors[] = 'watch faild!';
-                $std = new stdClass();
-                $std->status = self::RESPONSE_NO;
-                $std->errorCode = 502;
-                $std->errorMsg = 'watch faild!';
-                $this->output = $std;
-            }
+        $manger = new PostManager();
+        $isSuccess = $manger->createMatch($this->requestData);
+        if ($isSuccess === false) {
+            $this->errors[] = 'watch faild!';
+            $std = new stdClass();
+            $std->status = self::RESPONSE_NO;
+            $std->errorCode = 502;
+            $std->errorMsg = 'watch faild!';
+            $this->output = $std;
         }
     }
 

@@ -56,12 +56,14 @@ class XlhapiController extends Controller {
                     $output = $apiview->loadApiViewData();
                     break;
                 case 'orderhavelist':
-                    $this->userLoginRequired($values);
+                    $user = $this->userLoginRequired($values);
+                    $values['user_id'] = $user->id;
                     $apiview = new ApiViewOrderHaveList($values);
                     $output = $apiview->loadApiViewData();
                     break;
                 case 'orderwantlist':
-                    $this->userLoginRequired($values);
+                    $user = $this->userLoginRequired($values);
+                    $values['user_id'] = $user->id;
                     $apiview = new ApiViewOrderWantList($values);
                     $output = $apiview->loadApiViewData();
                     break;
@@ -97,7 +99,7 @@ class XlhapiController extends Controller {
                 case 'mypost':
                     $user = $this->userLoginRequired($values);
                     $mgr = new PostManager();
-                    $output = $mgr->deleteMyPost($id, $user->id);
+                    $output = $mgr->deleteMyPost($values['post_type'], $id, $user->id);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
@@ -135,10 +137,6 @@ class XlhapiController extends Controller {
                     $apipost = new ApiPostPwdLogin($post);
                     $output = $apipost->run();
                     break;
-//                case 'forgetpwd'://忘记密码
-//                    $apipost = new ApiPostForgetPwd($post);
-//                    $output = $apipost->run();
-//                    break;
                 case 'userpost':
                     $user = $this->userLoginRequired($post);
                     $post['user_id'] = $user->id;
@@ -204,7 +202,7 @@ class XlhapiController extends Controller {
         $output->status = EApiViewService::RESPONSE_NO;
         $output->errorCode = ErrorList::BAD_REQUEST;
         if (isset($values['username']) === false || isset($values['token']) === false) {
-            $output->errorMsg = '没有权限执行此操作!';
+            $output->errorMsg = 'not token!';
             $this->renderJsonOutput($output);
         }
         $username = $values['username'];
@@ -212,7 +210,7 @@ class XlhapiController extends Controller {
         $authMgr = new AuthManager();
         $authUserIdentity = $authMgr->authenticateUserByToken($username, $token);
         if (is_null($authUserIdentity) || $authUserIdentity->isAuthenticated === false) {
-            $output->errorMsg = '用户名或token不正确!';
+            $output->errorMsg = 'username or token error!';
 
             $this->renderJsonOutput($output);
         }

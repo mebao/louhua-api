@@ -55,7 +55,7 @@ class Project extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'advertising Pictures' => array(self::HAS_MANY, 'Advertising Pictures', 'project_id'),
+            'advertisingPictures' => array(self::HAS_MANY, 'AdvertisingPictures', 'project_id'),
             'housingResources' => array(self::HAS_MANY, 'HousingResources', 'project_id'),
             'userHaves' => array(self::HAS_MANY, 'UserHave', 'project_id'),
             'userWants' => array(self::HAS_MANY, 'UserWant', 'project_id'),

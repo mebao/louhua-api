@@ -20,7 +20,7 @@ class ApiViewOrderWantList extends EApiViewService {
 
     public function __construct($values) {
         parent::__construct();
-        $this->userId = $userId;
+        $this->userId = $values['user_id'];
         if (isset($values['order']) === false) {
             $order = 'id';
         } else {
@@ -51,9 +51,9 @@ class ApiViewOrderWantList extends EApiViewService {
     }
 
     private function loadUserhave() {
-        $options = array("order" => "t." . $this->order . " " . $this->type);
+        $order = "t." . $this->order . " " . $this->type;
         $with = array("user");
-        $models = UserWant::model()->getAll($with, $options);
+        $models = UserWant::model()->loadAllNotMe($this->userId, $with, $order);
         if (arrayNotEmpty($models)) {
             $this->setUserWant($models);
         }
@@ -71,6 +71,7 @@ class ApiViewOrderWantList extends EApiViewService {
             $std->price = $v->price;
             $user = $v->user;
             $std->avatarUrl = $user->avatar_url;
+            $std->postType = 'want';
             $this->postList[] = $std;
         }
     }

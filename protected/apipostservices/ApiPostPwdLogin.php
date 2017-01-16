@@ -41,11 +41,11 @@ class ApiPostPwdLogin extends EApiPostService {
         if (isset($this->requestData['username']) && strIsEmpty($this->requestData['username']) === false) {
             $user = AgentUser::model()->loadByUsernameAndRole($this->requestData['username']);
             if (is_null($user)) {
-                $this->errors[] = 'this email is not registered!';
+                $this->errors[] = 'this username is not registered!';
             }
             $this->user = $user;
         } else {
-            $this->errors[] = 'this email must input!';
+            $this->errors[] = 'this username must input!';
         }
 
         if (isset($this->requestData['password']) === false || strIsEmpty($this->requestData['password'])) {

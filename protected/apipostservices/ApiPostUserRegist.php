@@ -23,10 +23,10 @@ class ApiPostUserRegist extends EApiPostService {
         }
         if (isset($this->requestData['username']) && strIsEmpty($this->requestData['username']) === false) {
             if (AgentUser::model()->exists('username=:username', array(':username' => $this->requestData['username']))) {
-                $this->errors[] = 'this email has been registered!';
+                $this->errors[] = 'this username has been registered!';
             }
         } else {
-            $this->errors[] = 'this email must input!';
+            $this->errors[] = 'this username must input!';
         }
         if (isset($this->requestData['password_raw']) === false || strIsEmpty($this->requestData['password_raw'])) {
             $this->errors[] = 'this password must input!!';

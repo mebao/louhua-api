@@ -5,11 +5,11 @@
  *
  * The followings are the available columns in table 'housing_resources':
  * @property integer $id
- * @property string $have_id
- * @property string $user_have_id
+ * @property integer $have_id
+ * @property integer $user_have_id
  * @property string $user_have_name
- * @property string $want_id
- * @property string $user_want_id
+ * @property integer $want_id
+ * @property integer $user_want_id
  * @property integer $floor_level
  * @property integer $expect_floor_low
  * @property string $user_want_name
@@ -22,6 +22,7 @@
  * @property string $coop
  * @property string $action
  * @property string $unit_status
+ * @property integer $situation
  * @property string $date_created
  * @property string $date_updated
  * @property string $date_deleted
@@ -48,14 +49,14 @@ class HousingResources extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('date_created', 'required'),
-            array('floor_level, expect_floor_low, project_id, expect_floor_high', 'numerical', 'integerOnly' => true),
+            array('floor_level, expect_floor_low, project_id, expect_floor_high, user_have_id, user_want_id, want_id, have_id, situation', 'numerical', 'integerOnly' => true),
             array('user_have_name, user_want_name, project_name, price, exposure, action, unit_status', 'length', 'max' => 50),
             array('coop', 'length', 'max' => 10),
-            array('user_have_id, user_want_id, unit_type, want_id, have_id', 'length', 'max' => 20),
+            array('unit_type', 'length', 'max' => 20),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, user_have_id, user_have_name, user_want_id, floor_level, expect_floor_low, user_want_name, project_id, project_name, unit_type, expect_floor_high, price, exposure, coop, action, unit_status, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('id, user_have_id, user_have_name, user_want_id, floor_level, expect_floor_low, user_want_name, project_id, project_name, unit_type, expect_floor_high, price, exposure, coop, action, unit_status, situation, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -156,18 +157,24 @@ class HousingResources extends EActiveRecord {
         return parent::model($className);
     }
 
-    public function loadAllHaveNotWant($with, $order) {
-        $criteria = new CDbCriteria;
-        $criteria->addCondition("t.user_want_id is null");
-        $criteria->addCondition("t.have_id is not null");
-        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
-        $criteria->with = $with;
-        $criteria->order = $order;
-        return $this->findAll($criteria);
-    }
-
     public function loadByIdAndHaveId($id, $haveId) {
         return $this->getByAttributes(array("id" => $id, "have_id" => $haveId));
+    }
+
+    public function deleteByHaveId($haveId) {
+        return $this->updateAllByAttributes(array("is_deleted" => self::DB_IS_DELETED, "date_deleted" => date('Y-m-d H:i:s')), array('have_id' => $haveId));
+    }
+
+    public function deleteByWantId($wantId) {
+        return $this->updateAllByAttributes(array("is_deleted" => self::DB_IS_DELETED, "date_deleted" => date('Y-m-d H:i:s')), array('want_id' => $wantId));
+    }
+
+    public function loadByHaveIdAndUserWantId($haveId, $userWantId) {
+        return $this->getByAttributes(array('have_id' => $haveId, 'user_want_id' => $userWantId));
+    }
+
+    public function loadByWantIdAndUserHaveId($wantId, $userHaveId) {
+        return $this->getByAttributes(array('want_id' => $wantId, 'user_have_id' => $userHaveId));
     }
 
 }

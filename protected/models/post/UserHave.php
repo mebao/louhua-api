@@ -4,8 +4,8 @@
  * This is the model class for table "user_have".
  *
  * The followings are the available columns in table 'user_have':
- * @property string $id
- * @property string $user_id
+ * @property integer $id
+ * @property integer $user_id
  * @property integer $project_id
  * @property string $project_name
  * @property string $unit_type
@@ -38,8 +38,8 @@ class UserHave extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('date_created', 'required'),
-            array('project_id, floor_level', 'numerical', 'integerOnly' => true),
-            array('project_name,user_id', 'length', 'max' => 20),
+            array('project_id, floor_level, user_id', 'numerical', 'integerOnly' => true),
+            array('project_name', 'length', 'max' => 20),
             array('unit_type, exposure', 'length', 'max' => 50),
             array('price, coop', 'length', 'max' => 10),
             array('date_updated, date_deleted', 'safe'),
@@ -50,7 +50,6 @@ class UserHave extends EActiveRecord {
     }
 
     public function beforeValidate() {
-        $this->createId();
         return parent::beforeValidate();
     }
 
@@ -63,7 +62,7 @@ class UserHave extends EActiveRecord {
         return array(
             'user' => array(self::BELONGS_TO, 'AgentUser', 'user_id'),
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
-            'resoures' => array(self::HAS_ONE, 'HousingResources', 'have_id'),
+            'resoures' => array(self::HAS_MANY, 'HousingResources', 'have_id'),
         );
     }
 
@@ -132,23 +131,8 @@ class UserHave extends EActiveRecord {
         return parent::model($className);
     }
 
-    private function createId() {
-        if ($this->isNewRecord) {
-            $num = 1;
-            $criteria = new CDbCriteria;
-            $criteria->select = 'max(id) as id';
-            $model = $this->find($criteria);
-            if (isset($model)) {
-                $num = substr($model->id, 1) + 1;
-            }
-            $this->id = "H" . str_pad($num, 5, "0", STR_PAD_LEFT);
-        }
-    }
-
-    public function loadAllByUserId($userId) {
-        $with = array("resoures");
-        $order = array("order" => "t.date_created desc");
-        return $this->getAllByAttributes(array("user_id" => $userId), $with, $order);
+    public function loadAllByUserId($userId, $with = null, $options = null) {
+        return $this->getAllByAttributes(array("user_id" => $userId), $with, $options);
     }
 
     public function loadCount() {
@@ -161,6 +145,16 @@ class UserHave extends EActiveRecord {
 
     public function loadByIdAndUserId($id, $userId, $with = null) {
         return $this->getByAttributes(array("id" => $id, "user_id" => $userId), $with);
+    }
+
+    public function loadAllNotMe($userId, $with, $order) {
+        $criteria = new CDbCriteria;
+        $criteria->addCondition("t.is_show = 1");
+        $criteria->addCondition("t.user_id!={$userId}");
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
+        $criteria->with = $with;
+        $criteria->order = $order;
+        return $this->findAll($criteria);
     }
 
 }

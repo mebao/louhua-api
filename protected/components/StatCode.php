@@ -52,5 +52,11 @@ class StatCode {
     const HOUSE_ACTION_FAILED = "Deal Failed";
     const UNIT_STATUS_PENDING = "Pending";
     const UNIT_STATUS_MATCHED = "Matched";
+    const HOUSE_SITUATION_ONE = "1";
+    const HOUSE_SITUATION_TWO = "2";
+    const HOUSE_SITUATION_THREE = "3";
+    const HOUSE_SITUATION_FOUR = "4";
+    const DB_IS_DELETED = 1;
+    const DB_ISNOT_DELETED = 0;
 
 }

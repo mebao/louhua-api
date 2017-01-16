@@ -4,9 +4,8 @@
  * This is the model class for table "agent_user".
  *
  * The followings are the available columns in table 'agent_user':
- * @property string $id
+ * @property integer $id
  * @property string $wechat_id
- * @property string $wechat_name
  * @property string $username
  * @property string $real_name
  * @property string $password
@@ -38,16 +37,15 @@ class AgentUser extends EActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('id, date_created', 'required'),
+            array('date_created', 'required'),
             array('user_role', 'numerical', 'integerOnly' => true),
-            array('id', 'length', 'max' => 20),
             array('wechat_id, username, real_name, brokerage_name, avatar_url', 'length', 'max' => 200),
-            array('wechat_name, password_raw, cell, office_telephone, reco_number, subscribe', 'length', 'max' => 50),
+            array('password_raw, cell, office_telephone, reco_number, subscribe', 'length', 'max' => 50),
             array('password', 'length', 'max' => 64),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, wechat_id, wechat_name, username, real_name, password, password_raw, cell, brokerage_name, office_telephone, reco_number, avatar_url, user_role, subscribe, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('wechat_id, wechat_name, username, real_name, password, password_raw, cell, brokerage_name, office_telephone, reco_number, avatar_url, user_role, subscribe, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -68,7 +66,6 @@ class AgentUser extends EActiveRecord {
         return array(
             'id' => 'ID',
             'wechat_id' => 'Wechat',
-            'wechat_name' => 'Wechat Name',
             'username' => 'Username',
             'real_name' => 'Real Name',
             'password' => 'Password',
@@ -105,7 +102,6 @@ class AgentUser extends EActiveRecord {
 
         $criteria->compare('id', $this->id, true);
         $criteria->compare('wechat_id', $this->wechat_id, true);
-        $criteria->compare('wechat_name', $this->wechat_name, true);
         $criteria->compare('username', $this->username, true);
         $criteria->compare('real_name', $this->real_name, true);
         $criteria->compare('password', $this->password, true);
@@ -136,21 +132,7 @@ class AgentUser extends EActiveRecord {
         return parent::model($className);
     }
 
-    private function createId() {
-        if ($this->isNewRecord) {
-            $num = 1;
-            $criteria = new CDbCriteria;
-            $criteria->select = 'max(id) as id';
-            $model = $this->find($criteria);
-            if (isset($model)) {
-                $num = substr($model->id, 1) + 1;
-            }
-            $this->id = str_pad($num, 7, "0", STR_PAD_LEFT);
-        }
-    }
-
     public function createNewModel() {
-        $this->createId();
         $this->createPassword();
     }
 
