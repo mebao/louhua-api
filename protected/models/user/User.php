@@ -1,9 +1,9 @@
 <?php
 
 /**
- * This is the model class for table "agent_user".
+ * This is the model class for table "user".
  *
- * The followings are the available columns in table 'agent_user':
+ * The followings are the available columns in table 'user':
  * @property integer $id
  * @property string $wechat_id
  * @property string $username
@@ -21,13 +21,13 @@
  * @property string $date_updated
  * @property string $date_deleted
  */
-class AgentUser extends EActiveRecord {
+class User extends EActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'agent_user';
+        return 'user';
     }
 
     /**
@@ -126,7 +126,7 @@ class AgentUser extends EActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return AgentUser the static model class
+     * @return User the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);

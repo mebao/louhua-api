@@ -60,7 +60,7 @@ class UserHave extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'user' => array(self::BELONGS_TO, 'AgentUser', 'user_id'),
+            'user' => array(self::BELONGS_TO, 'User', 'user_id'),
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
             'resoures' => array(self::HAS_MANY, 'HousingResources', 'have_id'),
         );

@@ -23,7 +23,14 @@ class ApiViewOptions extends EApiViewService {
     }
 
     private function loadProject() {
-        $this->results->optionsProject = CHtml::listData(Project::model()->getAll(), 'id', 'name');
+        $list = array();
+        $models = Project::model()->loadAllByTime();
+        if (arrayNotEmpty($models)) {
+            foreach ($models as $m) {
+                $list[$m->id] = $m->name;
+            }
+        }
+        $this->results->optionsProject = $list;
     }
 
     private function loadOptionsExposure() {

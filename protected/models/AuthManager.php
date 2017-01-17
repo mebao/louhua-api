@@ -14,7 +14,7 @@
 class AuthManager {
 
     //验证登录权限
-    public function doTokenUserAutoLogin(AgentUser $user) {
+    public function doTokenUserAutoLogin(User $user) {
         $userId = $user->id;
         $username = $user->username;
         $authTokenUser = AuthTokenUser::model()->getFirstActiveByUserId($userId);

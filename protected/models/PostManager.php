@@ -79,7 +79,7 @@ class PostManager {
         $house->action = StatCode::HOUSE_ACTION_PENDING;
         $house->unit_status = StatCode::UNIT_STATUS_PENDING;
         $house->situation = StatCode::HOUSE_SITUATION_FOUR;
-        $user = AgentUser::model()->getById($model->user_id);
+        $user = User::model()->getById($model->user_id);
         if ($model instanceof UserWant) {
             $house->want_id = $model->id;
             $house->user_want_id = $user->id;

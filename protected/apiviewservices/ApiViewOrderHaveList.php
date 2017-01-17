@@ -52,8 +52,7 @@ class ApiViewOrderHaveList extends EApiViewService {
 
     private function loadUserhave() {
         $order = "t." . $this->order . " " . $this->type;
-        $with = array("user");
-        $models = UserHave::model()->loadAllNotMe($this->userId, $with, $order);
+        $models = UserHave::model()->loadAllNotMe($this->userId, null, $order);
         if (arrayNotEmpty($models)) {
             $this->setUserhave($models);
         }
@@ -69,8 +68,6 @@ class ApiViewOrderHaveList extends EApiViewService {
             $std->coop = $v->coop;
             $std->floor = $v->floor_level;
             $std->price = $v->price;
-            $user = $v->user;
-            $std->avatarUrl = $user->avatar_url;
             $std->postType = 'have';
             $this->postList[] = $std;
         }

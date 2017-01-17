@@ -39,7 +39,7 @@ class ApiPostPwdLogin extends EApiPostService {
 
     protected function validateRequestData() {
         if (isset($this->requestData['username']) && strIsEmpty($this->requestData['username']) === false) {
-            $user = AgentUser::model()->loadByUsernameAndRole($this->requestData['username']);
+            $user = User::model()->loadByUsernameAndRole($this->requestData['username']);
             if (is_null($user)) {
                 $this->errors[] = 'this username is not registered!';
             }

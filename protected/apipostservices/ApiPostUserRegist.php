@@ -18,11 +18,8 @@ class ApiPostUserRegist extends EApiPostService {
     }
 
     protected function validateRequestData() {
-        if (isset($this->requestData['avatar_url']) === false || strIsEmpty($this->requestData['avatar_url'])) {
-            $this->errors[] = 'this password must input!';
-        }
         if (isset($this->requestData['username']) && strIsEmpty($this->requestData['username']) === false) {
-            if (AgentUser::model()->exists('username=:username', array(':username' => $this->requestData['username']))) {
+            if (User::model()->exists('username=:username', array(':username' => $this->requestData['username']))) {
                 $this->errors[] = 'this username has been registered!';
             }
         } else {
@@ -55,7 +52,7 @@ class ApiPostUserRegist extends EApiPostService {
     }
 
     protected function doPostAction() {
-        $user = new AgentUser();
+        $user = new User();
         $user->setAttributes($this->requestData);
         $user->createNewModel();
         if ($user->save() === false) {

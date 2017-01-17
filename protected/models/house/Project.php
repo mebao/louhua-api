@@ -123,4 +123,13 @@ class Project extends EActiveRecord {
         return parent::model($className);
     }
 
+    public function loadAllByTime() {
+        $time = date('Y-m-d H:i:s');
+        $criteria = new CDbCriteria;
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
+        $criteria->addCondition("t.open_time  <= '{$time}'");
+        $criteria->addCondition("t.close_time >= '{$time}'");
+        return $this->findAll($criteria);
+    }
+
 }

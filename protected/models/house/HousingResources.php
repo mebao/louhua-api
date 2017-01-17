@@ -67,9 +67,9 @@ class HousingResources extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'userHave' => array(self::BELONGS_TO, 'AgentUser', 'user_have_id'),
+            'userHave' => array(self::BELONGS_TO, 'User', 'user_have_id'),
             'project' => array(self::BELONGS_TO, 'Project', 'project_id'),
-            'userWant' => array(self::BELONGS_TO, 'AgentUser', 'user_want_id'),
+            'userWant' => array(self::BELONGS_TO, 'User', 'user_want_id'),
             'postHave' => array(self::BELONGS_TO, 'UserHave', 'have_id'),
             'postWant' => array(self::BELONGS_TO, 'UserWant', 'want_id'),
         );
@@ -175,6 +175,34 @@ class HousingResources extends EActiveRecord {
 
     public function loadByWantIdAndUserHaveId($wantId, $userHaveId) {
         return $this->getByAttributes(array('want_id' => $wantId, 'user_have_id' => $userHaveId));
+    }
+
+    public function loadAllHaveNotWant() {
+        $criteria = new CDbCriteria;
+        $criteria->compare('t.action', StatCode::HOUSE_ACTION_PENDING);
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
+        $criteria->addCondition("t.user_want_id is null");
+        $criteria->addCondition("t.have_id is not null");
+
+        return $this->findAll($criteria);
+    }
+
+    public function loadAllWantNotHave() {
+        $criteria = new CDbCriteria;
+        $criteria->compare('t.action', StatCode::HOUSE_ACTION_PENDING);
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
+        $criteria->addCondition("t.user_have_id is null");
+        $criteria->addCondition("t.want_id is not null");
+        return $this->findAll($criteria);
+    }
+
+    public function loadAllPending() {
+        $criteria = new CDbCriteria;
+        $criteria->compare('t.action', StatCode::HOUSE_ACTION_PENDING);
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
+        $criteria->addCondition("t.user_have_id is not null");
+        $criteria->addCondition("t.user_want_id is not null");
+        return $this->findAll($criteria);
     }
 
 }
