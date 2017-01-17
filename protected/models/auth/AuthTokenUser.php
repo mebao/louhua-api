@@ -167,8 +167,8 @@ class AuthTokenUser extends EActiveRecord {
         return ($this->verified && $this->error_code === self::ERROR_NONE);
     }
 
-    public function createTokenUser($userId, $username, $userHostIp) {
-        return $this->createToken($userId, $username, StatCode::ROLE_USER, $userHostIp);
+    public function createTokenUser($userId, $username, $userRole, $userHostIp) {
+        return $this->createToken($userId, $username, $userRole, $userHostIp);
     }
 
     public function createToken($userId, $username, $userRole, $userHostIp) {
@@ -220,12 +220,8 @@ class AuthTokenUser extends EActiveRecord {
         $this->verified = true;
     }
 
-    public function getFirstActiveByUserId($userId) {
-        return $this->getByAttributes(array('user_id' => $userId, 'is_active' => '1', 'role' => StatCode::ROLE_USER));
-    }
-
-    public function getFirstActiveByDoctorId($doctorId) {
-        return $this->getByAttributes(array('user_id' => $doctorId, 'is_active' => '1', 'role' => StatCode::ROLE_DOCTOR));
+    public function getFirstActiveByUserIdAndRole($userId, $role = StatCode::ROLE_USER) {
+        return $this->getByAttributes(array('user_id' => $userId, 'is_active' => '1', 'role' => $role));
     }
 
     public function getUser() {

@@ -13,6 +13,7 @@
  */
 class ApiPostPwdLogin extends EApiPostService {
 
+    private $role;
     private $user;
     private $userManager;
     private $authManager;
@@ -38,10 +39,15 @@ class ApiPostPwdLogin extends EApiPostService {
     }
 
     protected function validateRequestData() {
+        if (isset($this->requestData['user_role']) === false || strIsEmpty($this->requestData['password'])) {
+            $this->role = StatCode::ROLE_USER;
+        } else {
+            $this->role = $this->requestData['user_role'];
+        }
         if (isset($this->requestData['username']) && strIsEmpty($this->requestData['username']) === false) {
-            $user = User::model()->loadByUsernameAndRole($this->requestData['username']);
+            $user = User::model()->loadByUsernameAndRole($this->requestData['username'], $this->role);
             if (is_null($user)) {
-                $this->errors[] = 'this username is not registered!';
+                $this->errors[] = 'this username is not registered or not token login system!';
             }
             $this->user = $user;
         } else {

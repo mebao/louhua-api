@@ -89,7 +89,7 @@ class CrmapiController extends Controller {
         try {
             switch ($model) {
                 case 'adminregist'://用户注册
-                    $apipost = new ApiPostUserRegist($post);
+                    $apipost = new ApiPostAdminRegist($post);
                     $output = $apipost->run();
                     break;
                 case 'adminlogin'://登录

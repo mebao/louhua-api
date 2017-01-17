@@ -65,8 +65,7 @@ class ApiViewCountPost extends EApiViewService {
 
     private function loadUserhave() {
         $options = array("order" => "t.id desc", "limit" => 4, "offset" => 0);
-        $with = array("user");
-        $models = UserHave::model()->getAll($with, $options);
+        $models = UserHave::model()->getAll(null, $options);
         if (arrayNotEmpty($models)) {
             $this->setUserhave($models);
         }
@@ -82,8 +81,6 @@ class ApiViewCountPost extends EApiViewService {
             $std->coop = $v->coop;
             $std->floor = $v->floor_level;
             $std->price = $v->price;
-            $user = $v->user;
-            $std->avatarUrl = $user->avatar_url;
             $this->postList[] = $std;
         }
     }

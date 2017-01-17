@@ -17,7 +17,8 @@ class AuthManager {
     public function doTokenUserAutoLogin(User $user) {
         $userId = $user->id;
         $username = $user->username;
-        $authTokenUser = AuthTokenUser::model()->getFirstActiveByUserId($userId);
+        $userRole = $user->user_role;
+        $authTokenUser = AuthTokenUser::model()->getFirstActiveByUserIdAndRole($userId, $userRole);
         if (isset($authTokenUser) && $authTokenUser->checkExpiry() === false) {
             // token is active but expired, so update it as 'inactive' (is_active=0). 
             $authTokenUser->deActivateToken();
@@ -27,14 +28,14 @@ class AuthManager {
         if (is_null($authTokenUser)) {
             $userHostIp = Yii::app()->request->userHostAddress;
             $deActivateFlag = false;
-            $authTokenUser = $this->createTokenUser($userId, $username, $userHostIp, $deActivateFlag);
+            $authTokenUser = $this->createTokenUser($userId, $username, $userRole, $userHostIp, $deActivateFlag);
         }
         return $authTokenUser;
     }
 
-    public function createTokenUser($userId, $username, $userHostIp, $deActivateFlag = true) {
+    public function createTokenUser($userId, $username, $userRole, $userHostIp, $deActivateFlag = true) {
         $tokenUser = new AuthTokenUser();
-        $tokenUser->createTokenUser($userId, $username, $userHostIp);
+        $tokenUser->createTokenUser($userId, $username, $userRole, $userHostIp);
         if ($deActivateFlag) {
             // deActivate all this user's tokens before creating a new one.
             $tokenUser->deActivateAllUserOldTokens($userId);
