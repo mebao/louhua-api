@@ -39,7 +39,7 @@ class ApiViewUserPostList extends EApiViewService {
     }
 
     private function loadHaveList() {
-        $with = array('resoures');
+        $with = null;
         $options = array("order" => "t.date_created desc");
         $models = UserHave::model()->loadAllByUserId($this->userId, $with, $options);
         if (arrayNotEmpty($models)) {
@@ -58,17 +58,12 @@ class ApiViewUserPostList extends EApiViewService {
             $std->price = $v->price;
             $std->time = $v->getDateCreated('Y/m/d H:i a');
             $std->postType = 'have';
-            $std->isDelete = 0;
-            $house = $v->resoures;
-            if (count($house) == 1 && strIsEmpty($house[0]->user_want_id)) {
-                $std->isDelete = 1;
-            }
             $this->postList[] = $std;
         }
     }
 
     public function loadWantList() {
-        $with = array('resoures');
+        $with = null;
         $options = array("order" => "t.date_created desc");
         $models = UserWant::model()->loadAllByUserId($this->userId, $with, $options);
         if (arrayNotEmpty($models)) {
@@ -87,11 +82,6 @@ class ApiViewUserPostList extends EApiViewService {
             $std->price = $v->price;
             $std->time = $v->getDateCreated('Y/m/d H:i a');
             $std->postType = 'want';
-            $std->isDelete = 0;
-            $house = $v->resoures;
-            if (count($house) == 1 && strIsEmpty($house[0]->user_have_id)) {
-                $std->isDelete = 1;
-            }
             $this->postList[] = $std;
         }
     }

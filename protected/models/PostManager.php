@@ -51,10 +51,10 @@ class PostManager {
             //重复预定
             if ($values['post_type'] == 'want') {
                 $model = UserWant::model()->getById($values['id']);
-                $oldmatch = HousingResources::model()->loadByHaveIdAndUserWantId($values['id'], $values['user_id']);
+                $oldmatch = HousingResources::model()->loadByWantIdAndUserHaveId($values['id'], $values['user_id']);
             } else {
                 $model = UserHave::model()->getById($values['id']);
-                $oldmatch = HousingResources::model()->loadByWantIdAndUserHaveId($values['id'], $values['user_id']);
+                $oldmatch = HousingResources::model()->loadByHaveIdAndUserWantId($values['id'], $values['user_id']);
             }
 
             if (isset($oldmatch) === false && isset($model)) {
