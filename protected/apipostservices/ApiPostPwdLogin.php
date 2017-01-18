@@ -13,15 +13,16 @@
  */
 class ApiPostPwdLogin extends EApiPostService {
 
-    private $role;
+    private $isadmin;
     private $user;
     private $userManager;
     private $authManager;
 
-    public function __construct($requestData) {
+    public function __construct($requestData, $isadmin = false) {
         parent::__construct($requestData);
         $this->userManager = new UserManager();
         $this->authManager = new AuthManager();
+        $this->isadmin = $isadmin;
     }
 
     protected function createOutput() {
@@ -39,15 +40,10 @@ class ApiPostPwdLogin extends EApiPostService {
     }
 
     protected function validateRequestData() {
-        if (isset($this->requestData['user_role']) === false || strIsEmpty($this->requestData['password'])) {
-            $this->role = StatCode::ROLE_USER;
-        } else {
-            $this->role = $this->requestData['user_role'];
-        }
         if (isset($this->requestData['username']) && strIsEmpty($this->requestData['username']) === false) {
-            $user = User::model()->loadByUsernameAndRole($this->requestData['username'], $this->role);
+            $user = User::model()->loadByUsername($this->requestData['username']);
             if (is_null($user)) {
-                $this->errors[] = 'this username is not registered or not token login system!';
+                $this->errors[] = 'this username is not registered!';
             }
             $this->user = $user;
         } else {
@@ -63,15 +59,23 @@ class ApiPostPwdLogin extends EApiPostService {
         $inputPwd = $this->user->encryptPassword($this->requestData['password']);
         $std = new stdClass();
         if ($this->user->password === $inputPwd) {
+            $role = $this->user->user_role;
+            if ($this->isadmin && (strIsEmpty($role) || $role == StatCode::ROLE_USER)) {
+                $this->errors[] = 'no token login system!';
+            }
+        } else {
+            $this->errors[] = 'password error!';
+        }
+        if ($this->hasErrors() === false) {
             $authTokenUser = $this->authManager->doTokenUserAutoLogin($this->user);
             $std->username = $this->user->username;
             $std->token = $authTokenUser->token;
+            $std->role = $this->user->user_role;
             $this->results->userinfo = $std;
         } else {
-            $this->errors[] = 'password error!';
             $std->status = self::RESPONSE_NO;
             $std->errorCode = 502;
-            $std->errorMsg = 'password error!';
+            $std->errorMsg = $this->getFirstErrors();
             $this->output = $std;
         }
     }

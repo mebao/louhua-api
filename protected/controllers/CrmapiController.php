@@ -35,6 +35,30 @@ class CrmapiController extends Controller {
                     $fileMgr = new FileManager();
                     $output = $fileMgr->getUploadToken();
                     break;
+                case 'needrole'://需要授权的admin
+                    $this->userLoginRequired($values);
+                    $apiview = new ApiViewUserNeedRole();
+                    $output = $apiview->loadApiViewData();
+                    break;
+                case 'wantpending':
+                    $this->userLoginRequired($values);
+                    $apiview = new ApiViewWantPending();
+                    $output = $apiview->loadApiViewData();
+                    break;
+                case 'searchhave':
+                    break;
+                case 'havepending':
+                    $this->userLoginRequired($values);
+                    $apiview = new ApiViewHavePending();
+                    $output = $apiview->loadApiViewData();
+                    break;
+                case 'searchwant':
+                    break;
+                case 'matchpengding':
+                    $this->userLoginRequired($values);
+                    $apiview = new ApiViewMacthPending();
+                    $output = $apiview->loadApiViewData();
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
@@ -93,8 +117,13 @@ class CrmapiController extends Controller {
                     $output = $apipost->run();
                     break;
                 case 'adminlogin'://登录
-                    $apipost = new ApiPostPwdLogin($post);
+                    $apipost = new ApiPostPwdLogin($post, true);
                     $output = $apipost->run();
+                    break;
+                case 'adminauth'://管理员授权
+                    $this->userLoginRequired($post);
+                    $mgr = new UserManager();
+                    $output = $mgr->adminAuth($post);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
@@ -157,7 +186,6 @@ class CrmapiController extends Controller {
         $authUserIdentity = $authMgr->authenticateUserByToken($username, $token);
         if (is_null($authUserIdentity) || $authUserIdentity->isAuthenticated === false) {
             $output->errorMsg = 'username or token error!';
-
             $this->renderJsonOutput($output);
         }
 

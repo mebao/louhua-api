@@ -162,8 +162,8 @@ class User extends EActiveRecord {
         return hash('sha256', $value);
     }
 
-    public function loadByUsernameAndRole($username, $role = StatCode::ROLE_USER) {
-        return $this->getByAttributes(array("username" => $username, "user_role" => $role));
+    public function loadByUsername($username) {
+        return $this->getByAttributes(array("username" => $username));
     }
 
     //加载所有需要授权的用户

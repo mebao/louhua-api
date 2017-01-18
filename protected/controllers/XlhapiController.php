@@ -17,15 +17,14 @@ class XlhapiController extends Controller {
 
     public function setDomainWhiteList() {
         $this->domainWhiteList = array(
-            "http://192.168.10.79",
-            "http://meb.mingyizd.com"
+            "http://wap.louhua.meb168.com",
         );
     }
 
     public function init() {
         parent::init();
         $this->setDomainWhiteList();
-        $domainList = array('http://meb.mingyizd.com');
+        $domainList = array('http://wap.louhua.meb168.com');
         $this->addHeaderSafeDomains($domainList);
         header('Access-Control-Allow-Credentials:true');      // 允许携带 用户认证凭据（也就是允许客户端发送的请求携带Cookie）        	
         header('Access-Control-Allow-Headers: Origin,X-Requested-With,Authorization,Accept,Content-Type,if-modified-since');
@@ -176,7 +175,7 @@ class XlhapiController extends Controller {
         $statusCode = 200;
         try {
             switch ($model) {
-                case 'updatedoctorprofile':
+                case '':
 
                     break;
                 default:

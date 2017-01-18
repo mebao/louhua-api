@@ -189,11 +189,11 @@ class AuthTokenUser extends EActiveRecord {
 
     // 验证 token。
     public function verifyTokenUser($token, $username) {
-        return $this->verifyByTokenAndUsernameAndRole($token, $username, StatCode::ROLE_USER);
+        return $this->verifyByTokenAndUsername($token, $username);
     }
 
-    public function verifyByTokenAndUsernameAndRole($token, $username, $userRole) {
-        $model = $this->getByTokenAndUsernameAndRole($token, $username, $userRole, true);
+    public function verifyByTokenAndUsername($token, $username) {
+        $model = $this->getByTokenAndUsername($token, $username, true);
         if (isset($model)) {
             $model->verifyToken();
             return $model;
@@ -202,9 +202,9 @@ class AuthTokenUser extends EActiveRecord {
         }
     }
 
-    private function getByTokenAndUsernameAndRole($token, $username, $userRole, $isActiveFlag = true) {
+    private function getByTokenAndUsername($token, $username, $isActiveFlag = true) {
         $isActive = $isActiveFlag === true ? 1 : 0;
-        $model = $this->getByAttributes(array('token' => $token, 'username' => $username, 'role' => $userRole, 'is_active' => $isActive));
+        $model = $this->getByAttributes(array('token' => $token, 'username' => $username, 'is_active' => $isActive));
         if (isset($model)) {
             return $model;
         }
