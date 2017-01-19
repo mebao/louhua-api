@@ -49,8 +49,8 @@ class UserManager {
             $std->status = 'ok';
             $std->errorCode = 200;
             $std->errorMsg = 'success';
-            $userarray = array('username' => $user->username, 'token' => $authTokenUser->token,
-                'role' => $user->user_role, 'isAccount' => $isAccount);
+            $userarray = array('accountId' => str_pad($user->id, 6, "0", STR_PAD_LEFT), 'id' => $user->id, 'username' => $user->username,
+                'token' => $authTokenUser->token, 'role' => $user->user_role, 'isAccount' => $isAccount);
             $std->results = array('userinfo' => $userarray);
         }
         return $std;
