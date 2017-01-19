@@ -174,4 +174,8 @@ class User extends EActiveRecord {
         return $this->findAll($criteria);
     }
 
+    public function loadByWxuserid($wxuserid) {
+        return $this->getByAttributes(array('wx_userid' => $wxuserid));
+    }
+
 }

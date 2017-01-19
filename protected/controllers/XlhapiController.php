@@ -70,6 +70,21 @@ class XlhapiController extends Controller {
                     $apiview = new ApiViewOptions();
                     $output = $apiview->loadApiViewData();
                     break;
+                //微信部分接口
+                case 'tasktoken':
+                    $mgr = new WechatManager();
+                    $output = $mgr->updateAccessToken();
+                    break;
+                case 'wechatregist':
+                    $values['url'] = $this->createAbsoluteUrl("xlhapi/wechatregist");
+                    $mgr = new UserManager();
+                    $output = $mgr->createUserByWechat($values);
+                    break;
+                case 'wechatlogin':
+                    $values['url'] = $this->createAbsoluteUrl("xlhapi/wechatlogin");
+                    $mgr = new UserManager();
+                    $output = $mgr->wechatLogin($values);
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
@@ -130,6 +145,10 @@ class XlhapiController extends Controller {
             switch ($model) {
                 case 'userregist'://用户注册
                     $apipost = new ApiPostUserRegist($post);
+                    $output = $apipost->run();
+                    break;
+                case 'useraccount'://用户补全信息
+                    $apipost = new ApiPostUserAccount($post);
                     $output = $apipost->run();
                     break;
                 case 'userlogin'://登录

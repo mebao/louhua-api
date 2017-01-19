@@ -59,6 +59,11 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewMacthPending();
                     $output = $apiview->loadApiViewData();
                     break;
+
+                //微信部分接口
+                case '':
+                    break;
+
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
