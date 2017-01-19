@@ -75,11 +75,6 @@ class XlhapiController extends Controller {
                     $mgr = new WechatManager();
                     $output = $mgr->updateAccessToken();
                     break;
-                case 'wechatregist':
-                    $values['url'] = $this->createAbsoluteUrl("xlhapi/wechatregist");
-                    $mgr = new UserManager();
-                    $output = $mgr->createUserByWechat($values);
-                    break;
                 case 'wechatlogin':
                     $values['url'] = $this->createAbsoluteUrl("xlhapi/wechatlogin");
                     $mgr = new UserManager();
