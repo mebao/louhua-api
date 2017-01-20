@@ -46,7 +46,7 @@ class ApiPostUserAccount extends EApiPostService {
         $std->status = self::RESPONSE_NO;
         $std->errorCode = 502;
         $std->errorMsg = 'operation failed';
-        $user = user::model()->getById($this->requestData['user_id']);
+        $user = User::model()->getById($this->requestData['user_id']);
         if (isset($user)) {
             $user->setAttributes($this->requestData);
             if ($user->save() === false) {

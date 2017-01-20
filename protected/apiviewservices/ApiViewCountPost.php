@@ -18,7 +18,7 @@ class ApiViewCountPost extends EApiViewService {
 
     public function __construct() {
         parent::__construct();
-        $this->project = array("studio" => 0, "1" => 0, "1+1" => 0, "2" => 0, "2+1" => 0, "3" => 0);
+        $this->project = array("studio" => 0, "one" => 0, "oneandone" => 0, "two" => 0, "twoandone" => 0, "three" => 0);
         $this->postList = array();
     }
 
