@@ -15,7 +15,7 @@ class ApiViewHavePending extends EApiViewService {
 
     private $haveList;
 
-    public function __construct($values) {
+    public function __construct() {
         parent::__construct();
         $this->haveList = array();
     }
@@ -48,6 +48,7 @@ class ApiViewHavePending extends EApiViewService {
             $std->id = $v->id;
             $std->haveId = $v->have_id;
             $std->userHaveId = $v->user_have_id;
+            $std->userHaveName = $v->user_have_name;
             $std->projectId = $v->project_id;
             $std->projectName = $v->project_name;
             $std->type = $v->unit_type;
@@ -55,7 +56,7 @@ class ApiViewHavePending extends EApiViewService {
             $std->coop = $v->coop;
             $std->floor = $v->floor_level;
             $std->price = $v->price;
-            $this->postList[] = $std;
+            $this->haveList[] = $std;
         }
     }
 

@@ -54,7 +54,7 @@ class CrmapiController extends Controller {
                     break;
                 case 'searchwant':
                     break;
-                case 'matchpengding':
+                case 'matchpending':
                     $this->userLoginRequired($values);
                     $apiview = new ApiViewMacthPending();
                     $output = $apiview->loadApiViewData();

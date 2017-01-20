@@ -48,6 +48,7 @@ class ApiViewWantPending extends EApiViewService {
             $std->id = $v->id;
             $std->wantId = $v->want_id;
             $std->userWantId = $v->user_want_id;
+            $std->userWantName = $v->user_want_name;
             $std->projectId = $v->project_id;
             $std->projectName = $v->project_name;
             $std->type = $v->unit_type;

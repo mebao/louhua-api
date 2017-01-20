@@ -24,11 +24,9 @@ class UserManager {
         $std->status = 'no';
         $std->errorCode = 502;
         $std->errorMsg = 'login failed!';
-        $wxMgr = new WechatManager();
-        $data = $wxMgr->wechatAuth($value);
-        if (isset($data['UserId'])) {
-            $wxuserid = $data['UserId'];
-            $user = user::model()->loadByWxuserid($wxuserid);
+        if (isset($value['userid'])) {
+            $wxuserid = $value['userid'];
+            $user = User::model()->loadByWxuserid($wxuserid);
             //未登陆过
             $isAccount = 1;
             if (isset($user) === false) {
