@@ -20,10 +20,10 @@ class ApiPostUserRegist extends EApiPostService {
     protected function validateRequestData() {
         if (isset($this->requestData['username']) && strIsEmpty($this->requestData['username']) === false) {
             if (User::model()->exists('username=:username', array(':username' => $this->requestData['username']))) {
-                $this->errors[] = 'this username has been registered!';
+                $this->errors[] = 'this email has been registered!';
             }
         } else {
-            $this->errors[] = 'this username must input!';
+            $this->errors[] = 'this email must input!';
         }
         if (isset($this->requestData['password_raw']) === false || strIsEmpty($this->requestData['password_raw'])) {
             $this->errors[] = 'this password must input!!';
@@ -32,13 +32,13 @@ class ApiPostUserRegist extends EApiPostService {
             $this->errors[] = 'this wechat_id must input!!';
         }
         if (isset($this->requestData['real_name']) === false || strIsEmpty($this->requestData['real_name'])) {
-            $this->errors[] = 'this real_name must input!!';
+            $this->errors[] = 'this full name must input!!';
         }
         if (isset($this->requestData['brokerage_name']) === false || strIsEmpty($this->requestData['brokerage_name'])) {
-            $this->errors[] = 'this brokerage_name must input!!';
+            $this->errors[] = 'this company must input!!';
         }
         if (isset($this->requestData['cell']) === false || strIsEmpty($this->requestData['cell'])) {
-            $this->errors[] = 'this cell must input!!';
+            $this->errors[] = 'this cell phone must input!!';
         }
         if (isset($this->requestData['office_telephone']) === false || strIsEmpty($this->requestData['office_telephone'])) {
             $this->errors[] = 'this office_telephone must input!!';

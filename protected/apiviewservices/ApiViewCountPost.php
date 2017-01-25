@@ -51,7 +51,24 @@ class ApiViewCountPost extends EApiViewService {
         foreach ($models as $v) {
             $sum+= $v->id;
             $avg+=$v->coop;
-            $this->project[$v->unit_type] = $v->id;
+            if ($v->unit_type == 'studio') {
+                $this->project['studio'] = $v->id;
+            }
+            if ($v->unit_type == '1') {
+                $this->project['one'] = $v->id;
+            }
+            if ($v->unit_type == '1+1') {
+                $this->project['oneandone'] = $v->id;
+            }
+            if ($v->unit_type == '2') {
+                $this->project['two'] = $v->id;
+            }
+            if ($v->unit_type == '2+1') {
+                $this->project['twoandone'] = $v->id;
+            }
+            if ($v->unit_type == '3') {
+                $this->project['three'] = $v->id;
+            }
         }
         $this->project['totalPosts'] = $sum;
         $coop = 0;

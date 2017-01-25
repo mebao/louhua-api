@@ -52,8 +52,11 @@ class WechatManager {
         //根据code获取openid
         $url = sprintf(WechatRequestUrl::qy_user_get, $account->access_token, $code);
         $data = https($url);
-      
-        $loginurl = 'http://wap.louhua.meb168.com/#/layout/wechatlogin?userid=' . $data['UserId'];
+        if (isset($data['UserId'])) {
+            $loginurl = 'http://wap.louhua.meb168.com/#/layout/wechatlogin?userid=' . $data['UserId'];
+        } else {
+            $loginurl = 'http://wap.louhua.meb168.com/#/layout/wechatlogin?userid=error';
+        }
         header('Location: ' . $loginurl);
         Yii::app()->end();
     }
