@@ -14,7 +14,7 @@
 class ApiViewOrderHaveList extends EApiViewService {
 
     private $postList;
-    private $userId;
+    private $values;
     private $order;
     private $type;
 
@@ -32,7 +32,7 @@ class ApiViewOrderHaveList extends EApiViewService {
         }
         $this->order = $order;
         $this->type = $type;
-        $this->userId = $values['user_id'];
+        $this->values = $values;
         $this->postList = array();
     }
 
@@ -52,7 +52,7 @@ class ApiViewOrderHaveList extends EApiViewService {
 
     private function loadUserhave() {
         $order = "t." . $this->order . " " . $this->type;
-        $models = UserHave::model()->loadAllNotMe($this->userId, null, $order);
+        $models = UserHave::model()->loadAllNotMe($this->values, null, $order);
         if (arrayNotEmpty($models)) {
             $this->setUserhave($models);
         }

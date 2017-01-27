@@ -147,10 +147,17 @@ class UserHave extends EActiveRecord {
         return $this->getByAttributes(array("id" => $id, "user_id" => $userId), $with);
     }
 
-    public function loadAllNotMe($userId, $with, $order) {
+    public function loadAllNotMe($values, $with, $order) {
         $criteria = new CDbCriteria;
         $criteria->addCondition("t.is_show = 1");
-        $criteria->addCondition("t.user_id!={$userId}");
+        $criteria->addCondition("t.user_id != " . $values['user_id']);
+        if (isset($values['unit_type']) && strIsEmpty($values['unit_type']) === false) {
+            $unit = str_replace(" ", "+", $values['unit_type']);
+            $criteria->compare('t.unit_type', $unit);
+        }
+        if (isset($values['exposure']) && strIsEmpty($values['exposure']) === false) {
+            $criteria->compare('t.exposure', $values['exposure']);
+        }
         $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
         $criteria->with = $with;
         $criteria->order = $order;

@@ -14,13 +14,13 @@
 class ApiViewOrderWantList extends EApiViewService {
 
     private $postList;
-    private $userId;
+    private $values;
     private $order;
     private $type;
 
     public function __construct($values) {
         parent::__construct();
-        $this->userId = $values['user_id'];
+        $this->values = $values;
         if (isset($values['order']) === false) {
             $order = 'id';
         } else {
@@ -52,7 +52,7 @@ class ApiViewOrderWantList extends EApiViewService {
 
     private function loadUserhave() {
         $order = "t." . $this->order . " " . $this->type;
-        $models = UserWant::model()->loadAllNotMe($this->userId, null, $order);
+        $models = UserWant::model()->loadAllNotMe($this->values, null, $order);
         if (arrayNotEmpty($models)) {
             $this->setUserWant($models);
         }
