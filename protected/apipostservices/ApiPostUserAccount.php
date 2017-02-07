@@ -33,9 +33,6 @@ class ApiPostUserAccount extends EApiPostService {
         if (isset($this->requestData['cell']) === false || strIsEmpty($this->requestData['cell'])) {
             $this->errors[] = 'this cell must input!';
         }
-        if (isset($this->requestData['office_telephone']) === false || strIsEmpty($this->requestData['office_telephone'])) {
-            $this->errors[] = 'this office_telephone must input!';
-        }
         if (isset($this->requestData['reco_number']) === false || strIsEmpty($this->requestData['reco_number'])) {
             $this->errors[] = 'this reco_number must input!';
         }

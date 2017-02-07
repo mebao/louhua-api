@@ -70,6 +70,11 @@ class XlhapiController extends Controller {
                     $apiview = new ApiViewOptions();
                     $output = $apiview->loadApiViewData();
                     break;
+                case 'userinfo':
+                    $user = $this->userLoginRequired($values);
+                    $apiview = new ApiViewUserInfo($user);
+                    $output = $apiview->loadApiViewData();
+                    break;
                 //微信部分接口
                 case 'tasktoken':
                     $mgr = new WechatManager();
