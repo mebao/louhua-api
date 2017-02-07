@@ -25,6 +25,7 @@ class ApiViewUserInfo extends EApiViewService {
 
     private function setUser() {
         $std = new stdClass();
+        $std->user_id = $this->user->id;
         $std->username = $this->user->username;
         $std->wechat_id = $this->user->wechat_id;
         $std->real_name = $this->user->real_name;
@@ -32,6 +33,7 @@ class ApiViewUserInfo extends EApiViewService {
         $std->cell = $this->user->cell;
         $std->office_telephone = $this->user->office_telephone;
         $std->reco_number = $this->user->reco_number;
+        $std->subscribe = $this->user->subscribe;
         $this->results->userinfo = $std;
     }
 
