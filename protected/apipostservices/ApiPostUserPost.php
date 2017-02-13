@@ -84,9 +84,6 @@ class ApiPostUserPost extends EApiPostService {
         if (isset($this->requestData['price']) === false || strIsEmpty($this->requestData['price'])) {
             $this->errors[] = 'this price must input!';
         }
-        if (isset($this->requestData['coop']) === false || strIsEmpty($this->requestData['coop'])) {
-            $this->errors[] = 'this coop must input!';
-        }
     }
 
     protected function doPostAction() {
