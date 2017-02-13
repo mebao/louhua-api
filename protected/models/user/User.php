@@ -182,4 +182,11 @@ class User extends EActiveRecord {
         return $this->getByAttributes(array('wx_userid' => $wxuserid));
     }
 
+    public function userVerify() {
+        if (strIsEmpty($this->date_verified)) {
+            return 0;
+        }
+        return 1;
+    }
+
 }
