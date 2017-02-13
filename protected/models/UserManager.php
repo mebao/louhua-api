@@ -27,7 +27,7 @@ class UserManager {
         if (isset($value['userid'])) {
             $wxuserid = $value['userid'];
             $user = User::model()->loadByWxuserid($wxuserid);
-            //未登陆过
+            //未登陆过 自动创建一个账号
             $isAccount = 1;
             if (isset($user) === false) {
                 $user = new User();
@@ -36,6 +36,7 @@ class UserManager {
                 $user->username = $wxuserid . 'wu' . substr(time(), 2);
                 $user->password_raw = rand(10000, 1000000);
                 $user->createNewModel();
+                $user->date_verified = date('Y-m-d H:i:s');
                 $user->save();
             } else {
                 if (strIsEmpty($user->wechat_id) === false) {

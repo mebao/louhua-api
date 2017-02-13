@@ -166,6 +166,10 @@ class User extends EActiveRecord {
         return $this->getByAttributes(array("username" => $username));
     }
 
+    public function loadByUsernameAndRole($username, $role = StatCode::ROLE_USER) {
+        return $this->getByAttributes(array("username" => $username, 'user_role' => $role));
+    }
+
     //加载所有需要授权的用户
     public function loadAllNeedRole() {
         $criteria = new CDbCriteria;

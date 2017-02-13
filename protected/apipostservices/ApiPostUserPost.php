@@ -75,14 +75,16 @@ class ApiPostUserPost extends EApiPostService {
     }
 
     protected function doPostAction() {
-        $isSuccess = $this->postManager->createPost($this->requestData);
-        if ($isSuccess === false) {
+        $id = $this->postManager->createPost($this->requestData);
+        if ($id === 0) {
             $this->errors[] = "";
             $std = new stdClass();
             $std->status = self::RESPONSE_NO;
             $std->errorCode = 502;
             $std->errorMsg = 'post failed!';
             $this->output = $std;
+        } else {
+            $this->results->id = $id;
         }
     }
 

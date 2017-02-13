@@ -3,7 +3,7 @@
 class PostManager {
 
     public function createPost($values) {
-        $isSuccess = false;
+        $id = 0;
         $trans = Yii::app()->db->beginTransaction();
         try {
             if ($values['post_type'] == 'want') {
@@ -18,13 +18,13 @@ class PostManager {
             //创建房源
             $this->createHouseSoure($model);
             $trans->commit();
-            $isSuccess = true;
+            $id = $model->id;
         } catch (CDbException $cdb) {
             $trans->rollback();
         } catch (Exception $e) {
             $trans->rollback();
         }
-        return $isSuccess;
+        return $id;
     }
 
     public function createMatch($values) {

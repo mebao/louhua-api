@@ -81,9 +81,8 @@ class XlhapiController extends Controller {
                     break;
                 case 'sendemail':
                     $email = $values['email'];
-                    $url = $this->createAbsoluteUrl("xlhapi/verifyemail");
                     $mgr = new EmailManager();
-                    $output = $mgr->sendEmailVerifyUser($email, $url);
+                    $output = $mgr->sendEmailVerifyUser($email);
                     break;
                 case 'verifyemail':
                     $authMgr = new AuthManager();
@@ -109,13 +108,6 @@ class XlhapiController extends Controller {
                     } else {
                         $this->responseMsg($values);
                     }
-                    break;
-                case 'test':
-                    $account = WechatAccount::model()->loadByWxName("tongxin");
-                    $uri = urlencode($this->createAbsoluteUrl("xlhapi/wxcodelogin"));
-                    $url = sprintf("https://qy.weixin.qq.com/cgi-bin/loginpage?corp_id=%s&redirect_uri=%s&usertype=member", $account->corp_id, $uri);
-                    print_r($url);
-                    exit;
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
