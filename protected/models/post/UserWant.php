@@ -147,6 +147,9 @@ class UserWant extends EActiveRecord {
         if (isset($values['exposure']) && strIsEmpty($values['exposure']) === false) {
             $criteria->compare('t.exposure', $values['exposure']);
         }
+        if (isset($values['project_id']) && strIsEmpty($values['project_id']) === false) {
+            $criteria->compare('t.project_id', $values['project_id']);
+        }
         $criteria->addCondition("t.is_show = 1");
         $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
         $criteria->with = $with;
