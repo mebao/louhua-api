@@ -15,9 +15,11 @@ class ApiViewCountPost extends EApiViewService {
 
     private $project;
     private $postList;
+    private $projectId;
 
-    public function __construct() {
+    public function __construct($projectId) {
         parent::__construct();
+        $this->projectId = $projectId;
         $this->project = array("studio" => 0, "one" => 0, "oneandone" => 0, "two" => 0, "twoandone" => 0, "three" => 0);
         $this->postList = array();
     }
@@ -33,14 +35,29 @@ class ApiViewCountPost extends EApiViewService {
     }
 
     protected function loadData() {
-        $this->loadCount();
+        $this->loadProject();
         $this->loadUserhave();
     }
 
-    private function loadCount() {
-        $models = UserHave::model()->loadCount();
-        if (arrayNotEmpty($models)) {
-            $this->setCount($models);
+    private function loadProject() {
+        $model = null;
+        if (strIsEmpty($this->projectId)) {
+            $projects = Project::model()->loadDefault();
+            if (arrayNotEmpty($projects)) {
+                $model = $projects[0];
+            }
+        } else {
+            $model = Project::model()->getById($this->projectId, array('advertisingPictures'));
+        }
+
+        if (isset($model)) {
+            $models = UserHave::model()->loadCount($this->projectId);
+            if (arrayNotEmpty($models)) {
+                $this->setCount($models);
+            }
+            $this->project['id'] = $model->id;
+            $this->project['name'] = $model->name;
+            $this->project['pictures'] = arrayExtractValue($model->advertisingPictures, 'picture_url');
         }
         $this->results->project = $this->project;
     }

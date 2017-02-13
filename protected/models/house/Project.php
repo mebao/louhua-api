@@ -132,4 +132,15 @@ class Project extends EActiveRecord {
         return $this->findAll($criteria);
     }
 
+    public function loadDefault() {
+        $time = date('Y-m-d H:i:s');
+        $criteria = new CDbCriteria;
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
+        $criteria->addCondition("t.open_time  <= '{$time}'");
+        $criteria->addCondition("t.close_time >= '{$time}'");
+        $criteria->with = array('advertisingPictures');
+        $criteria->order = 't.open_time desc';
+        return $this->findAll($criteria);
+    }
+
 }

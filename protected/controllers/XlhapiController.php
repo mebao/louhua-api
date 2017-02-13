@@ -51,7 +51,11 @@ class XlhapiController extends Controller {
                     $output = $apiview->loadApiViewData();
                     break;
                 case 'project':
-                    $apiview = new ApiViewCountPost();
+                    $projectid = null;
+                    if (isset($values['projectid'])) {
+                        $projectid = $values['projectid'];
+                    }
+                    $apiview = new ApiViewCountPost($projectid);
                     $output = $apiview->loadApiViewData();
                     break;
                 case 'orderhavelist':
@@ -74,6 +78,16 @@ class XlhapiController extends Controller {
                     $user = $this->userLoginRequired($values);
                     $apiview = new ApiViewUserInfo($user);
                     $output = $apiview->loadApiViewData();
+                    break;
+                case 'sendemail':
+                    $email = $values['email'];
+                    $url = $this->createAbsoluteUrl("xlhapi/verifyemail");
+                    $mgr = new EmailManager();
+                    $output = $mgr->sendEmailVerifyUser($email, $url);
+                    break;
+                case 'verifyemail':
+                    $authMgr = new AuthManager();
+                    $authMgr->verifyAuthSmsCode($values['email'], $values['code']);
                     break;
                 //微信部分接口
                 case 'tasktoken':

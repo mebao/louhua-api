@@ -135,10 +135,11 @@ class UserHave extends EActiveRecord {
         return $this->getAllByAttributes(array("user_id" => $userId), $with, $options);
     }
 
-    public function loadCount() {
+    public function loadCount($projectId) {
         $criteria = new CDbCriteria;
         $criteria->select = 'SUM(coop) as coop,unit_type,COUNT(1) as id';
         $criteria->compare('is_deleted', self::DB_ISNOT_DELETED);
+        $criteria->compare('project_id', $projectId);
         $criteria->group = "unit_type";
         return $this->findAll($criteria);
     }
