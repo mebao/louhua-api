@@ -35,6 +35,9 @@ class ApiPostUserPost extends EApiPostService {
     }
 
     protected function validateRequestData() {
+        if (isset($this->requestData['project_id']) === false || strIsEmpty($this->requestData['project_id'])) {
+            $this->errors[] = 'this project_name must choose!';
+        }
         if (isset($this->requestData['post_type']) && strIsEmpty($this->requestData['post_type']) === false) {
             if ($this->requestData['post_type'] == 'want') {
                 if (isset($this->requestData['expect_floor_low']) === false || strIsEmpty($this->requestData['expect_floor_low'])) {
@@ -42,10 +45,22 @@ class ApiPostUserPost extends EApiPostService {
                 }
                 if (isset($this->requestData['expect_floor_high']) === false || strIsEmpty($this->requestData['expect_floor_high'])) {
                     $this->errors[] = 'this expect floor high must input!';
+                } else {
+                    //楼层高度不得超过本身楼层最高
+                    $project = Project::model()->getById($this->requestData['project_id']);
+                    if ($this->requestData['expect_floor_high'] > $project->level_limits) {
+                        $this->errors[] = 'this floor level must less than the project limits!';
+                    }
                 }
             } elseif ($this->requestData['post_type'] == 'have') {
                 if (isset($this->requestData['floor_level']) === false || strIsEmpty($this->requestData['floor_level'])) {
                     $this->errors[] = 'this floor level must input!';
+                } else {
+                    //楼层高度不得超过本身楼层最高
+                    $project = Project::model()->getById($this->requestData['project_id']);
+                    if ($this->requestData['floor_level'] > $project->level_limits) {
+                        $this->errors[] = 'this floor level must less than  the project limits!';
+                    }
                 }
             } else {
                 $this->errors[] = 'this post_type error!';
