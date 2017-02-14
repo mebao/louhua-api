@@ -63,6 +63,8 @@ class ApiViewOrderWantList extends EApiViewService {
         foreach ($models as $v) {
             $std = new stdClass();
             $std->id = $v->id;
+            $std->projectId = $v->project_id;
+            $std->projectName = $v->project_name;
             $std->type = $v->unit_type;
             $std->exposure = $v->exposure;
             $std->coop = $v->coop;

@@ -55,6 +55,8 @@ class ApiViewUserPostList extends EApiViewService {
         foreach ($models as $v) {
             $std = new stdClass();
             $std->id = $v->id;
+            $std->projectId = $v->project_id;
+            $std->projectName = $v->project_name;
             $std->type = $v->unit_type;
             $std->exposure = $v->exposure;
             $std->coop = $v->coop;
@@ -84,6 +86,8 @@ class ApiViewUserPostList extends EApiViewService {
         foreach ($models as $v) {
             $std = new stdClass();
             $std->id = $v->id;
+            $std->projectId = $v->project_id;
+            $std->projectName = $v->project_name;
             $std->type = $v->unit_type;
             $std->exposure = $v->exposure;
             $std->floor = $v->expect_floor_low . "-" . $v->expect_floor_high;
