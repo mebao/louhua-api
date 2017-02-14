@@ -47,7 +47,8 @@ class XlhapiController extends Controller {
                     break;
                 case 'postlist':
                     $user = $this->userLoginRequired($values);
-                    $apiview = new ApiViewUserPostList($user->id);
+                    $values['user_id'] = $user->id;
+                    $apiview = new ApiViewUserPostList($values);
                     $output = $apiview->loadApiViewData();
                     break;
                 case 'project':
@@ -70,7 +71,7 @@ class XlhapiController extends Controller {
                     $apiview = new ApiViewOrderWantList($values);
                     $output = $apiview->loadApiViewData();
                     break;
-                case 'selectoptions':
+                case 'selectoptions'://下拉 
                     $apiview = new ApiViewOptions();
                     $output = $apiview->loadApiViewData();
                     break;
@@ -80,9 +81,10 @@ class XlhapiController extends Controller {
                     $output = $apiview->loadApiViewData();
                     break;
                 case 'sendemail':
+                    $url = $this->createAbsoluteUrl("xlhapi/verifyemail");
                     $email = $values['email'];
                     $mgr = new EmailManager();
-                    $output = $mgr->sendEmailVerifyUser($email);
+                    $output = $mgr->sendEmailVerifyUser($email, $url);
                     break;
                 case 'verifyemail':
                     $authMgr = new AuthManager();
@@ -215,10 +217,15 @@ class XlhapiController extends Controller {
         if (isset($id) === false) {
             $this->renderJsonOutput(array('status' => EApiViewService::RESPONSE_NO, 'errorCode' => ErrorList::BAD_REQUEST, 'errorMsg' => 'Error: Parameter <b>id</b> is missing'));
         }
+        $post = $_POST;
         $statusCode = 200;
+        if (empty($post)) {
+            //json参数
+            $post = CJSON::decode($this->getPostData());
+        }
         try {
             switch ($model) {
-                case '':
+                case 'updatemypost':
 
                     break;
                 default:

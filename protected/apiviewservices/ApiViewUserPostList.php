@@ -13,12 +13,12 @@
  */
 class ApiViewUserPostList extends EApiViewService {
 
-    private $userId;
+    private $values;
     private $postList;
 
-    public function __construct($userId) {
+    public function __construct($values) {
         parent::__construct();
-        $this->userId = $userId;
+        $this->values = $values;
         $this->postList = array();
     }
 
@@ -33,18 +33,22 @@ class ApiViewUserPostList extends EApiViewService {
     }
 
     protected function loadData() {
-        $this->loadHaveList();
-        $this->loadWantList();
-        $this->listorder();
+        if (isset($this->values['post_type']) && $this->values['post_type'] === 'want') {
+            $this->loadWantList();
+        } else {
+            $this->loadHaveList();
+        }
+        //$this->listorder();
     }
 
     private function loadHaveList() {
-        $with = null;
+        $with = array('resoures');
         $options = array("order" => "t.date_created desc");
-        $models = UserHave::model()->loadAllByUserId($this->userId, $with, $options);
+        $models = UserHave::model()->loadAllByUserId($this->values, $with, $options);
         if (arrayNotEmpty($models)) {
             $this->setHave($models);
         }
+        $this->results->postList = $this->postList;
     }
 
     private function setHave($models) {
@@ -58,17 +62,22 @@ class ApiViewUserPostList extends EApiViewService {
             $std->price = $v->price;
             $std->time = $v->getDateCreated('Y/m/d H:i a');
             $std->postType = 'have';
+            $std->isupdate = 0;
+            $house = $v->resoures;
+            if (count($house) === 1 && strIsEmpty($house[0]->user_want_id)) {
+                $std->isupdate = 1;
+            }
             $this->postList[] = $std;
         }
     }
 
     public function loadWantList() {
-        $with = null;
-        $options = array("order" => "t.date_created desc");
-        $models = UserWant::model()->loadAllByUserId($this->userId, $with, $options);
+        $with = array('resoures');
+        $models = UserWant::model()->loadAllByUserId($this->values, $with);
         if (arrayNotEmpty($models)) {
             $this->setWant($models);
         }
+        $this->results->postList = $this->postList;
     }
 
     private function setWant($models) {
@@ -77,11 +86,15 @@ class ApiViewUserPostList extends EApiViewService {
             $std->id = $v->id;
             $std->type = $v->unit_type;
             $std->exposure = $v->exposure;
-            $std->coop = $v->coop;
             $std->floor = $v->expect_floor_low . "-" . $v->expect_floor_high;
             $std->price = $v->price;
             $std->time = $v->getDateCreated('Y/m/d H:i a');
             $std->postType = 'want';
+            $std->isupdate = 0;
+            $house = $v->resoures;
+            if (count($house) === 1 && strIsEmpty($house[0]->user_have_id)) {
+                $std->isupdate = 1;
+            }
             $this->postList[] = $std;
         }
     }
