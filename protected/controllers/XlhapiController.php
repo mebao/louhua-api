@@ -217,16 +217,19 @@ class XlhapiController extends Controller {
         if (isset($id) === false) {
             $this->renderJsonOutput(array('status' => EApiViewService::RESPONSE_NO, 'errorCode' => ErrorList::BAD_REQUEST, 'errorMsg' => 'Error: Parameter <b>id</b> is missing'));
         }
-        $post = $_POST;
+        $values = $_POST;
         $statusCode = 200;
-        if (empty($post)) {
+        if (empty($values)) {
             //json参数
-            $post = CJSON::decode($this->getPostData());
+            $values = CJSON::decode($this->getPostData());
         }
         try {
             switch ($model) {
                 case 'updatemypost':
-
+                    $user = $this->userLoginRequired($values);
+                    $values['user_id'] = $user->id;
+                    $postMgr = new PostManager();
+                    $output = $postMgr->updatePost($id, $values);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));

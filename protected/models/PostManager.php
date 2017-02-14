@@ -27,6 +27,44 @@ class PostManager {
         return $id;
     }
 
+    public function updatePost($id, $values) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'update faild!';
+        //检查该房源是否有人预定了
+        if ($values['post_type'] == 'want') {
+            //楼层高度不得超过本身楼层最高
+            if (isset($values['expect_floor_high']) && strIsEmpty($values['expect_floor_high']) === false) {
+                $project = Project::model()->getById($values['project_id']);
+                if ($values['expect_floor_high'] > $project->level_limits) {
+                    $std->errorMsg = 'this floor high must less than the project limits!';
+                    return $std;
+                }
+            }
+        } else if ($values['post_type'] == 'have') {
+            if (isset($values['floor_level']) && strIsEmpty($values['floor_level']) === false) {
+                $project = Project::model()->getById($values['project_id']);
+                if ($values['floor_level'] > $project->level_limits) {
+                    $std->errorMsg = 'this floor level must less than the project limits!';
+                    return $std;
+                }
+            }
+            $model = UserHave::model()->loadByIdAndUserId($id, $values['user_id']);
+        }
+        //若有 这能修改 若无 这已被预定
+        if (isset($model)) {
+            $model->setAttributes($values);
+            $model->update(array_keys($values));
+            $std->status = 'ok';
+            $std->errorCode = 200;
+            $std->errorMsg = 'success';
+        } else {
+            $std->errorMsg = 'No authorization operation!';
+        }
+        return $std;
+    }
+
     public function createMatch($values) {
         $isSuccess = false;
         $criteria = new CDbCriteria;
