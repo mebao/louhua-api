@@ -43,13 +43,15 @@ class ApiPostUserWatch extends EApiPostService {
     protected function doPostAction() {
         $manger = new PostManager();
         $isSuccess = $manger->createMatch($this->requestData);
-        if ($isSuccess === false) {
-            $this->errors[] = 'watch faild!';
+        if ($isSuccess == 'again' || $isSuccess == 'no') {
+            $this->errors[] = 'watch again!';
             $std = new stdClass();
             $std->status = self::RESPONSE_NO;
             $std->errorCode = 502;
-            $std->errorMsg = 'watch faild!';
+            $std->errorMsg = 'watch again!';
             $this->output = $std;
+        } else {
+            $this->results->msg = $isSuccess;
         }
     }
 

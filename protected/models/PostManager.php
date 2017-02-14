@@ -66,7 +66,7 @@ class PostManager {
     }
 
     public function createMatch($values) {
-        $isSuccess = false;
+        $isSuccess = 'no';
         $criteria = new CDbCriteria;
         $criteria->compare('t.is_deleted', StatCode::DB_ISNOT_DELETED);
         //可以查出来一个(修改)或者一个查不出来(创建)
@@ -83,7 +83,7 @@ class PostManager {
         if (isset($house)) {
             $house->setAttributes($updateArr);
             if ($house->update(array_keys($updateArr))) {
-                $isSuccess = true;
+                $isSuccess = 'ok';
             }
         } else {
             //重复预定
@@ -99,8 +99,10 @@ class PostManager {
                 $newhouse = $this->createHouseSoure($model, false);
                 $newhouse->setAttributes($updateArr);
                 if ($newhouse->save()) {
-                    $isSuccess = true;
+                    $isSuccess = 'wait';
                 }
+            } else {
+                $isSuccess = 'again';
             }
         }
         return $isSuccess;
