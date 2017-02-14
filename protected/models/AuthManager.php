@@ -51,4 +51,25 @@ class AuthManager {
         return $authUserIdentity;
     }
 
+    public function verifyAuthSmsCode($email, $code) {
+        $smsVerify = AuthSmsVerify::model()->loadByEmailAndCode($email, $code);
+        if (is_null($smsVerify)) {
+            $smsVerify = new AuthSmsVerify();
+            $smsVerify->addError('code', 'null');
+        } else {
+            $smsVerify->checkValidity();
+        }
+        //验证成功
+        if ($smsVerify->isValid()) {
+            $user = User::model()->loadByUsernameAndRole($email);
+            $user->date_verified = date('Y-m-d H:i:s');
+            $user->update(array('date_verified'));
+            $url = 'http://wap.louhua.meb168.com/#/layout/emailValidate?status=ok';
+        } else {
+            $url = 'http://wap.louhua.meb168.com/#/layout/emailValidate?status=no&error=' . $smsVerify->getError('code');
+        }
+        header('Location:' . $url);
+        Yii::app()->end();
+    }
+
 }

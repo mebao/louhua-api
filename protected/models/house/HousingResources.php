@@ -205,4 +205,20 @@ class HousingResources extends EActiveRecord {
         return $this->findAll($criteria);
     }
 
+    public function loadWantNotUserHave($wantId) {
+        $criteria = new CDbCriteria;
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
+        $criteria->compare('t.want_id', $wantId);
+        $criteria->addCondition("t.user_have_id is null");
+        return $this->find($criteria);
+    }
+
+    public function loadHaveNotUserWant($haveId) {
+        $criteria = new CDbCriteria;
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
+        $criteria->compare('t.have_id', $haveId);
+        $criteria->addCondition("t.user_want_id is null");
+        return $this->find($criteria);
+    }
+
 }
