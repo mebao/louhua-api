@@ -62,6 +62,10 @@ class ApiPostUserRegist extends EApiPostService {
             $std->errorCode = 502;
             $std->errorMsg = 'user register failed';
             $this->output = $std;
+        } else {
+            //发送邮件
+            $mgr = new EmailManager();
+            $mgr->sendEmailVerifyUser($user->username, $this->requestData['url']);
         }
     }
 

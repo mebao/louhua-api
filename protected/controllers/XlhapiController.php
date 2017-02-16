@@ -170,6 +170,8 @@ class XlhapiController extends Controller {
         try {
             switch ($model) {
                 case 'userregist'://用户注册
+                    $url = $this->createAbsoluteUrl("xlhapi/verifyemail");
+                    $post['url'] = $url;
                     $apipost = new ApiPostUserRegist($post);
                     $output = $apipost->run();
                     break;
