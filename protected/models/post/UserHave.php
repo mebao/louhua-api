@@ -178,6 +178,12 @@ class UserHave extends EActiveRecord {
         if (isset($values['project_id']) && strIsEmpty($values['project_id']) === false) {
             $criteria->compare('t.project_id', $values['project_id']);
         }
+        if (isset($values['floor_low']) && strIsEmpty($values['floor_low']) === false) {
+            $criteria->addCondition("t.floor_level >=" . $values['floor_low']);
+        }
+        if (isset($values['floor_high']) && strIsEmpty($values['floor_high']) === false) {
+            $criteria->addCondition("t.floor_level <=" . $values['floor_high']);
+        }
         $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
         $criteria->with = $with;
         $criteria->order = $order;

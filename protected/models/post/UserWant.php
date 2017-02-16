@@ -166,6 +166,12 @@ class UserWant extends EActiveRecord {
         if (isset($values['project_id']) && strIsEmpty($values['project_id']) === false) {
             $criteria->compare('t.project_id', $values['project_id']);
         }
+        if (isset($values['floor_low']) && strIsEmpty($values['floor_low']) === false) {
+            $criteria->addCondition("t.expect_floor_low >=" . $values['floor_low']);
+        }
+        if (isset($values['floor_high']) && strIsEmpty($values['floor_high']) === false) {
+            $criteria->addCondition("t.expect_floor_high <=" . $values['floor_high']);
+        }
         $criteria->addCondition("t.is_show = 1");
         $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
         $criteria->with = $with;
