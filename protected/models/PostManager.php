@@ -42,6 +42,7 @@ class PostManager {
                     return $std;
                 }
             }
+            $model = UserWant::model()->loadByIdAndUserId($id, $values['user_id']);
         } else if ($values['post_type'] == 'have') {
             if (isset($values['floor_level']) && strIsEmpty($values['floor_level']) === false) {
                 $project = Project::model()->getById($values['project_id']);
