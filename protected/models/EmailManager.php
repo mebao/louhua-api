@@ -22,7 +22,7 @@ class EmailManager {
         //生成数据库数据
         $output = array('status' => 'ok');
         $model = new AuthSmsVerify();
-        $model->createRecord($email);
+        $model->createRecord($email, true);
         $user = User::model()->loadByUsernameAndRole($email);
         if (isset($user)) {
             $data = new stdClass();
