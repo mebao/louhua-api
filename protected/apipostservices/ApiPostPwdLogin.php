@@ -72,6 +72,7 @@ class ApiPostPwdLogin extends EApiPostService {
             $std->token = $authTokenUser->token;
             $std->role = $this->user->user_role;
             $std->verify = $this->user->userVerify();
+            $std->wx_userid = $this->user->wx_userid;
             $this->results->userinfo = $std;
         } else {
             $std->status = self::RESPONSE_NO;

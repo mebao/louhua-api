@@ -61,6 +61,33 @@ class WechatManager {
         Yii::app()->end();
     }
 
+    //更新用户微信userid
+    public function updateWxUserId($user, $value, $wxname = 'tongxin') {
+        if (strIsEmpty($user->wx_userid) === false) {
+            return 'no';
+        }
+        $account = WechatAccount::model()->loadByWxName($wxname);
+        $code = '';
+        if (isset($value['code'])) {
+            //请求中有code，通过code获取openid
+            $code = $value['code'];
+        } else {
+            //返回连接 用作第二次获取openid
+            $redirect_uri = urlencode($value['url']);
+            $url = sprintf(WechatRequestUrl::qy_code_get, $account->corp_id, $redirect_uri);
+            header('Location: ' . $url);
+            Yii::app()->end();
+        }
+        //根据code获取openid
+        $url = sprintf(WechatRequestUrl::qy_user_get, $account->access_token, $code);
+        $data = https($url);
+        if (isset($data['UserId'])) {
+            $user->wx_userid = $data['UserId'];
+            $user->update(array('wx_userid'));
+        }
+        return 'ok';
+    }
+
     public function wechatcode($value) {
         if (isset($value['auth_code'])) {
             $account = WechatAccount::model()->loadByWxName("tongxin");
