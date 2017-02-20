@@ -113,7 +113,7 @@ class XlhapiController extends Controller {
                     break;
                 case 'wxuserid':
                     $user = $this->userLoginRequired($values);
-                    $values['url'] = $this->createAbsoluteUrl("xlhapi/wxuserid");
+                    $values['url'] = $this->createAbsoluteUrl("xlhapi/wxuserid?username=" . $values['username'] . "&token=" . $values['token']);
                     $mgr = new WechatManager();
                     $output = $mgr->updateWxUserId($user, $values);
                     break;

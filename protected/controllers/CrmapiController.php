@@ -59,7 +59,11 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewMacthPending();
                     $output = $apiview->loadApiViewData();
                     break;
-
+                case 'searchadmins':
+                    //$this->userLoginRequired($values);
+                    $apiview = new ApiViewSearchAdmin($values);
+                    $output = $apiview->loadApiViewData();
+                    break;
                 //微信部分接口
                 case '':
                     break;

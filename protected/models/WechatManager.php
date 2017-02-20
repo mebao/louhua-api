@@ -63,9 +63,6 @@ class WechatManager {
 
     //更新用户微信userid
     public function updateWxUserId($user, $value, $wxname = 'tongxin') {
-        if (strIsEmpty($user->wx_userid) === false) {
-            return 'no';
-        }
         $account = WechatAccount::model()->loadByWxName($wxname);
         $code = '';
         if (isset($value['code'])) {
@@ -85,7 +82,8 @@ class WechatManager {
             $user->wx_userid = $data['UserId'];
             $user->update(array('wx_userid'));
         }
-        return 'ok';
+        header('Location: http://wap.louhua.meb168.com/#/layout/project');
+        Yii::app()->end();
     }
 
     public function wechatcode($value) {
