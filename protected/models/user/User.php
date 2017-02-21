@@ -39,7 +39,7 @@ class User extends EActiveRecord {
         return array(
             array('date_created', 'required'),
             array('user_role', 'numerical', 'integerOnly' => true),
-            array('wechat_id, username, real_name, brokerage_name, avatar_url', 'length', 'max' => 200),
+            array('wechat_id, wechat_name, username, real_name, brokerage_name, avatar_url', 'length', 'max' => 200),
             array('password_raw, cell, office_telephone, reco_number, subscribe', 'length', 'max' => 50),
             array('password', 'length', 'max' => 64),
             array('date_updated, date_deleted', 'safe'),

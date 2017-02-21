@@ -121,7 +121,7 @@ class CrmapiController extends Controller {
         }
         try {
             switch ($model) {
-                case 'adminregist'://用户注册需认证
+                case 'adminregist'://超管添加管理员
                     $apipost = new ApiPostAdminRegist($post);
                     $output = $apipost->run();
                     break;
@@ -157,11 +157,17 @@ class CrmapiController extends Controller {
         if (isset($id) === false) {
             $this->renderJsonOutput(array('status' => EApiViewService::RESPONSE_NO, 'errorCode' => ErrorList::BAD_REQUEST, 'errorMsg' => 'Error: Parameter <b>id</b> is missing'));
         }
+        $post = $_POST;
         $statusCode = 200;
+        if (empty($post)) {
+            //json参数
+            $post = CJSON::decode($this->getPostData());
+        }
         try {
             switch ($model) {
-                case 'updatedoctorprofile':
-
+                case 'updateadmin':
+                    $userMgr = new UserManager();
+                    $output = $userMgr->updateAdmin($id, $post);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));

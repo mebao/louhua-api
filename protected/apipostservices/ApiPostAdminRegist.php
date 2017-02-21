@@ -20,32 +20,36 @@ class ApiPostAdminRegist extends EApiPostService {
     protected function validateRequestData() {
         if (isset($this->requestData['username']) && strIsEmpty($this->requestData['username']) === false) {
             if (User::model()->exists('username=:username', array(':username' => $this->requestData['username']))) {
-                $this->errors[] = 'this username has been registered!';
+                $this->errors[] = 'this adminname has been registered!';
             }
         } else {
-            $this->errors[] = 'this username must input!';
+            $this->errors[] = 'this adminname must input!';
         }
-        if (isset($this->requestData['password_raw']) === false || strIsEmpty($this->requestData['password_raw'])) {
-            $this->errors[] = 'this password must input!';
-        }
+
         if (isset($this->requestData['wechat_id']) === false || strIsEmpty($this->requestData['wechat_id'])) {
             $this->errors[] = 'this wechat_id must input!';
         }
-        if (isset($this->requestData['real_name']) === false || strIsEmpty($this->requestData['real_name'])) {
-            $this->errors[] = 'this real_name must input!';
+        if (isset($this->requestData['wechat_name']) === false || strIsEmpty($this->requestData['wechat_name'])) {
+            $this->errors[] = 'this wechat_name must input!';
         }
+//        if (isset($this->requestData['real_name']) === false || strIsEmpty($this->requestData['real_name'])) {
+//            $this->errors[] = 'this real_name must input!';
+//        }
         if (isset($this->requestData['brokerage_name']) === false || strIsEmpty($this->requestData['brokerage_name'])) {
             $this->errors[] = 'this brokerage_name must input!';
         }
         if (isset($this->requestData['cell']) === false || strIsEmpty($this->requestData['cell'])) {
             $this->errors[] = 'this cell must input!';
+        } else {
+            $this->requestData['password_raw'] = $this->requestData['cell'];
         }
         if (isset($this->requestData['office_telephone']) === false || strIsEmpty($this->requestData['office_telephone'])) {
             $this->errors[] = 'this office_telephone must input!';
         }
-//        if (isset($this->requestData['user_role']) === false || strIsEmpty($this->requestData['user_role'])) {
-//            $this->errors[] = 'choose your role!';
-//        }
+        if (isset($this->requestData['user_role']) === false || strIsEmpty($this->requestData['user_role'])) {
+            $this->requestData['user_role'] = StatCode::ROLE_ADMIN;
+            //$this->errors[] = 'choose your role!';
+        }
     }
 
     protected function doPostAction() {
@@ -59,6 +63,8 @@ class ApiPostAdminRegist extends EApiPostService {
             $std->errorCode = 502;
             $std->errorMsg = 'user register failed';
             $this->output = $std;
+        } else {
+            $this->results->userid = $user->id;
         }
     }
 

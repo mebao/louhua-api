@@ -55,4 +55,27 @@ class UserManager {
         return $std;
     }
 
+    public function updateAdmin($id, $values) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'update failed';
+        $user = User::model()->getById($id);
+        if (isset($user)) {
+            if ($user->cell !== $values['cell']) {
+                $user->password_raw = $values['cell'];
+                $user->password = $user->encryptPassword($values['cell']);
+            }
+            $user->setAttributes($values);
+            if ($user->save()) {
+                $std->status = 'ok';
+                $std->errorCode = 200;
+                $std->errorMsg = 'success';
+            }
+        } else {
+            $std->errorMsg = 'user is null';
+        }
+        return $std;
+    }
+
 }
