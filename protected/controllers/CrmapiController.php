@@ -64,6 +64,11 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewSearchAdmin($values);
                     $output = $apiview->loadApiViewData();
                     break;
+                case 'searchagents':
+                    //$this->userLoginRequired($values);
+                    $apiview = new ApiViewSearchAgent($values);
+                    $output = $apiview->loadApiViewData();
+                    break;
                 //微信部分接口
                 case '':
                     break;
@@ -95,7 +100,11 @@ class CrmapiController extends Controller {
             switch ($model) {
                 case 'deleteadmin':
                     $userMgr = new UserManager();
-                    $output = $userMgr->deleteAdmin($id);
+                    $output = $userMgr->deleteUser($id);
+                    break;
+                case 'deleteagent':
+                    $userMgr = new UserManager();
+                    $output = $userMgr->deleteUser($id);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
@@ -138,6 +147,10 @@ class CrmapiController extends Controller {
                     $mgr = new UserManager();
                     $output = $mgr->adminAuth($post);
                     break;
+                case 'agentregist'://超管添加用户
+                    $apipost = new ApiPostAgentRegist($post);
+                    $output = $apipost->run();
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
@@ -171,7 +184,11 @@ class CrmapiController extends Controller {
             switch ($model) {
                 case 'updateadmin':
                     $userMgr = new UserManager();
-                    $output = $userMgr->updateAdmin($id, $post);
+                    $output = $userMgr->updateUser($id, $post);
+                    break;
+                case 'updateagent':
+                    $userMgr = new UserManager();
+                    $output = $userMgr->updateUser($id, $post);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));

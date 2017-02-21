@@ -6,6 +6,16 @@ class StatCode {
     const ROLE_USER = 3;    // 普通用户
     const ROLE_ADMIN = 2; // 管理员
     const ROLE_SUPERADMIN = 1; // 超管
+
+    public static function loadRoleUser() {
+        return array(
+            self::ROLE_SUPERADMIN => "Super Admin",
+            self::ROLE_ADMIN => "Admin",
+            self::ROLE_USER => "Bay Street Agent",
+            self::ROLE_OTHER => "Other Brokerage Agent"
+        );
+    }
+
     const ERROR_UNKNOWN = '未知';
     const UNIT_TYPE_STUDIO = "studio";
     const UNIT_TYPE_ONE = "1";

@@ -56,6 +56,8 @@ class User extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'have' => array(self::HAS_MANY, 'UserHave', 'user_id'),
+            'want' => array(self::HAS_MANY, 'UserWant', 'user_id'),
         );
     }
 

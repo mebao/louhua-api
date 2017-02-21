@@ -55,7 +55,7 @@ class UserManager {
         return $std;
     }
 
-    public function updateAdmin($id, $values) {
+    public function updateUser($id, $values) {
         $std = new stdClass();
         $std->status = 'no';
         $std->errorCode = 502;
@@ -78,7 +78,7 @@ class UserManager {
         return $std;
     }
 
-    public function deleteAdmin($id) {
+    public function deleteUser($id) {
         $std = new stdClass();
         $std->status = 'no';
         $std->errorCode = 502;

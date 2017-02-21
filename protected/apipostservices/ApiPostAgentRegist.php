@@ -1,6 +1,6 @@
 <?php
 
-class ApiPostAdminRegist extends EApiPostService {
+class ApiPostAgentRegist extends EApiPostService {
 
     public function __construct($requestData) {
         parent::__construct($requestData);
@@ -20,10 +20,10 @@ class ApiPostAdminRegist extends EApiPostService {
     protected function validateRequestData() {
         if (isset($this->requestData['username']) && strIsEmpty($this->requestData['username']) === false) {
             if (User::model()->exists('username=:username', array(':username' => $this->requestData['username']))) {
-                $this->errors[] = 'this adminname has been registered!';
+                $this->errors[] = 'this email has been registered!';
             }
         } else {
-            $this->errors[] = 'this adminname must input!';
+            $this->errors[] = 'this email must input!';
         }
 
         if (isset($this->requestData['wechat_id']) === false || strIsEmpty($this->requestData['wechat_id'])) {
@@ -33,8 +33,7 @@ class ApiPostAdminRegist extends EApiPostService {
             $this->errors[] = 'this wechat_name must input!';
         }
         if (isset($this->requestData['real_name']) === false || strIsEmpty($this->requestData['real_name'])) {
-            $this->requestData['real_name'] = $this->requestData['username'];
-            //$this->errors[] = 'this real_name must input!';
+            $this->errors[] = 'this trade name must input!';
         }
         if (isset($this->requestData['brokerage_name']) === false || strIsEmpty($this->requestData['brokerage_name'])) {
             $this->errors[] = 'this brokerage_name must input!';
@@ -48,8 +47,7 @@ class ApiPostAdminRegist extends EApiPostService {
             $this->errors[] = 'this office_telephone must input!';
         }
         if (isset($this->requestData['user_role']) === false || strIsEmpty($this->requestData['user_role'])) {
-            $this->requestData['user_role'] = StatCode::ROLE_ADMIN;
-            //$this->errors[] = 'choose your role!';
+            $this->errors[] = 'choose your role!';
         }
     }
 
@@ -57,6 +55,7 @@ class ApiPostAdminRegist extends EApiPostService {
         $user = new User();
         $user->setAttributes($this->requestData);
         $user->createNewModel();
+        $user->date_verified = date('Y-m-d H:i:s');
         if ($user->save() === false) {
             $this->errors[] = '注册失败!';
             $std = new stdClass();
