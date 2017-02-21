@@ -78,4 +78,22 @@ class UserManager {
         return $std;
     }
 
+    public function deleteAdmin($id) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'update failed';
+        $user = User::model()->getById($id);
+        if (isset($user)) {
+            if ($user->delete(false)) {
+                $std->status = 'ok';
+                $std->errorCode = 200;
+                $std->errorMsg = 'success';
+            }
+        } else {
+            $std->errorMsg = 'user is null';
+        }
+        return $std;
+    }
+
 }

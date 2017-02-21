@@ -93,6 +93,10 @@ class CrmapiController extends Controller {
         $statusCode = 200;
         try {
             switch ($model) {
+                case 'deleteadmin':
+                    $userMgr = new UserManager();
+                    $output = $userMgr->deleteAdmin($id);
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
