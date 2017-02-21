@@ -124,6 +124,34 @@ class CrmapiController extends Controller {
         }
     }
 
+    //具体信息展示页面
+    public function actionView($model, $id) {
+        $values = $_GET;
+        $statusCode = 200;
+        try {
+            switch ($model) {
+                case 'adminuserinfo'://取消预约
+                    $apiview = new ApiViewAdminUserInfo($id);
+                    $output = $apiview->loadApiViewData();
+                    break;
+                default:
+                    $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
+                    Yii::app()->end();
+            }
+        } catch (CHttpException $chex) {
+            $statusCode = 400;
+        } catch (CDbException $cdbex) {
+            $statusCode = 503;
+        } catch (CException $cex) {
+            $statusCode = 500;
+        }
+        if (empty($output)) {
+            $this->_sendResponse(200, sprintf('No result', $model));
+        } else {
+            $this->renderJsonOutput($output, true, $statusCode);
+        }
+    }
+
     //创建
     public function actionCreate($model) {
         $post = $_POST;
