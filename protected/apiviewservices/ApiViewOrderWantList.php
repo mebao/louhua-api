@@ -52,7 +52,8 @@ class ApiViewOrderWantList extends EApiViewService {
 
     private function loadUserhave() {
         $order = "t." . $this->order . " " . $this->type;
-        $models = UserWant::model()->loadAllNotMe($this->values, null, $order);
+        $with = array('resoures');
+        $models = UserWant::model()->loadAllNotMe($this->values, $with, $order);
         if (arrayNotEmpty($models)) {
             $this->setUserWant($models);
         }
@@ -71,6 +72,15 @@ class ApiViewOrderWantList extends EApiViewService {
             $std->floor = $v->expect_floor_low . "-" . $v->expect_floor_high;
             $std->price = $v->price;
             $std->postType = 'want';
+            $std->hasMacth = 1;
+            $house = $v->resoures;
+            if (count($house) === 1 && strIsEmpty($house[0]->user_want_id)) {
+                $std->hasMacth = 0;
+            }
+            $std->canMatch = 1;
+            if ($v->user_id == $this->values['user_id']) {
+                $std->canMatch = 0;
+            }
             $this->postList[] = $std;
         }
     }

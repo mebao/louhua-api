@@ -167,7 +167,7 @@ class UserHave extends EActiveRecord {
     public function loadAllNotMe($values, $with, $order) {
         $criteria = new CDbCriteria;
         $criteria->addCondition("t.is_show = 1");
-        $criteria->addCondition("t.user_id != " . $values['user_id']);
+        //$criteria->addCondition("t.user_id != " . $values['user_id']);
         if (isset($values['unit_type']) && strIsEmpty($values['unit_type']) === false) {
             $unit = str_replace(" ", "+", $values['unit_type']);
             $criteria->compare('t.unit_type', $unit);
