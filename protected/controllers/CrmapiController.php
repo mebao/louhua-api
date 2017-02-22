@@ -64,13 +64,24 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewSearchAdmin($values);
                     $output = $apiview->loadApiViewData();
                     break;
+                case 'exportadmins'://admin数据导出
+                    $apiview = new ApiViewSearchAdmin($values);
+                    $data = $apiview->loadApiViewData();
+                    $mgr = new ExeclManage();
+                    $mgr->exportadmins($data->results->admins);
+                    break;
                 case 'searchagents':
                     //$this->userLoginRequired($values);
                     $apiview = new ApiViewSearchAgent($values);
                     $output = $apiview->loadApiViewData();
                     break;
+
                 //微信部分接口
-                case '':
+                case 'exportagents':
+                    $apiview = new ApiViewSearchAgent($values);
+                    $data = $apiview->loadApiViewData();
+                    $mgr = new ExeclManage();
+                    $mgr->exportagents($data->results->agents);
                     break;
 
                 default:
