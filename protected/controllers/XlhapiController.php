@@ -57,7 +57,7 @@ class XlhapiController extends Controller {
                         $projectid = $values['projectid'];
                     }
                     $userId = "";
-                    if (isset($value['username'])) {
+                    if (isset($values['username'])) {
                         $user = $this->userLoginRequired($values);
                         $userId = $user->id;
                     }
