@@ -53,13 +53,17 @@ class ApiPostUserPost extends EApiPostService {
                     }
                 }
             } elseif ($this->requestData['post_type'] == 'have') {
-                if (isset($this->requestData['floor_level']) === false || strIsEmpty($this->requestData['floor_level'])) {
-                    $this->errors[] = 'this floor level must input!';
+                //楼层高度不得超过本身楼层最高
+                if (isset($this->requestData['floor_low']) === false || strIsEmpty($this->requestData['floor_low'])) {
+                    $this->errors[] = 'this expect floor low must input!';
+                }
+                if (isset($this->requestData['floor_high']) === false || strIsEmpty($this->requestData['floor_high'])) {
+                    $this->errors[] = 'this expect floor high must input!';
                 } else {
                     //楼层高度不得超过本身楼层最高
                     $project = Project::model()->getById($this->requestData['project_id']);
-                    if ($this->requestData['floor_level'] > $project->level_limits) {
-                        $this->errors[] = 'this floor level must less than  the project limits!';
+                    if ($this->requestData['floor_high'] > $project->level_limits) {
+                        $this->errors[] = 'this floor high must less than the project limits!';
                     }
                 }
             } else {

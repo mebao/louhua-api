@@ -38,7 +38,7 @@ class UserHave extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('date_created', 'required'),
-            array('project_id, floor_level, user_id', 'numerical', 'integerOnly' => true),
+            array('project_id, floor_level, floor_low, floor_high, user_id', 'numerical', 'integerOnly' => true),
             array('project_name', 'length', 'max' => 20),
             array('unit_type, exposure', 'length', 'max' => 50),
             array('price, coop', 'length', 'max' => 10),
@@ -179,15 +179,22 @@ class UserHave extends EActiveRecord {
             $criteria->compare('t.project_id', $values['project_id']);
         }
         if (isset($values['floor_low']) && strIsEmpty($values['floor_low']) === false) {
-            $criteria->addCondition("t.floor_level >=" . $values['floor_low']);
+            $criteria->addCondition("t.floor_low >=" . $values['floor_low']);
         }
         if (isset($values['floor_high']) && strIsEmpty($values['floor_high']) === false) {
-            $criteria->addCondition("t.floor_level <=" . $values['floor_high']);
+            $criteria->addCondition("t.floor_low <=" . $values['floor_high']);
         }
         $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
         $criteria->with = $with;
         $criteria->order = $order;
         return $this->findAll($criteria);
+    }
+
+    public function getFloor() {
+        if (strIsEmpty($this->floor_low) || strIsEmpty($this->floor_high)) {
+            return '';
+        }
+        return $this->floor_low . '-' . $this->floor_high;
     }
 
 }

@@ -56,7 +56,12 @@ class XlhapiController extends Controller {
                     if (isset($values['projectid'])) {
                         $projectid = $values['projectid'];
                     }
-                    $apiview = new ApiViewCountPost($projectid);
+                    $userId = "";
+                    if (isset($value['username'])) {
+                        $user = $this->userLoginRequired($values);
+                        $userId = $user->id;
+                    }
+                    $apiview = new ApiViewCountPost($projectid, $userId);
                     $output = $apiview->loadApiViewData();
                     break;
                 case 'orderhavelist':

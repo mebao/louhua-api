@@ -70,7 +70,7 @@ class ApiViewOrderHaveList extends EApiViewService {
             $std->type = $v->unit_type;
             $std->exposure = $v->exposure;
             $std->coop = $v->coop;
-            $std->floor = $v->floor_level;
+            $std->floor = $v->getFloor();
             $std->price = $v->price;
             $std->postType = 'have';
 //            $std->hasMacth = 1;

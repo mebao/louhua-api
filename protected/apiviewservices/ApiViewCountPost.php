@@ -16,10 +16,12 @@ class ApiViewCountPost extends EApiViewService {
     private $project;
     private $postList;
     private $projectId;
+    private $userId;
 
-    public function __construct($projectId) {
+    public function __construct($projectId, $userId) {
         parent::__construct();
         $this->projectId = $projectId;
+        $this->userId = $userId;
         $this->project = array("studio" => 0, "one" => 0, "oneandone" => 0, "two" => 0, "twoandone" => 0, "three" => 0);
         $this->postList = array();
     }
@@ -115,9 +117,13 @@ class ApiViewCountPost extends EApiViewService {
             $std->type = $v->unit_type;
             $std->exposure = $v->exposure;
             $std->coop = $v->coop;
-            $std->floor = $v->floor_level;
+            $std->floor = $v->getFloor();
             $std->price = $v->price;
             $std->postType = 'have';
+            $std->canMatch = 1;
+            if ($this->userId == $v->user_id) {
+                $std->canMatch = 0;
+            }
             $this->postList[] = $std;
         }
     }

@@ -44,9 +44,9 @@ class PostManager {
             }
             $model = UserWant::model()->loadByIdAndUserId($id, $values['user_id']);
         } else if ($values['post_type'] == 'have') {
-            if (isset($values['floor_level']) && strIsEmpty($values['floor_level']) === false) {
+            if (isset($values['floor_high']) && strIsEmpty($values['floor_high']) === false) {
                 $project = Project::model()->getById($values['project_id']);
-                if ($values['floor_level'] > $project->level_limits) {
+                if ($values['floor_high'] > $project->level_limits) {
                     $std->errorMsg = 'this floor level must less than the project limits!';
                     return $std;
                 }
@@ -129,7 +129,8 @@ class PostManager {
             $house->expect_floor_high = $model->expect_floor_high;
         } elseif ($model instanceof UserHave) {
             $house->have_id = $model->id;
-            $house->floor_level = $model->floor_level;
+            $house->expect_floor_low = $model->floor_low;
+            $house->expect_floor_high = $model->floor_high;
             $house->user_have_id = $user->id;
             $house->user_have_name = $user->real_name;
         }

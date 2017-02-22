@@ -60,7 +60,7 @@ class ApiViewUserPostList extends EApiViewService {
             $std->type = $v->unit_type;
             $std->exposure = $v->exposure;
             $std->coop = $v->coop;
-            $std->floor = $v->floor_level;
+            $std->floor = $v->getFloor();
             $std->price = $v->price;
             $std->time = $v->getDateCreated('Y/m/d H:i a');
             $std->postType = 'have';
