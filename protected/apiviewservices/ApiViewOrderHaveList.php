@@ -51,8 +51,8 @@ class ApiViewOrderHaveList extends EApiViewService {
     }
 
     private function loadUserhave() {
-        $with = array('resoures');
-        //$with = null;
+        //$with = array('resoures');
+        $with = null;
         $order = "t." . $this->order . " " . $this->type;
         $models = UserHave::model()->loadAllNotMe($this->values, $with, $order);
         if (arrayNotEmpty($models)) {
@@ -73,11 +73,11 @@ class ApiViewOrderHaveList extends EApiViewService {
             $std->floor = $v->floor_level;
             $std->price = $v->price;
             $std->postType = 'have';
-            $std->hasMacth = 1;
-            $house = $v->resoures;
-            if (count($house) === 1 && strIsEmpty($house[0]->user_want_id)) {
-                $std->hasMacth = 0;
-            }
+//            $std->hasMacth = 1;
+//            $house = $v->resoures;
+//            if (count($house) === 1 && strIsEmpty($house[0]->user_want_id)) {
+//                $std->hasMacth = 0;
+//            }
             $std->canMatch = 1;
             if ($v->user_id == $this->values['user_id']) {
                 $std->canMatch = 0;
