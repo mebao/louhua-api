@@ -241,7 +241,6 @@ class ExeclManage {
             }
             $user->user_role = $role;
             $user->wx_userid = trim($model[8]);
-            $user->user_role = StatCode::ROLE_ADMIN;
             $user->date_verified = date('Y-m-d H:i:s');
             $user->AddTemple();
             if ($user->save() === false) {
