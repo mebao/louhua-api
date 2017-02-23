@@ -10,6 +10,24 @@ require_once dirname(__FILE__) . '/../sdk/phpexcel/PHPExcel.php';
 require_once dirname(__FILE__) . '/../sdk/phpexcel/PHPExcel/IOFactory.php';
 
 class ExeclManage {
+
+    /**
+     * 存储上传的文件
+     */
+    public function saveFile($file) {
+        $filename = explode(".", $file['name']); //把上传的文件名以“.”好为准做一个数组。
+        $filename[0] = time(); //文件名替换
+        $name = implode(".", $filename); //上传后的文件名
+        $fileurl = realpath(dirname(__FILE__) . '/../../../upload') . DIRECTORY_SEPARATOR . $name;
+        //文件存储+重命名
+        $result = move_uploaded_file($file['tmp_name'], $fileurl);
+        if ($result) {
+            return $fileurl;
+        } else {
+            return "";
+        }
+    }
+
     /* 导出excel函数 */
 
     public function exportadmins($data, $name = 'adminlist') {
@@ -110,6 +128,185 @@ class ExeclManage {
         $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
         exit;
+    }
+
+    public function exportTemplet($name, $data) {
+        error_reporting(E_ALL);
+        date_default_timezone_set('Europe/London');
+        $objPHPExcel = new PHPExcel();
+        /* 以下是一些设置 ，什么作者  标题啊之类的 */
+        $objPHPExcel->getProperties()->setCreator("xlh")
+                ->setLastModifiedBy("xlh")
+                ->setTitle("DATA EXCEL EXPROT")
+                ->setSubject("DATA EXCEL EXPROT")
+                ->setDescription("DATA")
+                ->setKeywords("excel")
+                ->setCategory("result file");
+        //标题
+        $title = 65;
+        foreach ($data as $key => $value) {
+            $v = chr($title) . '1';
+            $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue($v, $key);
+            $title++;
+        }
+        $title = 65;
+        foreach ($data as $key => $value) {
+            $v = chr($title) . '2';
+            $input = 'input';
+            if ($key === 'Role') {
+                $input = 'Bay Street Agent/Other Brokerage Agent';
+            }
+            $objPHPExcel->setActiveSheetIndex(0)
+                    ->setCellValue($v, $input);
+            $title++;
+        }
+        $objPHPExcel->getActiveSheet()->setTitle($name);
+        $objPHPExcel->setActiveSheetIndex(0);
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="' . $name . '.xls"');
+        header('Cache-Control: max-age=0');
+        $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
+        exit;
+    }
+
+    public function read($filename, $encode = 'utf-8') {
+        $objReader = IOFactory::createReader('Excel5');
+        $objReader->setReadDataOnly(true);
+        $objPHPExcel = $objReader->load($filename);
+        $objWorksheet = $objPHPExcel->getActiveSheet();
+        $highestRow = $objWorksheet->getHighestRow();
+        $highestColumn = $objWorksheet->getHighestColumn();
+        $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);
+        $excelData = array();
+        for ($row = 1; $row <= $highestRow; $row++) {
+            for ($col = 0; $col < $highestColumnIndex; $col++) {
+                $excelData[$row][] = (string) $objWorksheet->getCellByColumnAndRow($col, $row)->getValue();
+            }
+        }
+        return $excelData;
+    }
+
+    public function insertAdmin($excelData) {
+        $count = count($excelData);
+        $status = true;
+        for ($i = 2; $i <= $count; $i++) {
+            $model = $excelData[$i];
+            if (count($model) !== 6) {
+                $status = false;
+                break;
+            }
+            $user = new User();
+            $user->username = trim($model[0]);
+            $user->real_name = trim($model[0]);
+            $user->wechat_id = trim($model[1]);
+            $user->wechat_name = trim($model[2]);
+            $user->cell = trim($model[3]);
+            $user->brokerage_name = trim($model[4]);
+            $user->office_telephone = trim($model[5]);
+            $user->user_role = StatCode::ROLE_ADMIN;
+            $user->date_verified = date('Y-m-d H:i:s');
+            $user->AddTemple();
+            if ($user->save() === false) {
+                $status = false;
+                break;
+            }
+        }
+        return $status;
+    }
+
+    public function insertAgent($excelData) {
+        $count = count($excelData);
+        $status = true;
+        for ($i = 2; $i <= $count; $i++) {
+            $model = $excelData[$i];
+            if (count($model) !== 9) {
+                $status = false;
+                break;
+            }
+            $user = new User();
+            $user->username = trim($model[0]);
+            $user->real_name = trim($model[1]);
+            $user->wechat_id = trim($model[2]);
+            $user->wechat_name = trim($model[3]);
+            $user->cell = trim($model[4]);
+            $user->brokerage_name = trim($model[5]);
+            $user->office_telephone = trim($model[6]);
+            $role = $model[7];
+            if (strIsEmpty($role, true) === false && stripos($role, 'other')) {
+                $role = StatCode::ROLE_OTHER;
+            } else {
+                $role = StatCode::ROLE_USER;
+            }
+            $user->user_role = $role;
+            $user->wx_userid = trim($model[8]);
+            $user->user_role = StatCode::ROLE_ADMIN;
+            $user->date_verified = date('Y-m-d H:i:s');
+            $user->AddTemple();
+            if ($user->save() === false) {
+                $status = false;
+                break;
+            }
+        }
+        return $status;
+    }
+
+    public function importAdmin($file) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'import faild!';
+        $trans = Yii::app()->db->beginTransaction();
+        try {
+            $url = $this->saveFile($file);
+            if (strIsEmpty($url) === false) {
+                $excelData = $this->read($url);
+                if ($this->insertAdmin($excelData)) {
+                    $std->status = 'ok';
+                    $std->errorCode = 200;
+                    $std->errorMsg = 'success';
+                    $trans->commit();
+                } else {
+                    throw new Exception("db save failed");
+                }
+            } else {
+                throw new Exception("file save failed");
+            }
+        } catch (Exception $ex) {
+            $trans->rollback();
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR, __METHOD__);
+        }
+        return $std;
+    }
+
+    public function importAgents($file) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'import faild!';
+        $trans = Yii::app()->db->beginTransaction();
+        try {
+            $url = $this->saveFile($file);
+            if (strIsEmpty($url) === false) {
+                $excelData = $this->read($url);
+                if ($this->insertAgent($excelData)) {
+                    $std->status = 'ok';
+                    $std->errorCode = 200;
+                    $std->errorMsg = 'success';
+                    $trans->commit();
+                } else {
+                    $std->errorMsg = 'data format error';
+                    throw new Exception("db save failed");
+                }
+            } else {
+                throw new Exception("file save failed");
+            }
+        } catch (Exception $ex) {
+            $trans->rollback();
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR, __METHOD__);
+        }
+        return $std;
     }
 
 }

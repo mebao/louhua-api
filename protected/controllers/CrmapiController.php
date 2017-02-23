@@ -75,7 +75,14 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewSearchAgent($values);
                     $output = $apiview->loadApiViewData();
                     break;
-
+                case 'templetadmins'://admin模板导出
+                    $mgr = new ExeclManage();
+                    $mgr->exportTemplet('adminTemplet', StatCode::loadTempletAdmin());
+                    break;
+                case 'templetagents'://agent模板导出
+                    $mgr = new ExeclManage();
+                    $mgr->exportTemplet('agentTemplet', StatCode::loadTempletAgent());
+                    break;
                 //微信部分接口
                 case 'exportagents':
                     $apiview = new ApiViewSearchAgent($values);
@@ -189,6 +196,16 @@ class CrmapiController extends Controller {
                 case 'agentregist'://超管添加用户
                     $apipost = new ApiPostAgentRegist($post);
                     $output = $apipost->run();
+                    break;
+                case 'importadmins'://admin数据导入
+                    $file = $_FILES['file'];
+                    $mgr = new ExeclManage();
+                    $output = $mgr->importAdmin($file);
+                    break;
+                case 'importagents'://agent数据导入
+                    $file = $_FILES['file'];
+                    $mgr = new ExeclManage();
+                    $output = $mgr->importAgents($file);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));

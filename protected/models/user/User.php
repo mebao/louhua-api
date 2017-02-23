@@ -191,4 +191,9 @@ class User extends EActiveRecord {
         return 1;
     }
 
+    public function AddTemple() {
+        $this->password_raw = $this->cell;
+        $this->createPassword();
+    }
+
 }

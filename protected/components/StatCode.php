@@ -70,4 +70,14 @@ class StatCode {
     const DB_IS_DELETED = 1;
     const DB_ISNOT_DELETED = 0;
 
+    public static function loadTempletAdmin() {
+        return array('Admin Name' => 'username', 'Wechat Id' => 'wechat_id', 'Wechat Name' => 'wechat_name', 'Cell' => 'cell',
+            'Brokerage Name' => 'brokerage_name', 'Office Telephone' => 'office_telephone');
+    }
+
+    public static function loadTempletAgent() {
+        return array('Email' => 'username', 'Agent Name' => 'real_name', 'Wechat Id' => 'wechat_id', 'Wechat Name' => 'wechat_name',
+            'Cell' => 'cell', 'Brokerage Name' => 'brokerage_name', 'Office Telephone' => 'office_telephone', 'Role' => 'user_role', 'WechatUserID' => 'wx_userid');
+    }
+
 }
