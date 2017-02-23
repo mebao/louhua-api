@@ -17,7 +17,7 @@ class CrmapiController extends Controller {
         $domainList = array('http://meb.mingyizd.com');
         $this->addHeaderSafeDomains($domainList);
         header('Access-Control-Allow-Credentials:true');      // 允许携带 用户认证凭据（也就是允许客户端发送的请求携带Cookie）        	
-        header('Access-Control-Allow-Headers: Origin,X-Requested-With,Authorization,Accept,Content-Type,if-modified-since');
+        header('Access-Control-Allow-Headers: Origin,X-Requested-With,Authorization,Accept,Content-Type,if-modified-since,Cache-Control');
         header('Access-Control-Allow-Methods: OPTIONS,GET,PUT,DELETE,POST');
     }
 
@@ -206,6 +206,9 @@ class CrmapiController extends Controller {
                     $file = $_FILES['file'];
                     $mgr = new ExeclManage();
                     $output = $mgr->importAgents($file);
+                    break;
+                case 'addproject'://创建
+                    
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
