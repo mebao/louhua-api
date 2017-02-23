@@ -83,6 +83,10 @@ class CrmapiController extends Controller {
                     $mgr = new ExeclManage();
                     $mgr->exportTemplet('agentTemplet', StatCode::loadTempletAgent());
                     break;
+                case 'projectlist':
+                    $apiview = new ApiViewSearchProject($values);
+                    $output = $apiview->loadApiViewData();
+                    break;
                 //微信部分接口
                 case 'exportagents':
                     $apiview = new ApiViewSearchAgent($values);
@@ -124,6 +128,10 @@ class CrmapiController extends Controller {
                     $userMgr = new UserManager();
                     $output = $userMgr->deleteUser($id);
                     break;
+                case 'deleteproject':
+                    $mgr = new HouseManager();
+                    $output = $mgr->deleteProject($id);
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
@@ -148,9 +156,12 @@ class CrmapiController extends Controller {
         $statusCode = 200;
         try {
             switch ($model) {
-                case 'adminuserinfo'://取消预约
+                case 'adminuserinfo':
                     $apiview = new ApiViewAdminUserInfo($id);
                     $output = $apiview->loadApiViewData();
+                    break;
+                case 'projectpicture'://添加project图片
+
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
@@ -207,8 +218,9 @@ class CrmapiController extends Controller {
                     $mgr = new ExeclManage();
                     $output = $mgr->importAgents($file);
                     break;
-                case 'addproject'://创建
-                    
+                case 'addproject'://创建项目
+                    $apipost = new ApiPostCreateProject($post);
+                    $output = $apipost->run();
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
@@ -248,6 +260,10 @@ class CrmapiController extends Controller {
                 case 'updateagent':
                     $userMgr = new UserManager();
                     $output = $userMgr->updateUser($id, $post);
+                    break;
+                case 'updateproject':
+                    $mgr = new HouseManager();
+                    $output = $mgr->updateProject($id, $post);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
