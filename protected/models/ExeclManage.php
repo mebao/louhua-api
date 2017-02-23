@@ -18,7 +18,7 @@ class ExeclManage {
         $filename = explode(".", $file['name']); //把上传的文件名以“.”好为准做一个数组。
         $filename[0] = time(); //文件名替换
         $name = implode(".", $filename); //上传后的文件名
-        $fileurl = realpath(dirname(__FILE__) . '/../../../upload') . DIRECTORY_SEPARATOR . $name;
+        $fileurl = realpath(dirname(__FILE__) . '/../../upload') . DIRECTORY_SEPARATOR . $name;
         //文件存储+重命名
         $result = move_uploaded_file($file['tmp_name'], $fileurl);
         if ($result) {
