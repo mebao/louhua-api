@@ -25,7 +25,7 @@ class HouseManager {
         $std = new stdClass();
         $std->status = 'no';
         $std->errorCode = 502;
-        $std->errorMsg = 'update failed';
+        $std->errorMsg = 'delete failed';
         $model = Project::model()->getById($id);
         if (isset($model)) {
             if ($model->delete(false)) {
@@ -39,16 +39,29 @@ class HouseManager {
         return $std;
     }
 
-    public function addPicture($id, $url) {
+    public function addPicture($values) {
         $std = new stdClass();
         $std->status = 'no';
         $std->errorCode = 502;
-        $std->errorMsg = 'created failed';
+        $std->errorMsg = 'create failed';
         $model = new AdvertisingPictures();
-        $model->project_id = $id;
-        $model->picture_url = $url;
+        $model->setAttributes($values);
         if ($model->save()) {
-            if ($model->delete(false)) {
+            $std->status = 'ok';
+            $std->errorCode = 200;
+            $std->errorMsg = 'success';
+        }
+        return $std;
+    }
+
+    public function deletePicture($id) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'delete failed';
+        $model = AdvertisingPictures::model()->getById($id);
+        if (isset($model)) {
+            if ($model->delete(true)) {
                 $std->status = 'ok';
                 $std->errorCode = 200;
                 $std->errorMsg = 'success';

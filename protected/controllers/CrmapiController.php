@@ -160,9 +160,6 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewAdminUserInfo($id);
                     $output = $apiview->loadApiViewData();
                     break;
-                case 'projectpicture'://添加project图片
-
-                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
@@ -221,6 +218,10 @@ class CrmapiController extends Controller {
                 case 'addproject'://创建项目
                     $apipost = new ApiPostCreateProject($post);
                     $output = $apipost->run();
+                    break;
+                case 'projectpicture'://添加project图片
+                    $mgr = new HouseManager();
+                    $output = $mgr->addPicture($post);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
