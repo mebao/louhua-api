@@ -66,7 +66,7 @@ class ApiViewSearchProject extends EApiViewService {
             $std->openTime = $value->open_time;
             $std->closeTime = $value->close_time;
             $std->totalUnits = $value->total_units;
-            $std->pictures = arrayExtractValue($value->advertisingPictures, 'picture_url');
+            $std->pictures = arrayExtractKeyValue($value->advertisingPictures, 'id', 'picture_url');
             $this->list[] = $std;
         }
     }
