@@ -132,6 +132,10 @@ class CrmapiController extends Controller {
                     $mgr = new HouseManager();
                     $output = $mgr->deleteProject($id);
                     break;
+                case 'deletepicture':
+                    $mgr = new HouseManager();
+                    $output = $mgr->deletePicture($id);
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
