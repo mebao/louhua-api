@@ -96,4 +96,16 @@ class UserManager {
         return $std;
     }
 
+    public function userOptions() {
+        $std = new stdClass();
+        $std->status = 'ok';
+        $std->errorCode = 200;
+        $std->errorMsg = 'success';
+        $results = new stdClass();
+        $models = User::model()->loadAllByUserRole();
+        $results->user = arrayExtractKeyValue($models, 'id', 'real_name');
+        $std->results = $results;
+        return $std;
+    }
+
 }

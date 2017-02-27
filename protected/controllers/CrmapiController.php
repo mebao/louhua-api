@@ -97,6 +97,10 @@ class CrmapiController extends Controller {
                     $mgr = new PostManager();
                     $output = $mgr->otherOptions();
                     break;
+                case 'optionsuser':
+                    $mgr = new UserManager();
+                    $output = $mgr->userOptions();
+                    break;
                 //微信部分接口
                 case 'exportagents':
                     $apiview = new ApiViewSearchAgent($values);
@@ -236,6 +240,10 @@ class CrmapiController extends Controller {
                 case 'projectpicture'://添加project图片
                     $mgr = new HouseManager();
                     $output = $mgr->addPicture($post);
+                    break;
+                case 'addhouse'://添加房源
+                    $apipost = new ApiPostCrmPost($post);
+                    $output = $apipost->run();
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));

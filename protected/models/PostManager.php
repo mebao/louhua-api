@@ -191,4 +191,41 @@ class PostManager {
         return $std;
     }
 
+    public function crmpost($values) {
+        $id = 0;
+        $trans = Yii::app()->db->beginTransaction();
+        try {
+            $house = new HousingResources();
+            $house->setAttributes($values);
+            if ($values['post_type'] == 'want') {
+                $model = new UserWant();
+                $model->user_id = $values['user_want_id'];
+            } else if ($values['post_type'] == 'have') {
+                $model = new UserHave();
+                $model->user_id = $values['user_have_id'];
+                $model->floor_low = $values['expect_floor_low'];
+                $model->floor_high = $values['expect_floor_high'];
+            }
+            $model->setAttributes($values);
+            if ($model->save() === false) {
+                throw new CDbException("db save failed");
+            } else {
+                if ($values['post_type'] == 'want') {
+                    $house->want_id = $model->id;
+                } else {
+                    $house->have_id = $model->id;
+                }
+                if ($house->save()) {
+                    $id = $house->id;
+                }
+            }
+            $trans->commit();
+        } catch (CDbException $cdb) {
+            $trans->rollback();
+        } catch (Exception $e) {
+            $trans->rollback();
+        }
+        return $id;
+    }
+
 }

@@ -172,6 +172,13 @@ class User extends EActiveRecord {
         return $this->getByAttributes(array("username" => $username, 'user_role' => $role));
     }
 
+    public function loadAllByUserRole() {
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('t.user_role = ' . StatCode::ROLE_USER . ' or t.user_role = ' . StatCode::ROLE_OTHER);
+        $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
+        return $this->findAll($criteria);
+    }
+
     //加载所有需要授权的用户
     public function loadAllNeedRole() {
         $criteria = new CDbCriteria;
