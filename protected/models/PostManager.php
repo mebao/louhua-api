@@ -43,6 +43,7 @@ class PostManager {
                 }
             }
             $model = UserWant::model()->loadByIdAndUserId($id, $values['user_id']);
+            $house = HousingResources::model()->loadWantNotUserHave($id);
         } else if ($values['post_type'] == 'have') {
             if (isset($values['floor_high']) && strIsEmpty($values['floor_high']) === false) {
                 $project = Project::model()->getById($values['project_id']);
@@ -50,13 +51,20 @@ class PostManager {
                     $std->errorMsg = 'this floor level must less than the project limits!';
                     return $std;
                 }
+                $values['expect_floor_high'] = $values['floor_high'];
+            }
+            if (isset($values['floor_low']) && strIsEmpty($values['floor_low']) === false) {
+                $values['expect_floor_low'] = $values['floor_low'];
             }
             $model = UserHave::model()->loadByIdAndUserId($id, $values['user_id']);
+            $house = HousingResources::model()->loadHaveNotUserWant($id);
         }
         //若有 这能修改 若无 这已被预定
-        if (isset($model)) {
+        if (isset($model) && isset($house)) {
             $model->setAttributes($values);
             $model->update(array_keys($values));
+            $house->setAttributes($values);
+            $house->update(array_keys($values));
             $std->status = 'ok';
             $std->errorCode = 200;
             $std->errorMsg = 'success';

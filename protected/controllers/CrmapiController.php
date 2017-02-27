@@ -49,6 +49,12 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewSearchHouse($values);
                     $output = $apiview->loadApiViewData();
                     break;
+                case 'exporthouse':
+                    $apiview = new ApiViewSearchHouse($values);
+                    $data = $apiview->loadApiViewData();
+                    $mgr = new ExeclManage();
+                    $mgr->exporthouse($data->results->list);
+                    break;
                 case 'havepending':
                     $this->userLoginRequired($values);
                     $apiview = new ApiViewHavePending();
@@ -101,7 +107,6 @@ class CrmapiController extends Controller {
                     $mgr = new UserManager();
                     $output = $mgr->userOptions();
                     break;
-                //微信部分接口
                 case 'exportagents':
                     $apiview = new ApiViewSearchAgent($values);
                     $data = $apiview->loadApiViewData();
@@ -287,6 +292,10 @@ class CrmapiController extends Controller {
                 case 'updateproject':
                     $mgr = new HouseManager();
                     $output = $mgr->updateProject($id, $post);
+                    break;
+                case 'updatehouse':
+//                    $postMgr = new PostManager();
+//                    $output = $postMgr->updatePost($id, $values);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
