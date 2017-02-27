@@ -221,4 +221,11 @@ class HousingResources extends EActiveRecord {
         return $this->find($criteria);
     }
 
+    public function getFloor() {
+        if (strIsEmpty($this->expect_floor_low) || strIsEmpty($this->expect_floor_high)) {
+            return '';
+        }
+        return $this->expect_floor_low . '-' . $this->expect_floor_high;
+    }
+
 }

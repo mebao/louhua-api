@@ -7,14 +7,14 @@
  */
 
 /**
- * Description of ApiViewProjectList
+ * Description of ApiViewSearchHave
  *
  * @author ShuMing
  */
-class ApiViewSearchProject extends EApiViewService {
+class ApiViewSearchHouse extends EApiViewService {
 
-    private $searchInputs;      // Search inputs passed from request url.
-    private $getCount = false;  // whether to count no. of Doctors satisfying the search conditions.
+    private $searchInputs;
+    private $getCount = false;
     private $pageSize = 10;
     private $modelSearch;
     private $list;
@@ -27,7 +27,7 @@ class ApiViewSearchProject extends EApiViewService {
         $this->searchInputs = $searchInputs;
         $this->getCount = isset($searchInputs['getcount']) && $searchInputs['getcount'] == 1 ? true : false;
         $this->searchInputs['pagesize'] = isset($searchInputs['pagesize']) && $searchInputs['pagesize'] > 0 ? $searchInputs['pagesize'] : $this->pageSize;
-        $this->modelSearch = new ProjectSearch($this->searchInputs, array('advertisingPictures'));
+        $this->modelSearch = new HouseSearch($this->searchInputs);
     }
 
     protected function loadData() {
@@ -57,16 +57,31 @@ class ApiViewSearchProject extends EApiViewService {
     }
 
     private function setModel($models) {
-        foreach ($models as $value) {
+        $postType = 'have';
+        if (isset($this->searchInputs['post_type']) && $this->searchInputs['post_type'] == 'want') {
+            $postType = 'want';
+        }
+        foreach ($models as $v) {
             $std = new stdClass();
-            $std->id = $value->id;
-            $std->name = $value->name;
-            $std->levelLimits = $value->level_limits;
-            $std->unitType = $value->unit_type;
-            $std->openTime = $value->open_time;
-            $std->closeTime = $value->close_time;
-            $std->totalUnits = $value->total_units;
-            $std->pictures = arrayExtractKeyValue($value->advertisingPictures, 'id', 'picture_url');
+            $std->id = $v->id;
+            $std->projectId = $v->project_id;
+            $std->projectName = $v->project_name;
+            $std->haveId = $v->have_id;
+            $std->userHaveId = $v->user_have_id;
+            $std->userHaveName = $v->user_have_name;
+            $std->wantId = $v->want_id;
+            $std->userWantId = $v->user_want_id;
+            $std->userWantName = $v->user_want_name;
+            $std->unitType = $v->unit_type;
+            $std->floorLow = $v->expect_floor_low;
+            $std->floorHigh = $v->expect_floor_high;
+            $std->price = $v->price;
+            $std->exposure = $v->exposure;
+            $std->coop = $v->coop;
+            $std->action = $v->action;
+            $std->unitStatus = $v->unit_status;
+            $std->time = $v->getDateCreated('Y-m-d H:i:s');
+            $std->postType = $postType;
             $this->list[] = $std;
         }
     }
