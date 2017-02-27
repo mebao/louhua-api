@@ -90,8 +90,8 @@ class CrmapiController extends Controller {
                     $output = $apiview->loadApiViewData();
                     break;
                 case 'optionproject':
-                    $mgr = new PostManager();
-                    $output = $mgr->optionsProject();
+                    $apiview = new ApiViewOptionsProject();
+                    $output = $apiview->loadApiViewData();
                     break;
                 case 'otheroptions':
                     $mgr = new PostManager();
