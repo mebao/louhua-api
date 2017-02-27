@@ -165,4 +165,30 @@ class PostManager {
         return $std;
     }
 
+    public function optionsProject() {
+        $std = new stdClass();
+        $std->status = 'ok';
+        $std->errorCode = 200;
+        $std->errorMsg = 'success';
+        $results = new stdClass();
+        $project = Project::model()->loadAllByTime();
+        $results->project = arrayExtractKeyValue($project, 'id', 'name');
+        $std->results = $results;
+        return $std;
+    }
+
+    public function otherOptions() {
+        $std = new stdClass();
+        $std->status = 'ok';
+        $std->errorCode = 200;
+        $std->errorMsg = 'success';
+        $results = new stdClass();
+        $results->optionsExposure = StatCode::loadOptionsExposure();
+        $results->optionsUnitType = StatCode::loadOptionsUnitType();
+        $results->optionsAction = StatCode::loadOptionsHouseAction();
+        $results->optionsUnitStatus = StatCode::loadOptionsHouseStatus();
+        $std->results = $results;
+        return $std;
+    }
+
 }

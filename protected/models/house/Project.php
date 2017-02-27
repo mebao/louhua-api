@@ -129,6 +129,7 @@ class Project extends EActiveRecord {
         $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
         $criteria->addCondition("t.open_time  <= '{$time}'");
         $criteria->addCondition("t.close_time >= '{$time}'");
+        $criteria->order = 't.open_time desc';
         return $this->findAll($criteria);
     }
 

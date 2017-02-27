@@ -89,6 +89,14 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewSearchProject($values);
                     $output = $apiview->loadApiViewData();
                     break;
+                case 'optionproject':
+                    $mgr = new PostManager();
+                    $output = $mgr->optionsProject();
+                    break;
+                case 'otheroptions':
+                    $mgr = new PostManager();
+                    $output = $mgr->otherOptions();
+                    break;
                 //微信部分接口
                 case 'exportagents':
                     $apiview = new ApiViewSearchAgent($values);

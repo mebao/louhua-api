@@ -70,6 +70,22 @@ class StatCode {
     const DB_IS_DELETED = 1;
     const DB_ISNOT_DELETED = 0;
 
+    public static function loadOptionsHouseAction() {
+        return array(
+            self::HOUSE_ACTION_PENDING => self::HOUSE_ACTION_PENDING,
+            self::HOUSE_ACTION_PROCESS => self::HOUSE_ACTION_PROCESS,
+            self::HOUSE_ACTION_DONE => self::HOUSE_ACTION_DONE,
+            self::HOUSE_ACTION_FAILED => self::HOUSE_ACTION_FAILED,
+        );
+    }
+
+    public static function loadOptionsHouseStatus() {
+        return array(
+            self::UNIT_STATUS_PENDING => self::UNIT_STATUS_PENDING,
+            self::UNIT_STATUS_MATCHED => self::UNIT_STATUS_MATCHED,
+        );
+    }
+
     public static function loadTempletAdmin() {
         return array('Admin Name' => 'username', 'Wechat Id' => 'wechat_id', 'Wechat Name' => 'wechat_name', 'Cell' => 'cell',
             'Brokerage Name' => 'brokerage_name', 'Office Telephone' => 'office_telephone');
