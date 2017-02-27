@@ -96,4 +96,10 @@ class StatCode {
             'Cell' => 'cell', 'Brokerage Name' => 'brokerage_name', 'Office Telephone' => 'office_telephone', 'Role' => 'user_role', 'WechatUserID' => 'wx_userid');
     }
 
+    public static function loadTempletHave() {
+        return array('Project ID' => 'project_id', 'Project Name' => 'project_name', 'Have Agent ID' => 'user_have_id', 'Have Agent Name' => 'user_have_name',
+            'Want Agent ID' => 'user_want_id', 'Want Agent Name' => 'user_want_name', 'Unit Type' => 'unit_type', 'Floor Low' => 'floor_low', 'Floor High' => 'floor_high',
+            'Price' => 'price', 'Exposure' => 'exposure', 'Action' => 'action', 'Unit Status' => 'unit_status');
+    }
+
 }

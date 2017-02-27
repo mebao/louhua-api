@@ -370,4 +370,151 @@ class ExeclManage {
         return $std;
     }
 
+    private function insertHave($excelData) {
+        $count = count($excelData);
+        $status = true;
+        for ($i = 2; $i <= $count; $i++) {
+            $model = $excelData[$i];
+            if (count($model) !== 14) {
+                $status = false;
+                break;
+            }
+            $have = new UserHave();
+            $have->project_id = trim($model[0]);
+            $have->project_name = trim($model[1]);
+            $have->user_id = trim($model[2]);
+            $have->unit_type = trim($model[6]);
+            $have->floor_low = trim($model[7]);
+            $have->floor_high = trim($model[8]);
+            $have->price = trim($model[9]);
+            $have->exposure = trim($model[10]);
+            $have->coop = trim($model[11]);
+            if ($have->save()) {
+                $house = new HousingResources();
+                $house->have_id = $have->id;
+                $house->project_id = $have->project_id;
+                $house->project_name = $have->project_name;
+                $house->unit_type = $have->unit_type;
+                $house->price = $have->price;
+                $house->coop = $have->coop;
+                $house->exposure = $have->exposure;
+                $house->expect_floor_low = $have->floor_low;
+                $house->expect_floor_high = $have->floor_high;
+                $house->user_have_id = trim($model[2]);
+                $house->user_have_name = trim($model[3]);
+                $house->user_want_id = trim($model[4]);
+                $house->user_want_name = trim($model[5]);
+                $house->action = trim($model[12]);
+                $house->unit_status = trim($model[13]);
+                $house->save();
+            } else {
+                $status = false;
+                break;
+            }
+        }
+        return $status;
+    }
+
+    public function importhavehouse($file) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'import faild!';
+        $trans = Yii::app()->db->beginTransaction();
+        try {
+            $url = $this->saveFile($file);
+            if (strIsEmpty($url) === false) {
+                $excelData = $this->read($url);
+                if ($this->insertHave($excelData)) {
+                    $std->status = 'ok';
+                    $std->errorCode = 200;
+                    $std->errorMsg = 'success';
+                    $trans->commit();
+                } else {
+                    $std->errorMsg = 'data format error';
+                    throw new Exception("db save failed");
+                }
+            } else {
+                throw new Exception("file save failed");
+            }
+        } catch (Exception $ex) {
+            $trans->rollback();
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR, __METHOD__);
+        }
+        return $std;
+    }
+
+    private function insertWant($excelData) {
+        $count = count($excelData);
+        $status = true;
+        for ($i = 2; $i <= $count; $i++) {
+            $model = $excelData[$i];
+            if (count($model) !== 13) {
+                $status = false;
+                break;
+            }
+            $want = new UserWant();
+            $want->project_id = trim($model[0]);
+            $want->project_name = trim($model[1]);
+            $want->user_id = trim($model[2]);
+            $want->unit_type = trim($model[6]);
+            $want->expect_floor_low = trim($model[7]);
+            $want->expect_floor_high = trim($model[8]);
+            $want->price = trim($model[9]);
+            $want->exposure = trim($model[10]);
+            if ($want->save()) {
+                $house = new HousingResources();
+                $house->have_id = $want->id;
+                $house->project_id = $want->project_id;
+                $house->project_name = $want->project_name;
+                $house->unit_type = $want->unit_type;
+                $house->price = $want->price;
+                $house->coop = $want->coop;
+                $house->exposure = $want->exposure;
+                $house->expect_floor_low = $want->expect_floor_low;
+                $house->expect_floor_high = $want->expect_floor_high;
+                $house->user_have_id = trim($model[2]);
+                $house->user_have_name = trim($model[3]);
+                $house->user_want_id = trim($model[4]);
+                $house->user_want_name = trim($model[5]);
+                $house->action = trim($model[11]);
+                $house->unit_status = trim($model[12]);
+                $house->save();
+            } else {
+                $status = false;
+                break;
+            }
+        }
+        return $status;
+    }
+
+    public function importwanthouse($file) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'import faild!';
+        $trans = Yii::app()->db->beginTransaction();
+        try {
+            $url = $this->saveFile($file);
+            if (strIsEmpty($url) === false) {
+                $excelData = $this->read($url);
+                if ($this->insertWant($excelData)) {
+                    $std->status = 'ok';
+                    $std->errorCode = 200;
+                    $std->errorMsg = 'success';
+                    $trans->commit();
+                } else {
+                    $std->errorMsg = 'data format error';
+                    throw new Exception("db save failed");
+                }
+            } else {
+                throw new Exception("file save failed");
+            }
+        } catch (Exception $ex) {
+            $trans->rollback();
+            Yii::log($ex->getMessage(), CLogger::LEVEL_ERROR, __METHOD__);
+        }
+        return $std;
+    }
+
 }

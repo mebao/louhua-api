@@ -113,7 +113,14 @@ class CrmapiController extends Controller {
                     $mgr = new ExeclManage();
                     $mgr->exportagents($data->results->agents);
                     break;
-
+                case 'templehave'://agent模板导出
+                    $mgr = new ExeclManage();
+                    $mgr->exportTemplet('houseHaveTemplet', StatCode::loadTempletHave());
+                    break;
+                case 'templewant'://agent模板导出
+                    $mgr = new ExeclManage();
+                    $mgr->exportTemplet('houseWantTemplet', StatCode::loadTempletHave());
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
@@ -249,6 +256,16 @@ class CrmapiController extends Controller {
                 case 'addhouse'://添加房源
                     $apipost = new ApiPostCrmPost($post);
                     $output = $apipost->run();
+                    break;
+                case 'importhavehouse':
+                    $file = $_FILES['file'];
+                    $mgr = new ExeclManage();
+                    $output = $mgr->importhavehouse($file);
+                    break;
+                case 'importwanthouse':
+                    $file = $_FILES['file'];
+                    $mgr = new ExeclManage();
+                    $output = $mgr->importwanthouse($file);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
