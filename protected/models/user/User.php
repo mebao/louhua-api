@@ -203,4 +203,12 @@ class User extends EActiveRecord {
         $this->createPassword();
     }
 
+    public function getSubscribeText() {
+        if ($this->subscribe == 'yes') {
+            return 'Subscribe';
+        } else {
+            return 'UnSubscribe';
+        }
+    }
+
 }

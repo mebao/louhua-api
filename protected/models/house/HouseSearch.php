@@ -24,7 +24,7 @@ class HouseSearch extends ESearchModel {
 
     public function getQueryFields() {
         return array('id', 'project_id', 'project_name', 'have_id', 'user_have_id', 'user_have_name', 'user_want_id', 'want_id', 'user_want_name', 'unit_type',
-            'expect_floor_low', 'expect_floor_high', 'price', 'exposure', 'coop', 'action', 'unit_status', 'post_type');
+            'expect_floor_low', 'expect_floor_high', 'price', 'exposure', 'coop', 'time', 'action', 'unit_status', 'post_type');
     }
 
     public function addQueryConditions() {
@@ -76,6 +76,9 @@ class HouseSearch extends ESearchModel {
             }
             if (isset($this->queryParams['expect_floor_high'])) {
                 $this->criteria->addCondition('t.expect_floor_high <= ' . $this->queryParams['expect_floor_high']);
+            }
+            if (isset($this->queryParams['time'])) {
+                $this->criteria->addCondition('t.data_created <= ' . $this->queryParams['time']);
             }
             if (isset($this->queryParams['price'])) {
                 $this->criteria->addSearchCondition('t.price', $this->queryParams['price']);

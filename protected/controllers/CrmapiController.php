@@ -113,11 +113,11 @@ class CrmapiController extends Controller {
                     $mgr = new ExeclManage();
                     $mgr->exportagents($data->results->agents);
                     break;
-                case 'templehave'://agent模板导出
+                case 'templehave':
                     $mgr = new ExeclManage();
                     $mgr->exportTemplet('houseHaveTemplet', StatCode::loadTempletHave());
                     break;
-                case 'templewant'://agent模板导出
+                case 'templewant':
                     $mgr = new ExeclManage();
                     $mgr->exportTemplet('houseWantTemplet', StatCode::loadTempletHave());
                     break;
@@ -188,6 +188,14 @@ class CrmapiController extends Controller {
             switch ($model) {
                 case 'adminuserinfo':
                     $apiview = new ApiViewAdminUserInfo($id);
+                    $output = $apiview->loadApiViewData();
+                    break;
+                case 'projectinfo':
+                    $apiview = new ApiViewCountProject($id);
+                    $output = $apiview->loadApiViewData();
+                    break;
+                case 'macthinfo':
+                    $apiview = new ApiViewMatchInfo($id, $values['type']);
                     $output = $apiview->loadApiViewData();
                     break;
                 default:
@@ -312,7 +320,7 @@ class CrmapiController extends Controller {
                     break;
                 case 'updatehouse':
 //                    $postMgr = new PostManager();
-//                    $output = $postMgr->updatePost($id, $values);
+//                    $output = $postMgr->updatePost($id, $post);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
