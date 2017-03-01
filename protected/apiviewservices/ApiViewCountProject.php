@@ -35,6 +35,7 @@ class ApiViewCountProject extends EApiViewService {
             $this->project['id'] = $model->id;
             $this->project['name'] = $model->name;
             $this->project['levelLimits'] = $model->level_limits;
+            $this->project['message'] = $model->message;
             $this->project['status'] = 'Past';
             $time = date('Y-m-d H:i:s');
             if ($time >= $model->open_time && $model->close_time >= $time) {

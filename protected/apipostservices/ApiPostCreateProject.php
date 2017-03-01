@@ -48,6 +48,9 @@ class ApiPostCreateProject extends EApiPostService {
         if (isset($this->requestData['total_units']) === false || strIsEmpty($this->requestData['total_units'])) {
             $this->errors[] = 'this total units name must input!';
         }
+        if (isset($this->requestData['message']) === false || strIsEmpty($this->requestData['message'])) {
+            $this->errors[] = 'this message name must input!';
+        }
     }
 
     protected function doPostAction() {

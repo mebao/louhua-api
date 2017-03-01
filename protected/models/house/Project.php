@@ -41,7 +41,7 @@ class Project extends EActiveRecord {
             array('level_limits, total_units', 'numerical', 'integerOnly' => true),
             array('name', 'length', 'max' => 20),
             array('unit_type', 'length', 'max' => 50),
-            array('open_time, close_time, date_updated, date_deleted', 'safe'),
+            array('message ,open_time, close_time, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, name, level_limits, unit_type, open_time, close_time, total_units, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),

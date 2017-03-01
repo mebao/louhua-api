@@ -27,7 +27,7 @@ class ApiViewSearchHouse extends EApiViewService {
         $this->searchInputs = $searchInputs;
         $this->getCount = isset($searchInputs['getcount']) && $searchInputs['getcount'] == 1 ? true : false;
         $this->searchInputs['pagesize'] = isset($searchInputs['pagesize']) && $searchInputs['pagesize'] > 0 ? $searchInputs['pagesize'] : $this->pageSize;
-        $this->modelSearch = new HouseSearch($this->searchInputs);
+        $this->modelSearch = new HouseSearch($this->searchInputs,array('project'));
     }
 
     protected function loadData() {
@@ -81,6 +81,10 @@ class ApiViewSearchHouse extends EApiViewService {
             $std->action = $v->action;
             $std->unitStatus = $v->unit_status;
             $std->time = $v->getDateCreated('Y-m-d H:i:s');
+            $std->projectMessage = "";
+            if(isset($v->project)){
+                 $std->projectMessage=$v->project->message;
+            }
             $std->postType = $postType;
             $this->list[] = $std;
         }
