@@ -97,4 +97,14 @@ class WechatManager {
         }
     }
 
+    public function sendHouse($values) {
+        $account = WechatAccount::model()->loadByWxName("tongxin");
+        $touser = $values['users'];
+        $message = $values['message'];
+        $post = array("touser" => $touser, "msgtype" => "text", "agentid" => "3", "text" => array("content" => $message), "safe" => "0");
+        $data = json_encode($post, JSON_UNESCAPED_UNICODE);
+        $url = sprintf(WechatRequestUrl::qy_message_send, $account->access_token);
+        return https($url, $data, "POST");
+    }
+
 }

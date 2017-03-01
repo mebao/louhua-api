@@ -109,13 +109,6 @@ class XlhapiController extends Controller {
                     $mgr = new UserManager();
                     $output = $mgr->wechatLogin($values);
                     break;
-                case 'wxcheck':
-                    if (isset($values['echostr'])) {
-                        $this->checkSignature($values);
-                    } else {
-                        $this->responseMsg($values);
-                    }
-                    break;
                 case 'wxuserid':
                     $user = $this->userLoginRequired($values);
                     $values['url'] = $this->createAbsoluteUrl("xlhapi/wxuserid?username=" . $values['username'] . "&token=" . $values['token']);
@@ -264,38 +257,6 @@ class XlhapiController extends Controller {
         } else {
             $this->renderJsonOutput($output, true, $statusCode);
         }
-    }
-
-    //获取请求内容以及根据类型回复相关消息
-    public function responseMsg($params) {
-        $account = WechatAccount::model()->loadByWxName("tongxin");
-        //内容体
-        $msgStr = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
-        $wxconfig = array("token" => $account->token, "encodingAESKey" => $account->encoding_key, "appId" => $account->corp_id);
-        $message = new WxMessage();
-        $result = $message->catchMassage($params, $msgStr, $wxconfig);
-        Yii::log($result, "info", "微信回复结果");
-        echo $result;
-        Yii::app()->end();
-    }
-
-    private function checkSignature($values) {
-        require_once dirname(__FILE__) . '/../sdk/wechat/WXBizMsgCrypt.php';
-        $account = WechatAccount::model()->loadByWxName("tongxin");
-        $msgSignature = $values["msg_signature"];
-        $timestamp = $values["timestamp"];
-        $nonce = $values["nonce"];
-        $echoStr = $values['echostr'];
-        // 需要返回的明文
-        $sEchoStr = "";
-        $wxcpt = new WXBizMsgCrypt($account->token, $account->encoding_key, $account->corp_id);
-        $errCode = $wxcpt->VerifyURL($msgSignature, $timestamp, $nonce, $echoStr, $sEchoStr);
-        if ($errCode == 0) {
-            print($sEchoStr);
-        } else {
-            print("ERR: " . $errCode . "\n\n");
-        }
-        Yii::app()->end();
     }
 
     private function userLoginRequired($values) {
