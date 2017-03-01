@@ -170,6 +170,10 @@ class CrmapiController extends Controller {
                     $mgr = new HouseManager();
                     $output = $mgr->deletePicture($id);
                     break;
+                case 'deletehouse':
+                    $mgr = new PostManager();
+                    $output = $mgr->deleteHouse($id, $values['type']);
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
@@ -332,8 +336,8 @@ class CrmapiController extends Controller {
                     $output = $mgr->updateProject($id, $post);
                     break;
                 case 'updatehouse':
-//                    $postMgr = new PostManager();
-//                    $output = $postMgr->updatePost($id, $post);
+                    $postMgr = new PostManager();
+                    $output = $postMgr->crmUpdatePost($id, $post);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));

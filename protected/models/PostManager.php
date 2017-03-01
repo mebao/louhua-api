@@ -236,4 +236,76 @@ class PostManager {
         return $id;
     }
 
+    public function crmUpdatePost($id, $values) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'update faild!';
+        //检查该房源是否有人预定了
+        if ($values['post_type'] == 'want') {
+            //楼层高度不得超过本身楼层最高
+            if (isset($values['expect_floor_high']) && strIsEmpty($values['expect_floor_high']) === false) {
+                $project = Project::model()->getById($values['project_id']);
+                if ($values['expect_floor_high'] > $project->level_limits) {
+                    $std->errorMsg = 'this floor high must less than the project limits!';
+                    return $std;
+                }
+            }
+            $model = UserWant::model()->getById($id);
+            $house = HousingResources::model()->loadAllByWantId($id);
+        } else if ($values['post_type'] == 'have') {
+            if (isset($values['floor_high']) && strIsEmpty($values['floor_high']) === false) {
+                $project = Project::model()->getById($values['project_id']);
+                if ($values['floor_high'] > $project->level_limits) {
+                    $std->errorMsg = 'this floor level must less than the project limits!';
+                    return $std;
+                }
+                $values['expect_floor_high'] = $values['floor_high'];
+            }
+            if (isset($values['floor_low']) && strIsEmpty($values['floor_low']) === false) {
+                $values['expect_floor_low'] = $values['floor_low'];
+            }
+            $model = UserHave::model()->getById($id);
+            $house = HousingResources::model()->loadAllByHaveId($id);
+        }
+        //若有 这能修改 若无 这已被预定
+        if (isset($model) && arrayNotEmpty($house)) {
+            $model->setAttributes($values);
+            $model->update(array_keys($values));
+            foreach ($house as $value) {
+                $value->setAttributes($values);
+                $value->update(array_keys($values));
+            }
+            $std->status = 'ok';
+            $std->errorCode = 200;
+            $std->errorMsg = 'success';
+        } else {
+            $std->errorMsg = 'No authorization operation!';
+        }
+        return $std;
+    }
+
+    public function deleteHouse($id, $type) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'deleted faild!';
+        if ($type == 'have') {
+            $model = UserHave::model()->getById($id);
+            if (isset($model) && $model->delete(false) && HousingResources::model()->deleteByHaveId($id)) {
+                $std->status = 'ok';
+                $std->errorCode = 200;
+                $std->errorMsg = 'success';
+            }
+        } else {
+            $model = UserWant::model()->getById($id);
+            if (isset($model) && $model->delete(false) && HousingResources::model()->deleteByWantId($id)) {
+                $std->status = 'ok';
+                $std->errorCode = 200;
+                $std->errorMsg = 'success';
+            }
+        }
+        return $std;
+    }
+
 }
