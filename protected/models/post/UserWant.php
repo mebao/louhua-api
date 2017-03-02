@@ -39,14 +39,14 @@ class UserWant extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('date_created', 'required'),
-            array('project_id, expect_floor_low, expect_floor_high, user_id', 'numerical', 'integerOnly' => true),
+            array('project_id, expect_floor_low, expect_floor_high, user_id, is_show', 'numerical', 'integerOnly' => true),
             array('project_name, exposure', 'length', 'max' => 50),
             array('unit_type', 'length', 'max' => 200),
             array('price, coop', 'length', 'max' => 10),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, user_id, project_id, project_name, unit_type, expect_floor_low, expect_floor_high, price, exposure, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('id, user_id, project_id, project_name, unit_type, expect_floor_low, expect_floor_high, price, exposure, is_show, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 

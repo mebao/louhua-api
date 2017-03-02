@@ -38,14 +38,14 @@ class UserHave extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('date_created', 'required'),
-            array('project_id, floor_level, floor_low, floor_high, user_id', 'numerical', 'integerOnly' => true),
+            array('project_id, floor_level, floor_low, floor_high, user_id, is_show', 'numerical', 'integerOnly' => true),
             array('project_name', 'length', 'max' => 20),
             array('unit_type, exposure', 'length', 'max' => 50),
             array('price, coop', 'length', 'max' => 10),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, user_id, project_id, project_name, unit_type, floor_level, price, exposure, coop, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
+            array('id, user_id, project_id, project_name, unit_type, floor_level, price, exposure, coop, is_show, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
         );
     }
 

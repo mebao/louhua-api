@@ -389,6 +389,9 @@ class ExeclManage {
             $have->price = trim($model[9]);
             $have->exposure = trim($model[10]);
             $have->coop = trim($model[11]);
+            if ($model[13] == 'Matched') {
+                $have->is_show = StatCode::POST_NOTSHOW;
+            }
             if ($have->save()) {
                 $house = new HousingResources();
                 $house->have_id = $have->id;
@@ -462,6 +465,9 @@ class ExeclManage {
             $want->expect_floor_high = trim($model[8]);
             $want->price = trim($model[9]);
             $want->exposure = trim($model[10]);
+            if ($model[12] == 'Matched') {
+                $want->is_show = StatCode::POST_NOTSHOW;
+            }
             if ($want->save()) {
                 $house = new HousingResources();
                 $house->have_id = $want->id;

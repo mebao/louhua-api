@@ -214,6 +214,9 @@ class PostManager {
                 $model->floor_low = $values['expect_floor_low'];
                 $model->floor_high = $values['expect_floor_high'];
             }
+            if (isset($values['unit_status']) && $values['unit_status'] == 'Matched') {
+                $values['is_show'] = StatCode::POST_NOTSHOW;
+            }
             $model->setAttributes($values);
             if ($model->save() === false) {
                 throw new CDbException("db save failed");
@@ -267,6 +270,9 @@ class PostManager {
             }
             $model = UserHave::model()->getById($id);
             $house = HousingResources::model()->loadAllByHaveId($id);
+        }
+        if (isset($values['unit_status']) && $values['unit_status'] == 'Matched') {
+            $values['is_show'] = StatCode::POST_NOTSHOW;
         }
         //若有 这能修改 若无 这已被预定
         if (isset($model) && arrayNotEmpty($house)) {

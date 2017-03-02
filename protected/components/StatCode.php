@@ -16,6 +16,8 @@ class StatCode {
         );
     }
 
+    const POST_SHOW = 1;
+    const POST_NOTSHOW = 0;
     const ERROR_UNKNOWN = '未知';
     const UNIT_TYPE_STUDIO = "studio";
     const UNIT_TYPE_ONE = "1";
