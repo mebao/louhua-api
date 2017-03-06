@@ -60,8 +60,6 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewHavePending();
                     $output = $apiview->loadApiViewData();
                     break;
-                case 'searchwant':
-                    break;
                 case 'matchpending':
                     $this->userLoginRequired($values);
                     $apiview = new ApiViewMacthPending();
@@ -120,6 +118,10 @@ class CrmapiController extends Controller {
                 case 'templewant':
                     $mgr = new ExeclManage();
                     $mgr->exportTemplet('houseWantTemplet', StatCode::loadTempletHave());
+                    break;
+                case 'searchtask':
+                    $apiview = new ApiViewSearchTask($values);
+                    $output = $apiview->loadApiViewData();
                     break;
                 //微信相关接口
                 case 'wxcheck':
@@ -338,6 +340,13 @@ class CrmapiController extends Controller {
                 case 'updatehouse':
                     $postMgr = new PostManager();
                     $output = $postMgr->crmUpdatePost($id, $post);
+                    break;
+                case 'gettask':
+                    $admin = $this->userLoginRequired($post);
+                    $post['id'] = $id;
+                    $post['user_id'] = $admin->id;
+                    $apiview = new ApiViewGetTask($post);
+                    $output = $apiview->loadApiViewData();
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
