@@ -289,6 +289,10 @@ class CrmapiController extends Controller {
                     $mgr = new ExeclManage();
                     $output = $mgr->importwanthouse($file);
                     break;
+                case 'adminmacth':
+                    $apipost = new ApiPostAdminMatch($post);
+                    $output = $apipost->run();
+                    break;
                 //微信部分接口
                 case 'sendhouse'://发送房源信息
                     $mgr = new WechatManager();

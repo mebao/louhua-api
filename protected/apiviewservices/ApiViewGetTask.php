@@ -27,11 +27,13 @@ class ApiViewGetTask extends EApiViewService {
 
     private function loadUserPost() {
         $model = HousingResources::model()->getById($this->values['id']);
-        if (isset($model)) {
+        if (isset($model) && strIsEmpty($model->admin_id)) {
             $model->admin_id = $this->values['user_id'];
             $model->action = StatCode::HOUSE_ACTION_PROCESS;
             $model->update(array('admin_id', 'action'));
             $this->setModel($model);
+        } else {
+            $this->createErrorOutput('this task has been received');
         }
         $this->results = $this->info;
     }
