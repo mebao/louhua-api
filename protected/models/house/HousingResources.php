@@ -229,6 +229,10 @@ class HousingResources extends EActiveRecord {
         return $this->getAllByAttributes(array('have_id' => $haveId));
     }
 
+    public function loadAllByAdminId($adminId) {
+        return $this->getAllByAttributes(array('admin_id' => $adminId));
+    }
+
     public function getFloor() {
         if (strIsEmpty($this->expect_floor_low) || strIsEmpty($this->expect_floor_high)) {
             return '';

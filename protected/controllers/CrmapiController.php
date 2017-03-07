@@ -123,6 +123,11 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewSearchTask($values);
                     $output = $apiview->loadApiViewData();
                     break;
+                case 'mytask':
+                    $user = $this->userLoginRequired($values);
+                    $apiview = new ApiViewMyTask($user->id);
+                    $output = $apiview->loadApiViewData();
+                    break;
                 //微信相关接口
                 case 'wxcheck':
                     if (isset($values['echostr'])) {
