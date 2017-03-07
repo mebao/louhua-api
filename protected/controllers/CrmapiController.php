@@ -357,6 +357,11 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewGetTask($post);
                     $output = $apiview->loadApiViewData();
                     break;
+                case 'taskfinish':
+                    $admin = $this->userLoginRequired($post);
+                    $mgr = new HouseManager();
+                    $output = $mgr->taskFinish($id, $admin->id);
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();

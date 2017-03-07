@@ -70,4 +70,20 @@ class HouseManager {
         return $std;
     }
 
+    public function taskFinish($id, $adminId) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'finish failed';
+        $house = HousingResources::model()->getByAttributes(array('id' => $id, 'admin_id' => $adminId));
+        if (isset($house)) {
+            $house->admin_id = null;
+            $house->update(array('admin_id'));
+            $std->status = 'ok';
+            $std->errorCode = 200;
+            $std->errorMsg = 'success';
+        }
+        return $std;
+    }
+
 }
