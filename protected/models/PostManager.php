@@ -271,8 +271,12 @@ class PostManager {
             $model = UserHave::model()->getById($id);
             $house = HousingResources::model()->loadAllByHaveId($id);
         }
-        if (isset($values['unit_status']) && $values['unit_status'] == 'Matched') {
-            $values['is_show'] = StatCode::POST_NOTSHOW;
+        if (isset($values['unit_status'])) {
+            if ($values['unit_status'] == 'Matched') {
+                $values['is_show'] = StatCode::POST_NOTSHOW;
+            } else {
+                $values['is_show'] = StatCode::POST_SHOW;
+            }
         }
         //若有 这能修改 若无 这已被预定
         if (isset($model) && arrayNotEmpty($house)) {
