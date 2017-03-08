@@ -78,7 +78,7 @@ class TaskSearch extends ESearchModel {
                 $this->criteria->addCondition('t.expect_floor_high <= ' . $this->queryParams['expect_floor_high']);
             }
             if (isset($this->queryParams['time'])) {
-                $this->criteria->addCondition('t.data_created <= ' . $this->queryParams['time']);
+                $this->criteria->addCondition("t.date_created <= '" . $this->queryParams['time'] . "'");
             }
             if (isset($this->queryParams['price'])) {
                 $this->criteria->addSearchCondition('t.price', $this->queryParams['price']);
