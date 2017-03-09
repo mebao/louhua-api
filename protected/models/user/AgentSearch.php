@@ -45,11 +45,15 @@ class AgentSearch extends ESearchModel {
             if (isset($this->queryParams['reco_number'])) {
                 $this->criteria->addSearchCondition("t.state_id", $this->queryParams['cell']);
             }
-//            if (isset($this->queryParams['subscribe'])) {
-//                $this->criteria->compare("t.subscribe", $this->queryParams['subscribe']);
-//            }
+            if (isset($this->queryParams['user_role'])) {
+                $this->criteria->compare("t.user_role", $this->queryParams['user_role']);
+            } else {
+                $this->criteria->addCondition('t.user_role = ' . StatCode::ROLE_USER . ' or t.user_role = ' . StatCode::ROLE_OTHER);
+            }
+            if (isset($this->queryParams['subscribe'])) {
+                $this->criteria->compare("t.subscribe", $this->queryParams['subscribe']);
+            }
         }
-        $this->criteria->addCondition('t.user_role = ' . StatCode::ROLE_USER . ' or t.user_role = ' . StatCode::ROLE_OTHER);
     }
 
 }
