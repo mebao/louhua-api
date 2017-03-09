@@ -22,7 +22,7 @@ class ApiViewCountPost extends EApiViewService {
         parent::__construct();
         $this->projectId = $projectId;
         $this->userId = $userId;
-        $this->project = array("studio" => 0, "one" => 0, "oneandone" => 0, "two" => 0, "twoandone" => 0, "three" => 0);
+        $this->project = array("studio" => 0, "one" => 0, "oneandone" => 0, "two" => 0, "twoandone" => 0, "three" => 0, 'averageCoop' => 0, 'totalPosts' => 0);
         $this->postList = array();
     }
 

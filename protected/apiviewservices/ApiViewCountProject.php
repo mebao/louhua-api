@@ -8,7 +8,7 @@ class ApiViewCountProject extends EApiViewService {
     public function __construct($projectId) {
         parent::__construct();
         $this->projectId = $projectId;
-        $this->project = array("studio" => 0, "one" => 0, "oneandone" => 0, "two" => 0, "twoandone" => 0, "three" => 0);
+        $this->project = array("studio" => 0, "one" => 0, "oneandone" => 0, "two" => 0, "twoandone" => 0, "three" => 0, 'averageCoop' => 0, 'totalPosts' => 0);
     }
 
     protected function createOutput() {
@@ -36,6 +36,8 @@ class ApiViewCountProject extends EApiViewService {
             $this->project['name'] = $model->name;
             $this->project['levelLimits'] = $model->level_limits;
             $this->project['message'] = $model->message;
+            $this->project['openTime'] = $model->open_time;
+            $this->project['closeTime'] = $model->close_time;
             $this->project['status'] = 'Past';
             $time = date('Y-m-d H:i:s');
             if ($time >= $model->open_time && $model->close_time >= $time) {
