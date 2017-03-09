@@ -57,6 +57,7 @@ class ApiViewSearchProject extends EApiViewService {
     }
 
     private function setModel($models) {
+        $time = date('Y-m-d H:i:s');
         foreach ($models as $value) {
             $std = new stdClass();
             $std->id = $value->id;
@@ -67,6 +68,10 @@ class ApiViewSearchProject extends EApiViewService {
             $std->closeTime = $value->close_time;
             $std->totalUnits = $value->total_units;
             $std->message = $value->message;
+            $std->projectStatus = 'Past';
+            if ($time >= $value->open_time && $value->close_time >= $time) {
+                $std->projectStatus = 'Current';
+            }
             $std->pictures = arrayExtractKeyValue($value->advertisingPictures, 'id', 'picture_url');
             $this->list[] = $std;
         }
