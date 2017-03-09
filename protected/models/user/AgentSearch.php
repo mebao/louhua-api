@@ -19,10 +19,10 @@ class AgentSearch extends ESearchModel {
         $this->criteria->compare('t.is_deleted', StatCode::DB_ISNOT_DELETED);
         if ($this->hasQueryParams()) {
             if (isset($this->queryParams['id'])) {
-                $this->criteria->compare('id', $this->queryParams['id']);
+                $this->criteria->compare('t.id', $this->queryParams['id']);
             }
             if (isset($this->queryParams['wechat_id'])) {
-                $this->criteria->addSearchCondition('wechat_id', $this->queryParams['wechat_id']);
+                $this->criteria->addSearchCondition('t.wechat_id', $this->queryParams['wechat_id']);
             }
             if (isset($this->queryParams['wechat_name'])) {
                 $this->criteria->addSearchCondition('t.wechat_name', $this->queryParams['wechat_name']);
