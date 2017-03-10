@@ -34,22 +34,22 @@ class ApiPostCreateProject extends EApiPostService {
             $this->errors[] = 'this project name must input!';
         }
         if (isset($this->requestData['level_limits']) === false || strIsEmpty($this->requestData['level_limits'])) {
-            $this->errors[] = 'this level limits name must input!';
+            $this->errors[] = 'this level limits must input!';
         }
         if (isset($this->requestData['unit_type']) === false || strIsEmpty($this->requestData['unit_type'])) {
-            $this->errors[] = 'this unit type  must input!';
+            $this->errors[] = 'this unit type must input!';
         }
         if (isset($this->requestData['open_time']) === false || strIsEmpty($this->requestData['open_time'])) {
-            $this->errors[] = 'this open time name must input!';
+            $this->errors[] = 'this open time must input!';
         }
         if (isset($this->requestData['close_time']) === false || strIsEmpty($this->requestData['close_time'])) {
-            $this->errors[] = 'this close time name must input!';
+            $this->errors[] = 'this close time must input!';
         }
         if (isset($this->requestData['total_units']) === false || strIsEmpty($this->requestData['total_units'])) {
-            $this->errors[] = 'this total units name must input!';
+            $this->errors[] = 'this total units must input!';
         }
         if (isset($this->requestData['message']) === false || strIsEmpty($this->requestData['message'])) {
-            $this->errors[] = 'this message name must input!';
+            $this->errors[] = 'this message must input!';
         }
     }
 

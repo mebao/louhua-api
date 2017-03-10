@@ -298,10 +298,21 @@ class CrmapiController extends Controller {
                     $apipost = new ApiPostAdminMatch($post);
                     $output = $apipost->run();
                     break;
+                case 'conversation'://创建一次会话
+                    $admin = $this->userLoginRequired($post);
+                    $post['admin_id'] = $admin->id;
+                    $post['admin_name'] = $admin->real_name;
+                    $apipost = new ApiPostCreateConver($post);
+                    $output = $apipost->run();
+                    break;
                 //微信部分接口
                 case 'sendhouse'://发送房源信息
                     $mgr = new WechatManager();
                     $output = $mgr->sendHouse($post);
+                    break;
+                case 'sendmessage':
+                    $mgr = new WechatManager();
+                    $output = $mgr->sendMessage($post);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
@@ -361,6 +372,11 @@ class CrmapiController extends Controller {
                     $admin = $this->userLoginRequired($post);
                     $mgr = new HouseManager();
                     $output = $mgr->taskFinish($id, $admin->id);
+                    break;
+                case 'closeconver'://关闭会话
+                    $admin = $this->userLoginRequired($post);
+                    $mgr = new UserManager();
+                    $output = $mgr->closeConver($id, $admin->id);
                     break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));

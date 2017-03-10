@@ -108,4 +108,23 @@ class UserManager {
         return $std;
     }
 
+    public function closeConver($id, $adminId) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'close failed';
+        $model = Conversation::model()->loadByIdAndAdminId($id, $adminId);
+        if (isset($model)) {
+            $model->is_closed = Conversation::DB_ISCLOSED;
+            if ($model->update(array('is_closed'))) {
+                $std->status = 'ok';
+                $std->errorCode = 200;
+                $std->errorMsg = 'success';
+            }
+        } else {
+            $std->errorMsg = 'no authorization operation';
+        }
+        return $std;
+    }
+
 }

@@ -1,29 +1,33 @@
 <?php
 
 /**
- * This is the model class for table "wechat_account".
+ * This is the model class for table "conversation".
  *
- * The followings are the available columns in table 'wechat_account':
+ * The followings are the available columns in table 'conversation':
  * @property integer $id
- * @property string $wx_name
- * @property string $corp_id
- * @property string $corp_secret
- * @property string $access_token
- * @property string $token
- * @property string $encoding_key
+ * @property integer $admin_id
+ * @property string $admin_name
+ * @property integer $user_id
+ * @property string $wx_userid
+ * @property string $user_name
+ * @property string $channel
+ * @property integer $is_closed
  * @property string $date_created
  * @property string $date_updated
  * @property string $date_deleted
  * @property integer $is_deleted
  */
-class WechatAccount extends EActiveRecord {
+class Conversation extends EActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return 'wechat_account';
+        return 'conversation';
     }
+
+    const DB_ISCLOSED = 1;
+    const DB_NOTCLOSED = 0;
 
     /**
      * @return array validation rules for model attributes.
@@ -33,13 +37,12 @@ class WechatAccount extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('date_created', 'required'),
-            array('is_deleted', 'numerical', 'integerOnly' => true),
-            array('wx_name, corp_id, token', 'length', 'max' => 50),
-            array('corp_secret, access_token, encoding_key', 'length', 'max' => 300),
+            array('admin_id, user_id, is_closed, is_deleted', 'numerical', 'integerOnly' => true),
+            array('admin_name, wx_userid, user_name, channel', 'length', 'max' => 50),
             array('date_updated, date_deleted', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, wx_name, corp_id, corp_secret, access_token, token, encoding_key, date_created, date_updated, date_deleted, is_deleted', 'safe', 'on' => 'search'),
+            array('id, admin_id, admin_name, user_id, wx_userid, user_name, channel, is_closed, date_created, date_updated, date_deleted, is_deleted', 'safe', 'on' => 'search'),
         );
     }
 
@@ -59,12 +62,13 @@ class WechatAccount extends EActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'wx_name' => '微信号名称',
-            'corp_id' => '开发者应用id',
-            'corp_secret' => '开发者应用密钥',
-            'access_token' => '开发者权限',
-            'token' => '消息加解密权限',
-            'encoding_key' => '消息加解密密钥',
+            'admin_id' => 'Admin',
+            'admin_name' => 'Admin Name',
+            'user_id' => 'User',
+            'wx_userid' => 'Wx Userid',
+            'user_name' => 'User Name',
+            'channel' => 'Channel',
+            'is_closed' => 'Is Closed',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
             'date_deleted' => 'Date Deleted',
@@ -90,12 +94,13 @@ class WechatAccount extends EActiveRecord {
         $criteria = new CDbCriteria;
 
         $criteria->compare('id', $this->id);
-        $criteria->compare('wx_name', $this->wx_name, true);
-        $criteria->compare('corp_id', $this->corp_id, true);
-        $criteria->compare('corp_secret', $this->corp_secret, true);
-        $criteria->compare('access_token', $this->access_token, true);
-        $criteria->compare('token', $this->token, true);
-        $criteria->compare('encoding_key', $this->encoding_key, true);
+        $criteria->compare('admin_id', $this->admin_id);
+        $criteria->compare('admin_name', $this->admin_name, true);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('wx_userid', $this->wx_userid, true);
+        $criteria->compare('user_name', $this->user_name, true);
+        $criteria->compare('channel', $this->channel, true);
+        $criteria->compare('is_closed', $this->is_closed);
         $criteria->compare('date_created', $this->date_created, true);
         $criteria->compare('date_updated', $this->date_updated, true);
         $criteria->compare('date_deleted', $this->date_deleted, true);
@@ -110,14 +115,23 @@ class WechatAccount extends EActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return WechatAccount the static model class
+     * @return Conversation the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
-    public function loadByWxName($name = 'tongxin') {
-        return $this->getByAttributes(array('wx_name' => $name));
+    public function checkUser($id) {
+        $model = $this->getByAttributes(array('user_id' => $id, 'is_closed' => self::$DB_NOTCLOSED));
+        if (isset($model)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function loadByIdAndAdminId($id, $adminId) {
+        return $this->getByAttributes(array('id' => $id, 'admin_id' => $adminId));
     }
 
 }

@@ -2,10 +2,13 @@
 
 class WechatManager {
 
+    const WX_NAME = 'tongxin';
+    const AGENTID = '3';
+
     //更新微信操作权限
-    public function updateAccessToken($name = 'tongxin') {
+    public function updateAccessToken() {
         $output = array('status' => 'no');
-        $account = WechatAccount::model()->loadByWxName($name);
+        $account = WechatAccount::model()->loadByWxName(self::WX_NAME);
         $url = sprintf(WechatRequestUrl::qy_access_token, $account->corp_id, $account->corp_secret);
         $data = https($url);
         $account->access_token = $data['access_token'];
@@ -16,8 +19,8 @@ class WechatManager {
     }
 
     //微信授权
-    public function wechatAuth($value, $wxname = 'tongxin') {
-        $account = WechatAccount::model()->loadByWxName($wxname);
+    public function wechatAuth($value) {
+        $account = WechatAccount::model()->loadByWxName(self::WX_NAME);
         $code = '';
         if (isset($value['code'])) {
             //请求中有code，通过code获取openid
@@ -36,8 +39,8 @@ class WechatManager {
     }
 
     //微信授权
-    public function wechatAuthlogin($value, $wxname = 'tongxin') {
-        $account = WechatAccount::model()->loadByWxName($wxname);
+    public function wechatAuthlogin($value) {
+        $account = WechatAccount::model()->loadByWxName(self::WX_NAME);
         $code = '';
         if (isset($value['code'])) {
             //请求中有code，通过code获取openid
@@ -62,8 +65,8 @@ class WechatManager {
     }
 
     //更新用户微信userid
-    public function updateWxUserId($user, $value, $wxname = 'tongxin') {
-        $account = WechatAccount::model()->loadByWxName($wxname);
+    public function updateWxUserId($user, $value) {
+        $account = WechatAccount::model()->loadByWxName(self::WX_NAME);
         $code = '';
         if (isset($value['code'])) {
             //请求中有code，通过code获取openid
@@ -98,13 +101,44 @@ class WechatManager {
     }
 
     public function sendHouse($values) {
-        $account = WechatAccount::model()->loadByWxName("tongxin");
+        $account = WechatAccount::model()->loadByWxName(self::WX_NAME);
         $touser = $values['users'];
         $message = $values['message'];
-        $post = array("touser" => $touser, "msgtype" => "text", "agentid" => "3", "text" => array("content" => $message), "safe" => "0");
+        $post = array("touser" => $touser, "msgtype" => "text", "agentid" => self::AGENTID, "text" => array("content" => $message), "safe" => "0");
         $data = json_encode($post, JSON_UNESCAPED_UNICODE);
         $url = sprintf(WechatRequestUrl::qy_message_send, $account->access_token);
         return https($url, $data, "POST");
+    }
+
+    public function sendMessage($values) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'send message faild!';
+
+        //创建adminmessage
+        $model = new AdminMessage();
+        $model->conversation_id = $values['id'];
+        $model->is_admin = AdminMessage::IS_ADMIN;
+        $model->message = $values['message'];
+        if ($model->save()) {
+            $account = WechatAccount::model()->loadByWxName(self::WX_NAME);
+            $touser = $values['userid'];
+            $post = array("touser" => $touser, "msgtype" => "text", "agentid" => self::AGENTID, "text" => array("content" => $model->message), "safe" => "0");
+            $data = json_encode($post, JSON_UNESCAPED_UNICODE);
+            $url = sprintf(WechatRequestUrl::qy_message_send, $account->access_token);
+            $wx = https($url, $data, "POST");
+            if ($wx['errmsg'] == 'ok') {
+                $std->status = 'ok';
+                $std->errorCode = 200;
+                $std->errorMsg = 'success';
+            } else {
+                $std->errorMsg = 'wechat send message faild!';
+            }
+        } else {
+            $std->errorMsg = 'param error!';
+        }
+        return $std;
     }
 
 }
