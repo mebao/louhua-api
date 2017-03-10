@@ -314,6 +314,9 @@ class CrmapiController extends Controller {
                     $mgr = new WechatManager();
                     $output = $mgr->sendMessage($post);
                     break;
+                case 'wxcheck':
+                    $xmlStr = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
+                    $this->responseMsg($_GET, $xmlStr);
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();
@@ -417,20 +420,47 @@ class CrmapiController extends Controller {
     }
 
     //获取请求内容以及根据类型回复相关消息
-    public function responseMsg($params) {
+    public function responseMsg($params, $sReqData) {
+        require_once dirname(__FILE__) . '/../sdk/wechat/WXBizMsgCrypt.php';
         $account = WechatAccount::model()->loadByWxName();
-        //内容体
-        $msgStr = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
-        $wxconfig = array("token" => $account->token, "encodingAESKey" => $account->encoding_key, "appId" => $account->corp_id);
-        $message = new WxMessage();
-        $result = $message->catchMassage($params, $msgStr, $wxconfig);
-        echo $result;
+        $sReqMsgSig = $params["msg_signature"];
+        $sReqTimeStamp = $params["timestamp"];
+        $sReqNonce = $params["nonce"];
+        //post请求的密文数据
+        $sMsg = "";  // 解析之后的明文
+        $wxcpt = new WXBizMsgCrypt($account->token, $account->encoding_key, $account->corp_id);
+        $errCode = $wxcpt->DecryptMsg($sReqMsgSig, $sReqTimeStamp, $sReqNonce, $sReqData, $sMsg);
+        if ($errCode == 0) {
+            $postObj = simplexml_load_string($sMsg, 'SimpleXMLElement', LIBXML_NOCDATA);
+            if ($postObj->MsgType == 'text') {
+                $this->receiveText($postObj->FromUserName, $postObj->Content);
+            }
+        }
+        echo "";
         Yii::app()->end();
+    }
+
+    //回复文本消息
+    private function receiveText($id, $message) {
+        //处理微信发回来的信息
+        $conver = Conversation::model()->loadByWxUserId($id);
+        if (isset($conver)) {
+            $model = new AdminMessage();
+            $model->conversation_id = $conver->id;
+            $model->is_admin = AdminMessage::ISNOT_ADMIN;
+            $model->message = $message;
+            $model->save();
+        }
+        //调用前台推送
+        $data = array('appkey' => '2ba7f5ae-99ff-417b-bba0-903c4e60a5da', 'channel' => $conver->channel, 'content' => $message);
+        $url = 'http://goeasy.io/goeasy/publish';
+        $date = https($url, $data, 'POST');
+        Yii::log(json_encode($date), 'info', '消息推送');
     }
 
     private function checkSignature($values) {
         require_once dirname(__FILE__) . '/../sdk/wechat/WXBizMsgCrypt.php';
-        $account = WechatAccount::model()->loadByWxName("tongxin");
+        $account = WechatAccount::model()->loadByWxName();
         $msgSignature = $values["msg_signature"];
         $timestamp = $values["timestamp"];
         $nonce = $values["nonce"];

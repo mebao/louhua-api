@@ -136,7 +136,7 @@ class Conversation extends EActiveRecord {
     }
 
     public function loadByWxUserId($wxuserid, $with = null) {
-        return $this->getByAttributes(array('wx_userid' => $wxuserid, 'is_closed' => self::$DB_NOTCLOSED), $with);
+        return $this->getByAttributes(array('wx_userid' => $wxuserid, 'is_closed' => self::DB_NOTCLOSED), $with);
     }
 
 }
