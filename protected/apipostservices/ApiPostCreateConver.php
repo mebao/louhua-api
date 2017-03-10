@@ -22,7 +22,7 @@ class ApiPostCreateConver extends EApiPostService {
         if (isset($this->requestData['admin_id']) === false || strIsEmpty($this->requestData['admin_id'])) {
             $this->errors[] = 'this admin id must input!';
         }
-        if (isset($this->requestData['admin_name']) === false || strIsEmpty($this->requestData['admin_name'])) {
+        if (isset($this->requestData['admin_name']) === false) {
             $this->errors[] = 'this admin name must input!';
         }
         if (isset($this->requestData['user_id']) === false || strIsEmpty($this->requestData['user_id'])) {
