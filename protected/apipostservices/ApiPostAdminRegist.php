@@ -56,6 +56,7 @@ class ApiPostAdminRegist extends EApiPostService {
     protected function doPostAction() {
         $user = new User();
         $user->setAttributes($this->requestData);
+        $user->date_verified = date('Y-m-d H:i:s');
         $user->createNewModel();
         if ($user->save() === false) {
             $this->errors[] = '注册失败!';

@@ -53,6 +53,7 @@ class Conversation extends EActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'message' => array(self::HAS_ONE, 'AdminMessage', 'conversation_id'),
         );
     }
 
@@ -122,7 +123,7 @@ class Conversation extends EActiveRecord {
     }
 
     public function checkUser($id) {
-        $model = $this->getByAttributes(array('user_id' => $id, 'is_closed' => self::$DB_NOTCLOSED));
+        $model = $this->getByAttributes(array('user_id' => $id, 'is_closed' => self::DB_NOTCLOSED));
         if (isset($model)) {
             return true;
         } else {
@@ -132,6 +133,10 @@ class Conversation extends EActiveRecord {
 
     public function loadByIdAndAdminId($id, $adminId) {
         return $this->getByAttributes(array('id' => $id, 'admin_id' => $adminId));
+    }
+
+    public function loadByWxUserId($wxuserid, $with = null) {
+        return $this->getByAttributes(array('wx_userid' => $wxuserid, 'is_closed' => self::$DB_NOTCLOSED), $with);
     }
 
 }

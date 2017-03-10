@@ -418,13 +418,12 @@ class CrmapiController extends Controller {
 
     //获取请求内容以及根据类型回复相关消息
     public function responseMsg($params) {
-        $account = WechatAccount::model()->loadByWxName("tongxin");
+        $account = WechatAccount::model()->loadByWxName();
         //内容体
         $msgStr = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA'] : file_get_contents("php://input");
         $wxconfig = array("token" => $account->token, "encodingAESKey" => $account->encoding_key, "appId" => $account->corp_id);
         $message = new WxMessage();
         $result = $message->catchMassage($params, $msgStr, $wxconfig);
-        Yii::log($result, "info", "微信回复结果");
         echo $result;
         Yii::app()->end();
     }
