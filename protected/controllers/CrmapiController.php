@@ -7,14 +7,14 @@ class CrmapiController extends Controller {
     public function setDomainWhiteList() {
         $this->domainWhiteList = array(
             "http://192.168.10.79",
-            "http://meb.mingyizd.com"
+            "http://crm.louhua.meb168.com"
         );
     }
 
     public function init() {
         parent::init();
         $this->setDomainWhiteList();
-        $domainList = array('http://meb.mingyizd.com');
+        $domainList = array('http://crm.louhua.meb168.com');
         $this->addHeaderSafeDomains($domainList);
         header('Access-Control-Allow-Credentials:true');      // 允许携带 用户认证凭据（也就是允许客户端发送的请求携带Cookie）        	
         header('Access-Control-Allow-Headers: Origin,X-Requested-With,Authorization,Accept,Content-Type,if-modified-since,Cache-Control');
@@ -449,13 +449,14 @@ class CrmapiController extends Controller {
             $model->conversation_id = $conver->id;
             $model->is_admin = AdminMessage::ISNOT_ADMIN;
             $model->message = $message;
-            $model->save();
+            if ($model->save()) {
+                //调用前台推送
+                $data = array('appkey' => '2ba7f5ae-99ff-417b-bba0-903c4e60a5da', 'channel' => $conver->channel, 'content' => $message);
+                $url = 'http://goeasy.io/goeasy/publish';
+                $date = https($url, $data, 'POST');
+                Yii::log(json_encode($date), 'info', '消息推送');
+            }
         }
-        //调用前台推送
-        $data = array('appkey' => '2ba7f5ae-99ff-417b-bba0-903c4e60a5da', 'channel' => $conver->channel, 'content' => $message);
-        $url = 'http://goeasy.io/goeasy/publish';
-        $date = https($url, $data, 'POST');
-        Yii::log(json_encode($date), 'info', '消息推送');
     }
 
     private function checkSignature($values) {
