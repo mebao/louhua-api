@@ -55,6 +55,11 @@ class ApiViewMatchInfo extends EApiViewService {
     private function setModel($v) {
         $std = new stdClass();
         $std->id = $v->id;
+        if ($this->type == 'have') {
+            $std->user_id = $v->user_have_id;
+        } else {
+            $std->user_id = $v->user_want_id;
+        }
         $std->projectId = $v->project_id;
         $std->projectName = $v->project_name;
         $std->type = $v->unit_type;
