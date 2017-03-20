@@ -172,7 +172,7 @@ class UserWant extends EActiveRecord {
         if (isset($values['floor_high']) && strIsEmpty($values['floor_high']) === false) {
             $criteria->addCondition("t.expect_floor_high <=" . $values['floor_high']);
         }
-        $criteria->addCondition("t.is_show = 1");
+        //$criteria->addCondition("t.is_show = 1");
         $criteria->compare('t.is_deleted', self::DB_ISNOT_DELETED);
         $criteria->with = $with;
         $criteria->order = $order;

@@ -205,6 +205,7 @@ class PostManager {
         try {
             $house = new HousingResources();
             $house->setAttributes($values);
+            $house->is_show = StatCode::POST_SHOW;
             if ($values['post_type'] == 'want') {
                 $model = new UserWant();
                 $model->user_id = $values['user_want_id'];
@@ -213,6 +214,7 @@ class PostManager {
                 $model->user_id = $values['user_have_id'];
                 $model->floor_low = $values['expect_floor_low'];
                 $model->floor_high = $values['expect_floor_high'];
+                $model->is_show = StatCode::POST_SHOW;
             }
             if (isset($values['unit_status']) && $values['unit_status'] == 'Matched') {
                 $values['is_show'] = StatCode::POST_NOTSHOW;
@@ -270,6 +272,9 @@ class PostManager {
             }
             $model = UserHave::model()->getById($id);
             $house = HousingResources::model()->loadAllByHaveId($id);
+        }
+        if (isset($values['house_status']) && $values['house_status'] == 1) {
+            $values['is_show'] = StatCode::POST_SHOW;
         }
         if (isset($values['unit_status'])) {
             if ($values['unit_status'] == 'Matched') {

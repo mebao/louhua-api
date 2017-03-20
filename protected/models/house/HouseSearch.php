@@ -95,6 +95,9 @@ class HouseSearch extends ESearchModel {
             if (isset($this->queryParams['unit_status'])) {
                 $this->criteria->compare('t.unit_status', $this->queryParams['unit_status']);
             }
+            if (isset($this->queryParams['house_status'])) {
+                $this->criteria->compare('t.house_status', $this->queryParams['house_status']);
+            }
         }
     }
 
