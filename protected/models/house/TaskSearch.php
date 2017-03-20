@@ -43,7 +43,7 @@ class TaskSearch extends ESearchModel {
             if (isset($this->queryParams['searchkey']) && strIsEmpty($this->queryParams['searchkey']) === false) {
                 $searchkey = $this->queryParams['searchkey'];
                 $searchsql = "t.project_name = '{$searchkey}' or t.user_have_name = '{$searchkey}' or t.user_want_name = '{$searchkey}' "
-                        . "or t.action = '{$searchkey}' or t.unit_status = '{$searchkey}'";
+                        . "or t.action = '{$searchkey}' or t.unit_status = '{$searchkey}' or t.exposure = '{$searchkey}'";
                 if (is_numeric($searchkey)) {
                     $searchsql.=" or t.id = {$searchkey} or t.expect_floor_low = '{$searchkey}'  or t.expect_floor_high = '{$searchkey}'  or t.price= '{$searchkey}' or t.coop = '{$searchkey}'";
                 }
