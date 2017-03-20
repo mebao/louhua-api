@@ -49,11 +49,11 @@ class HousingResources extends EActiveRecord {
         // will receive user inputs.
         return array(
             array('date_created', 'required'),
-            array('floor_level, expect_floor_low, project_id, expect_floor_high, user_have_id, user_want_id, want_id, have_id, situation', 'numerical', 'integerOnly' => true),
+            array('floor_level, expect_floor_low, project_id, expect_floor_high, user_have_id, user_want_id, want_id, have_id, house_status, situation', 'numerical', 'integerOnly' => true),
             array('user_have_name, user_want_name, project_name, price, exposure, action, unit_status', 'length', 'max' => 50),
             array('coop', 'length', 'max' => 10),
             array('unit_type', 'length', 'max' => 20),
-            array('date_updated, date_deleted', 'safe'),
+            array('date_updated, date_deleted, house_status', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, user_have_id, user_have_name, user_want_id, floor_level, expect_floor_low, user_want_name, project_id, project_name, unit_type, expect_floor_high, price, exposure, coop, action, unit_status, situation, date_created, date_updated, date_deleted', 'safe', 'on' => 'search'),
