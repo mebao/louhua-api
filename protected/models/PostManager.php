@@ -205,7 +205,7 @@ class PostManager {
         try {
             $house = new HousingResources();
             $house->setAttributes($values);
-            $house->is_show = StatCode::POST_SHOW;
+            $house->house_status = 1;
             if ($values['post_type'] == 'want') {
                 $model = new UserWant();
                 $model->user_id = $values['user_want_id'];
