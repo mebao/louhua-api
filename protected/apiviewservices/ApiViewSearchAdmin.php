@@ -17,7 +17,7 @@ class ApiViewSearchAdmin extends EApiViewService {
     private $getCount = false;  // whether to count no. of Doctors satisfying the search conditions.
     private $pageSize = 10;
     private $adminSearch;  // DoctorSearch model.
-    private $admins;
+    private $admins = array();
     private $adminCount;     // count no. of Doctors.
 
     public function __construct($searchInputs) {

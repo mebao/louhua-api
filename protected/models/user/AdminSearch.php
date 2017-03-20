@@ -12,45 +12,57 @@ class AdminSearch extends ESearchModel {
     }
 
     public function getQueryFields() {
-        return array('id', 'wechat_id', 'wechat_name', 'admin_name', 'real_name', 'cell', 'brokerage_name', 'office_telephone', 'reco_number', 'user_role', 'subscribe');
+        return array('id', 'wechat_id', 'wechat_name', 'admin_name', 'real_name', 'cell', 'brokerage_name', 'office_telephone', 'reco_number', 'user_role', 'subscribe', 'searchkey');
     }
 
     public function addQueryConditions() {
         $this->criteria->compare('t.is_deleted', StatCode::DB_ISNOT_DELETED);
         $this->criteria->compare('t.user_role', StatCode::ROLE_ADMIN);
         if ($this->hasQueryParams()) {
-            if (isset($this->queryParams['id'])) {
-                $this->criteria->compare('id', $this->queryParams['id']);
-            }
-            if (isset($this->queryParams['wechat_id'])) {
-                $this->criteria->addSearchCondition('wechat_id', $this->queryParams['wechat_id']);
-            }
-            if (isset($this->queryParams['wechat_name'])) {
-                $this->criteria->addSearchCondition('t.wechat_name', $this->queryParams['wechat_name']);
-            }
-            if (isset($this->queryParams['admin_name'])) {
-                $this->criteria->addSearchCondition('t.username', $this->queryParams['admin_name']);
-            }
-            if (isset($this->queryParams['real_name'])) {
-                $this->criteria->addSearchCondition('t.real_name', $this->queryParams['real_name']);
-            }
-            if (isset($this->queryParams['cell'])) {
-                $this->criteria->addSearchCondition("t.cell", $this->queryParams['cell']);
-            }
-            if (isset($this->queryParams['brokerage_name'])) {
-                $this->criteria->addSearchCondition("t.brokerage_name", $this->queryParams['brokerage_name']);
-            }
-            if (isset($this->queryParams['office_telephone'])) {
-                $this->criteria->addSearchCondition("t.office_telephone", $this->queryParams['office_telephone']);
-            }
-            if (isset($this->queryParams['reco_number'])) {
-                $this->criteria->addSearchCondition("t.state_id", $this->queryParams['cell']);
+            if (isset($this->queryParams['searchkey']) && strIsEmpty($this->queryParams['searchkey']) === false) {
+                $searchkey = $this->queryParams['searchkey'];
+                $searchsql = "t.wechat_id = '{$searchkey}' or t.wechat_name = '{$searchkey}' or t.username = '{$searchkey}' "
+                        . "or t.real_name = '{$searchkey}' or t.cell = '{$searchkey}' or t.brokerage_name = '{$searchkey}' or t.office_telephone = '{$searchkey}' "
+                        . "or t.reco_number = '{$searchkey}'";
+                if (is_numeric($searchkey)) {
+                    $searchsql.=" or t.id = {$searchkey}";
+                }
+                $this->criteria->addCondition($searchsql);
+            } else {
+                if (isset($this->queryParams['id'])) {
+                    $this->criteria->compare('id', $this->queryParams['id']);
+                }
+                if (isset($this->queryParams['wechat_id'])) {
+                    $this->criteria->addSearchCondition('wechat_id', $this->queryParams['wechat_id']);
+                }
+                if (isset($this->queryParams['wechat_name'])) {
+                    $this->criteria->addSearchCondition('t.wechat_name', $this->queryParams['wechat_name']);
+                }
+                if (isset($this->queryParams['admin_name'])) {
+                    $this->criteria->addSearchCondition('t.username', $this->queryParams['admin_name']);
+                }
+                if (isset($this->queryParams['real_name'])) {
+                    $this->criteria->addSearchCondition('t.real_name', $this->queryParams['real_name']);
+                }
+                if (isset($this->queryParams['cell'])) {
+                    $this->criteria->addSearchCondition("t.cell", $this->queryParams['cell']);
+                }
+                if (isset($this->queryParams['brokerage_name'])) {
+                    $this->criteria->addSearchCondition("t.brokerage_name", $this->queryParams['brokerage_name']);
+                }
+                if (isset($this->queryParams['office_telephone'])) {
+                    $this->criteria->addSearchCondition("t.office_telephone", $this->queryParams['office_telephone']);
+                }
+                if (isset($this->queryParams['reco_number'])) {
+                    $this->criteria->addSearchCondition("t.state_id", $this->queryParams['cell']);
+                }
+
+                if (isset($this->queryParams['subscribe'])) {
+                    $this->criteria->compare("t.subscribe", $this->queryParams['subscribe']);
+                }
             }
             if (isset($this->queryParams['user_role'])) {
                 $this->criteria->compare("t.user_role", $this->queryParams['user_role']);
-            }
-            if (isset($this->queryParams['subscribe'])) {
-                $this->criteria->compare("t.subscribe", $this->queryParams['subscribe']);
             }
         }
     }

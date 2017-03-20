@@ -17,7 +17,7 @@ class ApiViewSearchAgent extends EApiViewService {
     private $getCount = false;  // whether to count no. of Doctors satisfying the search conditions.
     private $pageSize = 10;
     private $agentSearch;
-    private $agents;
+    private $agents = array();
     private $agentCount;
     private $postList;
 
