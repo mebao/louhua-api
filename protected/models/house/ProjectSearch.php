@@ -26,7 +26,7 @@ class ProjectSearch extends ESearchModel {
                 }
                 $this->criteria->addCondition($searchsql);
             } else {
-                if (isset($this->queryParams['t.id'])) {
+                if (isset($this->queryParams['id'])) {
                     $this->criteria->compare('t.id', $this->queryParams['id']);
                 }
                 if (isset($this->queryParams['name'])) {

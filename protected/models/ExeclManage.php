@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: myzd-changbiyu
- * Date: 2017/1/10
- * Time: 11:11
- */
 require_once dirname(__FILE__) . '/../sdk/phpexcel/PHPExcel.php';
 require_once dirname(__FILE__) . '/../sdk/phpexcel/PHPExcel/IOFactory.php';
 

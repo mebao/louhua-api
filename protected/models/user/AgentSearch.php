@@ -17,6 +17,11 @@ class AgentSearch extends ESearchModel {
 
     public function addQueryConditions() {
         $this->criteria->compare('t.is_deleted', StatCode::DB_ISNOT_DELETED);
+        if (isset($this->queryParams['user_role'])) {
+            $this->criteria->compare("t.user_role", $this->queryParams['user_role']);
+        } else {
+            $this->criteria->addCondition('t.user_role = ' . StatCode::ROLE_USER . ' or t.user_role = ' . StatCode::ROLE_OTHER);
+        }
         if ($this->hasQueryParams()) {
             if (isset($this->queryParams['searchkey']) && strIsEmpty($this->queryParams['searchkey']) === false) {
                 $searchkey = $this->queryParams['searchkey'];
@@ -58,11 +63,6 @@ class AgentSearch extends ESearchModel {
                 if (isset($this->queryParams['subscribe'])) {
                     $this->criteria->compare("t.subscribe", $this->queryParams['subscribe']);
                 }
-            }
-            if (isset($this->queryParams['user_role'])) {
-                $this->criteria->compare("t.user_role", $this->queryParams['user_role']);
-            } else {
-                $this->criteria->addCondition('t.user_role = ' . StatCode::ROLE_USER . ' or t.user_role = ' . StatCode::ROLE_OTHER);
             }
         }
     }
