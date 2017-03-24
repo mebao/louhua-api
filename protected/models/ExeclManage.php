@@ -465,7 +465,7 @@ class ExeclManage {
             }
             if ($want->save()) {
                 $house = new HousingResources();
-                $house->have_id = $want->id;
+                $house->want_id = $want->id;
                 $house->project_id = $want->project_id;
                 $house->project_name = $want->project_name;
                 $house->unit_type = $want->unit_type;
