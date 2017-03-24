@@ -470,7 +470,6 @@ class ExeclManage {
                 $house->project_name = $want->project_name;
                 $house->unit_type = $want->unit_type;
                 $house->price = $want->price;
-                $house->coop = $want->coop;
                 $house->exposure = $want->exposure;
                 $house->expect_floor_low = $want->expect_floor_low;
                 $house->expect_floor_high = $want->expect_floor_high;
