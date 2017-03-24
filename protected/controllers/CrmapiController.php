@@ -117,7 +117,7 @@ class CrmapiController extends Controller {
                     break;
                 case 'templewant':
                     $mgr = new ExeclManage();
-                    $mgr->exportTemplet('houseWantTemplet', StatCode::loadTempletHave());
+                    $mgr->exportTemplet('houseWantTemplet', StatCode::loadTempletWant());
                     break;
                 case 'searchtask':
                     $apiview = new ApiViewSearchTask($values);

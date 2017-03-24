@@ -39,7 +39,7 @@ class Project extends EActiveRecord {
         return array(
             array('date_created', 'required'),
             array('level_limits, total_units', 'numerical', 'integerOnly' => true),
-            array('name', 'length', 'max' => 20),
+            array('name', 'length', 'max' => 200),
             array('unit_type', 'length', 'max' => 50),
             array('message ,open_time, close_time, date_updated, date_deleted', 'safe'),
             // The following rule is used by search().

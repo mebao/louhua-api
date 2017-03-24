@@ -403,6 +403,7 @@ class ExeclManage {
                 $house->user_want_name = trim($model[5]);
                 $house->action = trim($model[12]);
                 $house->unit_status = trim($model[13]);
+                $house->house_status = 1;
                 $house->save();
             } else {
                 $status = false;
@@ -479,6 +480,7 @@ class ExeclManage {
                 $house->user_want_name = trim($model[5]);
                 $house->action = trim($model[11]);
                 $house->unit_status = trim($model[12]);
+                $house->house_status = 1;
                 $house->save();
             } else {
                 $status = false;
