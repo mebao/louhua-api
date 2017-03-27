@@ -56,9 +56,9 @@ class WechatManager {
         $url = sprintf(WechatRequestUrl::qy_user_get, $account->access_token, $code);
         $data = https($url);
         if (isset($data['UserId'])) {
-            $loginurl = 'http://wap.louhua.meb168.com/#/layout/wechatlogin?userid=' . $data['UserId'];
+            $loginurl = Yii::app()->params['viewUrl'] . 'wechatlogin?userid=' . $data['UserId'];
         } else {
-            $loginurl = 'http://wap.louhua.meb168.com/#/layout/wechatlogin?userid=error';
+            $loginurl = Yii::app()->params['viewUrl'] . 'wechatlogin?userid=error';
         }
         header('Location: ' . $loginurl);
         Yii::app()->end();
@@ -85,7 +85,8 @@ class WechatManager {
             $user->wx_userid = $data['UserId'];
             $user->update(array('wx_userid'));
         }
-        header('Location: http://wap.louhua.meb168.com/#/layout/project');
+        $viewUrl = Yii::app()->params['viewUrl'] . 'project';
+        header('Location: ' . $viewUrl);
         Yii::app()->end();
     }
 

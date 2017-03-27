@@ -115,10 +115,6 @@ class XlhapiController extends Controller {
                     $mgr = new WechatManager();
                     $output = $mgr->updateWxUserId($user, $values);
                     break;
-                case 'test':
-                    $mgr = new ExeclManage();
-                    $output = $mgr->daochu();
-                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();

@@ -13,11 +13,6 @@ class EmailManager {
         
     }
 
-    /**
-     * 支付完成 发送邮件提醒
-     * @param type $data
-     * @return type
-     */
     public function sendEmailVerifyUser($email, $url) {
         //生成数据库数据
         $output = array('status' => 'ok');
@@ -29,9 +24,9 @@ class EmailManager {
             $data->name = $user->real_name;
             $data->url = $url . "?email={$email}&code=" . $model->code;
             $view = 'verifyUser';
-            $subject = "user eamil verify";
+            $subject = "user email verify";
             $to = array($email);
-            $from = array('noreply@mingyihz.com' => Yii::app()->name);
+            $from = array('demo@ubene.com' => 'xlh');
             $bodyParams = array();
             $bodyParams['data'] = $data;
             $num = $this->sendEmail($from, $to, $subject, $bodyParams, $view);
