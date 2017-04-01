@@ -24,7 +24,7 @@ class XlhapiController extends Controller {
     public function init() {
         parent::init();
         $this->setDomainWhiteList();
-        $domainList = array('http://wap.louhua.meb168.com');
+        $domainList = Yii::app()->params['domainWhiteList'];
         $this->addHeaderSafeDomains($domainList);
         header('Access-Control-Allow-Credentials:true');      // 允许携带 用户认证凭据（也就是允许客户端发送的请求携带Cookie）        	
         header('Access-Control-Allow-Headers: Origin,X-Requested-With,Authorization,Accept,Content-Type,if-modified-since');

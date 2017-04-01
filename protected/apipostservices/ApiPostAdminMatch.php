@@ -61,7 +61,7 @@ class ApiPostAdminMatch extends EApiPostService {
             $std = new stdClass();
             $std->status = self::RESPONSE_NO;
             $std->errorCode = 502;
-            $std->errorMsg = 'watch again!';
+            $std->errorMsg = 'You have duplicated the match requests, please choose other options.';
             $this->output = $std;
         } else {
             $house = HousingResources::model()->getById($this->requestData['house_id']);

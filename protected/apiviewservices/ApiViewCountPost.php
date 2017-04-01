@@ -102,7 +102,7 @@ class ApiViewCountPost extends EApiViewService {
 
     private function loadUserhave() {
         $options = array("order" => "t.id desc", "limit" => 4, "offset" => 0);
-        $models = UserHave::model()->getAllByAttributes(array('project_id' => $this->projectId), null, $options);
+        $models = UserHave::model()->getAllByAttributes(array('project_id' => $this->projectId,'is_show'=>'1'), null, $options);
         if (arrayNotEmpty($models)) {
             $this->setUserhave($models);
         }
