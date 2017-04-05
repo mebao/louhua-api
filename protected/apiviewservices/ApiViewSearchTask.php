@@ -57,14 +57,12 @@ class ApiViewSearchTask extends EApiViewService {
     }
 
     private function setModel($models) {
-
-        if (isset($this->searchInputs['post_type']) && $this->searchInputs['post_type'] == 'want') {
+        $postType = '';
+        if (isset($this->searchInputs['post_type'])) {
             if ($this->searchInputs['post_type'] == 'want') {
                 $postType = 'want';
             } else if ($this->searchInputs['post_type'] == 'want') {
                 $postType = 'have';
-            } else {
-                $postType = '';
             }
         }
         foreach ($models as $v) {
