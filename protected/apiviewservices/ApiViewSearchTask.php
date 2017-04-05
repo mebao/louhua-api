@@ -57,9 +57,15 @@ class ApiViewSearchTask extends EApiViewService {
     }
 
     private function setModel($models) {
-        $postType = 'have';
+
         if (isset($this->searchInputs['post_type']) && $this->searchInputs['post_type'] == 'want') {
-            $postType = 'want';
+            if ($this->searchInputs['post_type'] == 'want') {
+                $postType = 'want';
+            } else if ($this->searchInputs['post_type'] == 'want') {
+                $postType = 'have';
+            } else {
+                $postType = '';
+            }
         }
         foreach ($models as $v) {
             $std = new stdClass();
@@ -81,7 +87,15 @@ class ApiViewSearchTask extends EApiViewService {
             $std->action = $v->action;
             $std->unitStatus = $v->unit_status;
             $std->time = $v->getDateCreated('Y-m-d H:i:s');
-            $std->postType = $postType;
+            if (strIsEmpty($postType)) {
+                if (strIsEmpty($v->have_id) === false && strIsEmpty($v->want_id)) {
+                    $std->postType = 'have';
+                } else {
+                    $std->postType = 'want';
+                }
+            } else {
+                $std->postType = $postType;
+            }
             $this->list[] = $std;
         }
     }
