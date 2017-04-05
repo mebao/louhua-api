@@ -40,6 +40,16 @@ class ApiPostCrmPost extends EApiPostService {
         }
         if (isset($this->requestData['post_type']) === false || strIsEmpty($this->requestData['post_type'])) {
             $this->errors[] = 'this post_type must input!';
+        } else {
+            if ($this->requestData['post_type'] == 'have') {
+                if (isset($this->requestData['user_have_id']) === false || strIsEmpty($this->requestData['user_have_id'])) {
+                    $this->errors[] = 'this have agent must input!';
+                }
+            } else {
+                if (isset($this->requestData['user_want_id']) === false || strIsEmpty($this->requestData['user_want_id'])) {
+                    $this->errors[] = 'this want agent must input!';
+                }
+            }
         }
         if (isset($this->requestData['expect_floor_low']) === false || strIsEmpty($this->requestData['expect_floor_low'])) {
             $this->errors[] = 'this expect floor low must input!';
@@ -52,13 +62,6 @@ class ApiPostCrmPost extends EApiPostService {
             if ($this->requestData['expect_floor_high'] > $project->level_limits) {
                 $this->errors[] = 'this floor level must less than the project limits!';
             }
-        }
-
-        if (isset($this->requestData['user_have_id']) === false || strIsEmpty($this->requestData['user_have_id'])) {
-            $this->errors[] = 'this have agent must input!';
-        }
-        if (isset($this->requestData['user_want_id']) === false || strIsEmpty($this->requestData['user_want_id'])) {
-            $this->errors[] = 'this want agent must input!';
         }
         if (isset($this->requestData['project_name']) === false || strIsEmpty($this->requestData['project_name'])) {
             $this->errors[] = 'this project_name must input!';

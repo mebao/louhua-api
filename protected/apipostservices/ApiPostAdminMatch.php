@@ -57,7 +57,7 @@ class ApiPostAdminMatch extends EApiPostService {
         $manger = new PostManager();
         $isSuccess = $manger->createMatch($this->requestData);
         if ($isSuccess == 'again' || $isSuccess == 'no') {
-            $this->errors[] = 'watch again!';
+            $this->errors[] = 'match again!';
             $std = new stdClass();
             $std->status = self::RESPONSE_NO;
             $std->errorCode = 502;
