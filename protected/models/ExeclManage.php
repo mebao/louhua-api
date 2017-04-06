@@ -158,10 +158,16 @@ class ExeclManage {
 
         /* 以下就是对处理Excel里的数据， 横着取数据，主要是这一步，其他基本都不要改 */
         foreach ($data as $k => $v) {
+            $id = '';
+            if ($v->postType == 'have') {
+                $id = $v->haveId;
+            } else {
+                $id = $v->wantId;
+            }
             $num = $k + 2;
             $objPHPExcel->setActiveSheetIndex(0)
                     //Excel的第A列，uid是你查出数组的键值，下面以此类推
-                    ->setCellValue('A' . $num, $v->id)
+                    ->setCellValue('A' . $num, $id)
                     ->setCellValue('B' . $num, $v->projectName)
                     ->setCellValue('C' . $num, $v->userHaveName)
                     ->setCellValue('D' . $num, $v->userWantName)
