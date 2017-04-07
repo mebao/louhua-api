@@ -93,6 +93,7 @@ class ApiViewMatchInfo extends EApiViewService {
                 continue;
             }
             $std = new stdClass();
+            $std->houseId = $value->id;
             $std->userId = $user->id;
             $std->username = $user->username;
             $std->wechatId = $user->wechat_id;
