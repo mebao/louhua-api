@@ -106,11 +106,12 @@ class HouseManager {
             $criteria->addCondition("id !=" . $values['id']);
             if ($values['type'] == 'have') {
                 $criteria->compare('have_id', $house->have_id);
-            } else {
+            } else if ($values['type'] == 'want') {
                 $criteria->compare('want_id', $house->want_id);
             }
             $now = date('Y-m-d H:i:s');
-            if (HousingResources::model()->updateAll(array('is_deleted' => StatCode::DB_IS_DELETED, 'date_deleted' => $now), $criteria)) {
+            $num = HousingResources::model()->updateAll(array('is_deleted' => StatCode::DB_IS_DELETED, 'date_deleted' => $now), $criteria);
+            if ($num >= 0) {
                 $std->status = 'ok';
                 $std->errorCode = 200;
                 $std->errorMsg = 'success';
