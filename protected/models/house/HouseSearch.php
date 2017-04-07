@@ -100,6 +100,9 @@ class HouseSearch extends ESearchModel {
                 }
                 if (isset($this->queryParams['action'])) {
                     $this->criteria->compare('t.action', $this->queryParams['action']);
+                } else {
+                    $this->criteria->addCondition('t.action !=' . StatCode::HOUSE_ACTION_DONE);
+                    $this->criteria->addCondition('t.action !=' . StatCode::HOUSE_ACTION_FAILED);
                 }
                 if (isset($this->queryParams['unit_status'])) {
                     $this->criteria->compare('t.unit_status', $this->queryParams['unit_status']);
