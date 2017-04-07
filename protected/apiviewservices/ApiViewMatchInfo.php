@@ -58,9 +58,11 @@ class ApiViewMatchInfo extends EApiViewService {
         if ($this->type == 'have') {
             $std->user_id = $v->user_have_id;
             $std->userName = $v->user_have_name;
+            $std->showId = have_id;
         } else {
             $std->user_id = $v->user_want_id;
             $std->userName = $v->user_want_name;
+            $std->showId = want_id;
         }
         $std->projectId = $v->project_id;
         $std->projectName = $v->project_name;
