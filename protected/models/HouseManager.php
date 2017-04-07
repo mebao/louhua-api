@@ -97,8 +97,8 @@ class HouseManager {
         $std->errorCode = 502;
         $std->errorMsg = 'operation failed';
         $house = HousingResources::model()->getById($values['id']);
-        $house->unit_status = StatCode::HOUSE_ACTION_DONE;
-        $house->action = StatCode::UNIT_STATUS_MATCHED;
+        $house->unit_status = StatCode::UNIT_STATUS_MATCHED;
+        $house->action = StatCode::HOUSE_ACTION_DONE;
         $house->admin_id = null;
         if ($house->update(array('unit_status', 'action', 'admin_id'))) {
             //删除条件
