@@ -38,6 +38,15 @@ class ApiViewGetTask extends EApiViewService {
             } else {
                 $this->createErrorOutput('this task has been received');
             }
+            //将其他的改为被占用的
+            $criteria = new CDbCriteria;
+            $criteria->addCondition("id !=" . $model->id);
+            if ($this->values['post_type'] == 'have') {
+                $criteria->compare('have_id', $model->have_id);
+            } else {
+                $criteria->compare('want_id', $model->want_id);
+            }
+            HousingResources::model()->updateAll(array('admin_id' => 0), $criteria);
         } else {
             $this->createErrorOutput('this task is null');
         }

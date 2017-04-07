@@ -77,8 +77,13 @@ class HouseManager {
         $std->errorMsg = 'finish failed';
         $house = HousingResources::model()->getByAttributes(array('id' => $id, 'admin_id' => $adminId));
         if (isset($house)) {
-            $house->admin_id = null;
-            $house->update(array('admin_id'));
+            $attr = array();
+            if (strIsEmpty($house->have_id)) {
+                $attr['want_id'] = $house->want_id;
+            } else {
+                $attr['have_id'] = $house->have_id;
+            }
+            HousingResources::model()->updateAll(array('admin_id' => null), $attr);
             $std->status = 'ok';
             $std->errorCode = 200;
             $std->errorMsg = 'success';
@@ -99,7 +104,7 @@ class HouseManager {
             //删除条件
             $criteria = new CDbCriteria;
             $criteria->addCondition("id !=" . $values['id']);
-            if ($values['type'] === 'have') {
+            if ($values['type'] == 'have') {
                 $criteria->compare('have_id', $house->have_id);
             } else {
                 $criteria->compare('want_id', $house->want_id);
