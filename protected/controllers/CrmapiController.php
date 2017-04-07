@@ -217,6 +217,11 @@ class CrmapiController extends Controller {
                     $apiview = new ApiViewMatchInfo($id, $values['type']);
                     $output = $apiview->loadApiViewData();
                     break;
+                case 'matchsuccess'://匹配成功
+                    $values['id'] = $id;
+                    $houseMgr = new HouseManager();
+                    $output = $houseMgr->matchsuccess($values);
+                    break;
                 default:
                     $this->_sendResponse(501, sprintf('Error: Invalid request', $model));
                     Yii::app()->end();

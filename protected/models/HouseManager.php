@@ -86,4 +86,32 @@ class HouseManager {
         return $std;
     }
 
+    public function matchsuccess($values) {
+        $std = new stdClass();
+        $std->status = 'no';
+        $std->errorCode = 502;
+        $std->errorMsg = 'operation failed';
+        $house = HousingResources::model()->getById($values['id']);
+        $house->unit_status = StatCode::HOUSE_ACTION_DONE;
+        $house->action = StatCode::UNIT_STATUS_MATCHED;
+        $house->admin_id = null;
+        if ($house->update(array('unit_status', 'action', 'admin_id'))) {
+            //删除条件
+            $criteria = new CDbCriteria;
+            $criteria->addCondition("id !=" . $values['id']);
+            if ($values['type'] === 'have') {
+                $criteria->compare('have_id', $house->have_id);
+            } else {
+                $criteria->compare('want_id', $house->want_id);
+            }
+            $now = date('Y-m-d H:i:s');
+            if (HousingResources::model()->updateAll(array('is_deleted' => StatCode::DB_IS_DELETED, 'date_deleted' => $now), $criteria)) {
+                $std->status = 'ok';
+                $std->errorCode = 200;
+                $std->errorMsg = 'success';
+            }
+        }
+        return $std;
+    }
+
 }
