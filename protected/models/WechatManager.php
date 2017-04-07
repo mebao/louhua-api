@@ -105,7 +105,7 @@ class WechatManager {
         $account = WechatAccount::model()->loadByWxName(self::WX_NAME);
         $touser = $values['users'];
         $message = $values['message'];
-        $post = array("touser" => $touser, "msgtype" => "text", "agentid" => self::AGENTID, "text" => array("content" => $message), "safe" => "0");
+        $post = array("touser" => $touser, "msgtype" => "text", "agentid" => $account->agent_id, "text" => array("content" => $message), "safe" => "0");
         $data = json_encode($post, JSON_UNESCAPED_UNICODE);
         $url = sprintf(WechatRequestUrl::qy_message_send, $account->access_token);
         return https($url, $data, "POST");
@@ -125,7 +125,7 @@ class WechatManager {
         if ($model->save()) {
             $account = WechatAccount::model()->loadByWxName(self::WX_NAME);
             $touser = $values['userid'];
-            $post = array("touser" => $touser, "msgtype" => "text", "agentid" => self::AGENTID, "text" => array("content" => $model->message), "safe" => "0");
+            $post = array("touser" => $touser, "msgtype" => "text", "agentid" => $account->agent_id, "text" => array("content" => $model->message), "safe" => "0");
             $data = json_encode($post, JSON_UNESCAPED_UNICODE);
             $url = sprintf(WechatRequestUrl::qy_message_send, $account->access_token);
             $wx = https($url, $data, "POST");
