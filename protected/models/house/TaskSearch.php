@@ -30,8 +30,8 @@ class TaskSearch extends ESearchModel {
     public function addQueryConditions() {
         $this->criteria->compare('t.is_deleted', StatCode::DB_ISNOT_DELETED);
         $this->criteria->addCondition('t.admin_id is null');
-        $this->criteria->addCondition('t.action !=' . StatCode::HOUSE_ACTION_DONE);
-        $this->criteria->addCondition('t.action !=' . StatCode::HOUSE_ACTION_FAILED);
+        $this->criteria->addCondition("t.action != '" . StatCode::HOUSE_ACTION_DONE . "'");
+        $this->criteria->addCondition("t.action != '" . StatCode::HOUSE_ACTION_FAILED . "'");
         if ($this->hasQueryParams()) {
             if (isset($this->queryParams['post_type'])) {
                 if ($this->queryParams['post_type'] == 'want') {
