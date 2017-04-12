@@ -28,6 +28,7 @@ class ApiViewUserInfo extends EApiViewService {
         $std->user_id = $this->user->id;
         $std->username = $this->user->username;
         $std->wechat_id = $this->user->wechat_id;
+        $std->wechat_name = $this->user->wechat_name;
         $std->real_name = $this->user->real_name;
         $std->brokerage_name = $this->user->brokerage_name;
         $std->cell = $this->user->cell;
