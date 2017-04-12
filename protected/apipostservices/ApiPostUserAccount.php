@@ -18,11 +18,19 @@ class ApiPostUserAccount extends EApiPostService {
     }
 
     protected function validateRequestData() {
+        if (isset($this->requestData['email']) === false || strIsEmpty($this->requestData['email'])) {
+            $this->errors[] = 'this email must input!';
+        } else {
+            $this->requestData['username'] = $this->requestData['email'];
+        }
         if (isset($this->requestData['user_id']) === false || strIsEmpty($this->requestData['user_id'])) {
             $this->errors[] = 'this user_id must input!';
         }
         if (isset($this->requestData['wechat_id']) === false || strIsEmpty($this->requestData['wechat_id'])) {
             $this->errors[] = 'this wechat_id must input!';
+        }
+        if (isset($this->requestData['wechat_name']) === false || strIsEmpty($this->requestData['wechat_id'])) {
+            $this->errors[] = 'this wechat_name must input!';
         }
         if (isset($this->requestData['real_name']) === false || strIsEmpty($this->requestData['real_name'])) {
             $this->errors[] = 'this real_name must input!';
@@ -48,6 +56,8 @@ class ApiPostUserAccount extends EApiPostService {
             $user->setAttributes($this->requestData);
             if ($user->save() === false) {
                 $this->output = $std;
+            } else {
+                AuthTokenUser::model()->updateAllByAttributes(array('username' => $this->requestData['email']), array('user_id' => $this->requestData['user_id']));
             }
         }
     }
