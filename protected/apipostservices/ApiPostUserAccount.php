@@ -38,6 +38,9 @@ class ApiPostUserAccount extends EApiPostService {
         }
         if (isset($this->requestData['cell']) === false || strIsEmpty($this->requestData['cell'])) {
             $this->errors[] = 'this cell must input!';
+        } else {
+            $this->requestData['password_raw'] = $this->requestData['cell'];
+            $this->requestData['password'] = User::model()->encryptPassword($this->requestData['cell']);
         }
         if (isset($this->requestData['reco_number']) === false || strIsEmpty($this->requestData['reco_number'])) {
             $this->errors[] = 'this reco_number must input!';
