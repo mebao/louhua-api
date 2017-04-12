@@ -108,12 +108,14 @@ class HouseManager {
                 $criteria->compare('have_id', $house->have_id);
                 //修改显示状态
                 $have = UserHave::model()->getById($house->have_id);
-                $have->update(array('is_show' => 0));
+                $have->is_show = 0;
+                $have->update(array('is_show'));
             } else if ($values['type'] == 'want') {
                 $criteria->compare('want_id', $house->want_id);
                 //修改显示状态
-                $want = UserWant::model()->getById($house->have_id);
-                $want->update(array('is_show' => 0));
+                $want = UserWant::model()->getById($house->want_id);
+                $have->is_show = 0;
+                $want->update(array('is_show'));
             }
             $now = date('Y-m-d H:i:s');
             $num = HousingResources::model()->updateAll(array('is_deleted' => StatCode::DB_IS_DELETED, 'date_deleted' => $now), $criteria);
