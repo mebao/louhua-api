@@ -18,10 +18,8 @@ class ApiPostUserAccount extends EApiPostService {
     }
 
     protected function validateRequestData() {
-        if (isset($this->requestData['email']) === false || strIsEmpty($this->requestData['email'])) {
-            $this->errors[] = 'this email must input!';
-        } else {
-            $this->requestData['username'] = $this->requestData['email'];
+        if (isset($this->requestData['username']) === false || strIsEmpty($this->requestData['username'])) {
+            $this->errors[] = 'this username must input!';
         }
         if (isset($this->requestData['user_id']) === false || strIsEmpty($this->requestData['user_id'])) {
             $this->errors[] = 'this user_id must input!';
@@ -57,7 +55,7 @@ class ApiPostUserAccount extends EApiPostService {
             if ($user->save() === false) {
                 $this->output = $std;
             } else {
-                AuthTokenUser::model()->updateAllByAttributes(array('username' => $this->requestData['email']), array('user_id' => $this->requestData['user_id']));
+                AuthTokenUser::model()->updateAllByAttributes(array('username' => $this->requestData['username']), array('user_id' => $this->requestData['user_id']));
             }
         }
     }
