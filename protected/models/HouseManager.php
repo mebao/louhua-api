@@ -106,8 +106,14 @@ class HouseManager {
             $criteria->addCondition("id !=" . $values['id']);
             if ($values['type'] == 'have') {
                 $criteria->compare('have_id', $house->have_id);
+                //修改显示状态
+                $have = UserHave::model()->getById($house->have_id);
+                $have->update(array('is_show' => 0));
             } else if ($values['type'] == 'want') {
                 $criteria->compare('want_id', $house->want_id);
+                //修改显示状态
+                $want = UserWant::model()->getById($house->have_id);
+                $want->update(array('is_show' => 0));
             }
             $now = date('Y-m-d H:i:s');
             $num = HousingResources::model()->updateAll(array('is_deleted' => StatCode::DB_IS_DELETED, 'date_deleted' => $now), $criteria);
