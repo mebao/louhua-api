@@ -156,6 +156,7 @@ class UserHave extends EActiveRecord {
         $criteria->select = 'SUM(coop) as coop,unit_type,COUNT(1) as id';
         $criteria->compare('is_deleted', self::DB_ISNOT_DELETED);
         $criteria->compare('project_id', $projectId);
+        $criteria->compare('is_show', 1);
         $criteria->group = "unit_type";
         return $this->findAll($criteria);
     }

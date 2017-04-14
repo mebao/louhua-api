@@ -83,7 +83,7 @@ class HouseManager {
             } else {
                 $attr['have_id'] = $house->have_id;
             }
-            HousingResources::model()->updateAll(array('admin_id' => null), $attr);
+            HousingResources::model()->updateAllByAttributes(array('admin_id' => null), $attr);
             $std->status = 'ok';
             $std->errorCode = 200;
             $std->errorMsg = 'success';
