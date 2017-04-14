@@ -77,13 +77,18 @@ class HouseManager {
         $std->errorMsg = 'finish failed';
         $house = HousingResources::model()->getByAttributes(array('id' => $id, 'admin_id' => $adminId));
         if (isset($house)) {
-            $attr = array();
+            $house->admin_id = null;
+            $house->update(array('admin_id'));
+
+            $criteria = new CDbCriteria;
+            $criteria->addCondition("id !=" . $id);
             if (strIsEmpty($house->have_id)) {
-                $attr['want_id'] = $house->want_id;
+                $criteria->compare('want_id', $house->want_id);
             } else {
-                $attr['have_id'] = $house->have_id;
+                $criteria->compare('have_id', $house->have_id);
             }
-            HousingResources::model()->updateAllByAttributes(array('admin_id' => null), $attr);
+            $now = date('Y-m-d H:i:s');
+            HousingResources::model()->updateAll(array('is_deleted' => StatCode::DB_IS_DELETED, 'date_deleted' => $now), $criteria);
             $std->status = 'ok';
             $std->errorCode = 200;
             $std->errorMsg = 'success';
@@ -91,7 +96,8 @@ class HouseManager {
         return $std;
     }
 
-    public function matchsuccess($values) {
+    public
+            function matchsuccess($values) {
         $std = new stdClass();
         $std->status = 'no';
         $std->errorCode = 502;
