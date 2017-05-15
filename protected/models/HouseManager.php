@@ -96,8 +96,7 @@ class HouseManager {
         return $std;
     }
 
-    public
-            function matchsuccess($values) {
+    public function matchsuccess($values) {
         $std = new stdClass();
         $std->status = 'no';
         $std->errorCode = 502;
@@ -120,7 +119,7 @@ class HouseManager {
                 $criteria->compare('want_id', $house->want_id);
                 //修改显示状态
                 $want = UserWant::model()->getById($house->want_id);
-                $have->is_show = 0;
+                $want->is_show = 0;
                 $want->update(array('is_show'));
             }
             $now = date('Y-m-d H:i:s');

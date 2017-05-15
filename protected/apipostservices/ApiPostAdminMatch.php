@@ -66,8 +66,15 @@ class ApiPostAdminMatch extends EApiPostService {
         } else {
             $house = HousingResources::model()->getById($this->requestData['house_id']);
             if (isset($house)) {
-                $house->admin_id = null;
-                $house->update(array('admin_id'));
+//                $house->admin_id = null;
+//                $house->update(array('admin_id'));
+                if ($this->requestData['post_type'] == 'want') {
+                    $model = UserWant::model()->getById($house->want_id);
+                } else {
+                    $model = UserHave::model()->getById($house->have_id);
+                }
+                $model->is_show = 0;
+                $model->update(array('is_show'));
             }
             $this->results->msg = $isSuccess;
         }
